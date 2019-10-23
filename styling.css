@@ -1,0 +1,46 @@
+.zombies_div_login input {
+  width: 200px;
+}
+
+.zombies_div_login {
+  width: 300px;
+  margin: 0 auto;
+  overflow: hidden;
+  padding: 15px;
+  border: solid black 3px;
+  border-radius: 15px;
+}
+
+.zombies_div_login button {
+  width: 80px;
+  float: right;
+}
+
+.zombies_div_login_separator {
+  text-align: center;
+}
+
+.zombies_header_login {
+  text-align: center;
+}
+
+br {
+  clear: both;
+}
+
+.textbox {
+  float: right;
+}
+
+.zombies_div_login_facebook {
+  text-align: center;
+}
+
+.zombies_div_login_alternatives {
+  text-align: center;
+}
+
+.facebook_icon {
+  border: solid black 3px;
+  border-radius: 15px;
+}
