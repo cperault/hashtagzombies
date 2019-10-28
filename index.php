@@ -29,7 +29,7 @@ switch ($action) {
         break;
     case 'submit_login':
         //get the username
-        $username = filter_input(INPUT_POST, 'username');
+        $username = htmlspecialchars(filter_input(INPUT_POST, 'username'));
         //get the password
         $password = filter_input(INPUT_POST, 'password');
         //retrieve the hashed password from the users table by username
@@ -50,11 +50,6 @@ switch ($action) {
         }
         die();
         break;
-    case 'logout';
-        session_destroy();
-        include("Views/login.php");
-        die();
-        break;
     case 'register':
         //get the form data
         include('Views/registration.php');
@@ -62,10 +57,10 @@ switch ($action) {
         break;
     case 'submit_registration':
         //get data from the form
-        $username = filter_input(INPUT_POST, 'username');
-        $first_name = filter_input(INPUT_POST, 'first_name');
-        $last_name = filter_input(INPUT_POST, 'last_name');
-        $email_address = filter_input(INPUT_POST, 'email_address');
+        $username = htmlspecialchars(filter_input(INPUT_POST, 'username'));
+        $first_name = htmlspecialchars(filter_input(INPUT_POST, 'first_name'));
+        $last_name = htmlspecialchars(filter_input(INPUT_POST, 'last_name'));
+        $email_address = htmlspecialchars(filter_input(INPUT_POST, 'email_address'));
         $password = filter_input(INPUT_POST, 'password');
         //salt
         $options = [
@@ -91,6 +86,11 @@ switch ($action) {
         //TODO: make method call(s) to the model file in which Google authentication is done
         //TODO: gather any necessary data pertaining to the user based on some sort of associated information (email address more than likely); store that locally for the session
         //TODO: send logged-in user to the game view so that they can start playing
+        die();
+        break;
+    case 'logout';
+        session_destroy();
+        include("Views/login.php");
         die();
         break;
 }
