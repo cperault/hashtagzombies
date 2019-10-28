@@ -18,10 +18,66 @@ if ($action === NULL) {
 
 //load CSS into all pages
 require("Views/styling.php");
-
+require_once('Models/Database.php');
+require_once('Models/PlayerDB.php');
+require_once('Models/Players.php');
 //decide what to do based on the action(s) received from gameplay/forms
 switch ($action) {
     case 'login':
+        include("Views/login.php");
+        die();
+        break;
+    case 'submit_login':
+        //get the username
+        $username = filter_input(INPUT_POST, 'username');
+        //get the password
+        $password = filter_input(INPUT_POST, 'password');
+        //retrieve the hashed password from the users table by username
+        $hash_from_db = PlayerDB::get_player_password($username);
+        //check the entered password against the hashed password received from the Players table
+        if (!password_verify($password, $hash_from_db)) {
+            //password does not match--exit script and redirect to login
+            $login_result = "Incorrect login. Please try again.";
+            include("Views/login.php");
+        } else {
+            //password matches--save the logged-in player in the session and then proceed to the gameplay page
+            $_SESSION["authenticated"] = "true";
+            //get the player ID
+            $player_id = PlayerDB::get_player_id($username);
+            $_SESSION["current_player"] = $player_id;
+            $player = PlayerDB::get_player_object($player_id);
+            require('Views/game.php');
+        }
+        die();
+        break;
+    case 'logout';
+        session_destroy();
+        include("Views/login.php");
+        die();
+        break;
+    case 'register':
+        //get the form data
+        include('Views/registration.php');
+        die();
+        break;
+    case 'submit_registration':
+        //get data from the form
+        $username = filter_input(INPUT_POST, 'username');
+        $first_name = filter_input(INPUT_POST, 'first_name');
+        $last_name = filter_input(INPUT_POST, 'last_name');
+        $email_address = filter_input(INPUT_POST, 'email_address');
+        $password = filter_input(INPUT_POST, 'password');
+        //salt
+        $options = [
+            'cost' => 14,
+        ];
+        $hash = password_hash($password, PASSWORD_BCRYPT, $options);
+        //add the user to the Players database
+        PlayerDB::add_new_user($username, $first_name, $last_name, $email_address, $hash);
+        $player_id = PlayerDB::get_player_id($username);
+        $_SESSION["current_player"] = $player_id;
+        //redirect the player to the login screen
+        $message = "Thank you for registering! Let's get you signed in now.";
         include("Views/login.php");
         die();
         break;

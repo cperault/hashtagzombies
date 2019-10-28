@@ -1,17 +1,28 @@
-.zombies_div_login input {
+.zombies_div_login input,
+.zombies_div_registration input {
   width: 200px;
 }
 
-.zombies_div_login {
+.zombies_div_login,
+.zombies_div_registration {
   width: 300px;
   margin: 0 auto;
   overflow: hidden;
   padding: 15px;
-  border: solid black 3px;
+  border: solid red 3px;
   border-radius: 15px;
 }
-
-.zombies_div_login button {
+.zombies_body_gameplay_container {
+  margin: 0 auto;
+  max-width: 1080px;
+  min-width: 1050px;
+  max-height: 960px;
+  min-height: 960px;
+  border: solid red 3px;
+  border-radius: 15px;
+}
+.zombies_div_login button,
+.zombies_div_registration button {
   width: 80px;
   float: right;
 }
@@ -20,7 +31,9 @@
   text-align: center;
 }
 
-.zombies_header_login {
+.zombies_header_login,
+.zombies_header_registration,
+.zombies_header_gameplay {
   text-align: center;
 }
 
@@ -41,6 +54,24 @@ br {
 }
 
 .facebook_icon {
-  border: solid black 3px;
+  border: solid red 3px;
   border-radius: 15px;
+}
+
+.thank_you_message {
+  font-size: small;
+  text-align: center;
+}
+
+.login_error {
+  color: red;
+  text-align: center;
+}
+
+.center_text {
+  text-align: center;
+}
+
+.logout_footer {
+  text-align: center;
 }
