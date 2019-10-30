@@ -18,9 +18,11 @@ if ($action === NULL) {
 
 //load CSS into all pages
 require("Views/styling.php");
+//load the files from Models
 require_once('Models/Database.php');
 require_once('Models/PlayerDB.php');
 require_once('Models/Players.php');
+require_once('Models/Validation.php');
 //decide what to do based on the action(s) received from gameplay/forms
 switch ($action) {
     case 'login':
@@ -62,20 +64,34 @@ switch ($action) {
         $last_name = htmlspecialchars(filter_input(INPUT_POST, 'last_name'));
         $email_address = htmlspecialchars(filter_input(INPUT_POST, 'email_address'));
         $password = filter_input(INPUT_POST, 'password');
-        //salt
-        $options = [
-            'cost' => 14,
-        ];
-        $hash = password_hash($password, PASSWORD_BCRYPT, $options);
-        //add the user to the Players database
-        PlayerDB::add_new_user($username, $first_name, $last_name, $email_address, $hash);
-        $player_id = PlayerDB::get_player_id($username);
-        $_SESSION["current_player"] = $player_id;
-        //redirect the player to the login screen
-        $message = "Thank you for registering! Let's get you signed in now.";
-        include("Views/login.php");
-        die();
-        break;
+
+        //create associative array for all input
+        $input_array = array('username' => $username, 'first_name' => $first_name, 'last_name' => $last_name, 'email_address' => $email_address, 'password' => $password);
+        //validate input before proceeding
+        //variable to store result of validation
+        $validation_result = Validation::is_valid($input_array);
+        if ($validation_result) {
+            //there's something wrong with the form input
+            include('Views/registration.php');
+            die();
+            break;
+        } else {
+            //salt
+            $options = [
+                'cost' => 14,
+            ];
+            $hash = password_hash($password, PASSWORD_BCRYPT, $options);
+            //add the user to the Players database
+            PlayerDB::add_new_user($username, $first_name, $last_name, $email_address, $hash);
+            $player_id = PlayerDB::get_player_id($username);
+            $_SESSION["current_player"] = $player_id;
+            //redirect the player to the login screen
+            $message = "Thank you for registering! Let's get you signed in now.";
+            include("Views/login.php");
+            die();
+            break;
+        }
+
     case 'facebook_login_api':
         //TODO: make method call(s) to the model file in which Facebook authentication is done
         //TODO: gather any necessary data pertaining to the user based on some sort of associated information (email address more than likely); store that locally for the session
