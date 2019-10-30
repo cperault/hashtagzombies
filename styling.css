@@ -75,3 +75,7 @@ br {
 .logout_footer {
   text-align: center;
 }
+
+canvas {
+  border-radius: 12px;
+}
