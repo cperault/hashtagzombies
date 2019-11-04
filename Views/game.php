@@ -19,10 +19,7 @@
 </head>
 
 <body>
-    <div class="zombies_body_gameplay_container">
-        <canvas id="canvas"></canvas>
-        <script src="Models/JS/actions.js"></script>
-    </div>
+    <?php include("Models/JS/map.html"); ?>
     <footer class="logout_footer">
         <form action="." method="POST">
             <input type="submit" value="Logout">
