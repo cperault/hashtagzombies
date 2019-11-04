@@ -17,8 +17,6 @@ $fb = new Facebook\Facebook([
 
 $helper = $fb->getRedirectLoginHelper();
 
-$permissions = ['email']; // optional
-
 try {
 
   if (isset($_SESSION['facebook_access_token'])) {
@@ -131,6 +129,6 @@ if (isset($accessToken)) {
 
   // replace your website URL same as added in the developers.Facebook.com/apps e.g. if you used http instead of https and you used            
 
-  $loginUrl = $helper->getLoginUrl('https://hashtagzombies.herokuapp.com', $permissions);
+  $loginUrl = $helper->getLoginUrl('https://hashtagzombies.herokuapp.com/');
   echo '<a href="' . $loginUrl . '">Facebook</a>';
 }
