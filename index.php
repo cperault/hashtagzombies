@@ -65,7 +65,14 @@ switch ($action) {
         $last_name = htmlspecialchars(trim(filter_input(INPUT_POST, 'last_name')));
         $email_address = htmlspecialchars(trim(filter_input(INPUT_POST, 'email_address')));
         $password = filter_input(INPUT_POST, 'password');
+        $invite_code = htmlspecialchars(trim(filter_input(INPUT_POST, 'invite_code')));
 
+        //if user has not entered an invite code, exit script; this will prevent spam registrations while site is live
+        if ($invite_code !== "green_teamis_awesome!") {
+            $no_invite = "You don't have permission to be registering. Get on outta here.";
+            include('Views/registration.php');
+            exit();
+        }
         //create associative array for all input
         $input_array = array('Username' => $username, 'First Name' => $first_name, 'Last Name' => $last_name, 'Email Address' => $email_address, 'Password' => $password);
         //validate input before proceeding
@@ -94,7 +101,7 @@ switch ($action) {
         }
 
     case 'facebook_login_api':
-        
+
         //TODO: make method call(s) to the model file in which Facebook authentication is done
         //TODO: gather any necessary data pertaining to the user based on some sort of associated information (email address more than likely); store that locally for the session
         //TODO: send logged-inuser to the game view so that they can start playing

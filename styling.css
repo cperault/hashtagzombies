@@ -89,3 +89,7 @@ canvas {
 .error_text_header {
   text-decoration: underline;
 }
+.invite_code_invalid {
+  text-align: center;
+  color: red;
+}

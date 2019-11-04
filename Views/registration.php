@@ -42,6 +42,8 @@
             <input type="password" name="password" class="textbox" <?php if (isset($password)) {
                                                                         echo "value='$password'";
                                                                     } ?>><br>
+            <label>Invite Code</label>
+            <input type="text" name="invite_code" class="textbox">
             <input type='hidden' name="action" value="submit_registration">
             <br>
             <button type="submit">Register</button>
@@ -56,6 +58,8 @@
             foreach ($validation_result as $error) {
                 echo "<p class='error_text'>" . $error . "</p>";
             }
+        } elseif (isset($no_invite)) {
+            echo "<p class='invite_code_invalid'>" . $no_invite . "</p>";
         } ?>
     </div>
 
