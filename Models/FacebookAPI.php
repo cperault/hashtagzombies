@@ -131,6 +131,6 @@ if (isset($accessToken)) {
 
   // replace your website URL same as added in the developers.Facebook.com/apps e.g. if you used http instead of https and you used            
 
-  $loginUrl = $helper->getLoginUrl('http://phpstack-21306-56790-161818.cloudwaysapps.com', $permissions);
+  $loginUrl = $helper->getLoginUrl('https://hashtagzombies.herokuapp.com', $permissions);
   echo '<a href="' . $loginUrl . '">Facebook</a>';
 }
