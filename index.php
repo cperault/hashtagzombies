@@ -23,6 +23,7 @@ require_once('Models/Database.php');
 require_once('Models/PlayerDB.php');
 require_once('Models/Players.php');
 require_once('Models/Validation.php');
+
 //decide what to do based on the action(s) received from gameplay/forms
 switch ($action) {
     case 'login':
@@ -59,18 +60,25 @@ switch ($action) {
         break;
     case 'submit_registration':
         //get data from the form
-        $username = htmlspecialchars(filter_input(INPUT_POST, 'username'));
-        $first_name = htmlspecialchars(filter_input(INPUT_POST, 'first_name'));
-        $last_name = htmlspecialchars(filter_input(INPUT_POST, 'last_name'));
-        $email_address = htmlspecialchars(filter_input(INPUT_POST, 'email_address'));
+        $username = htmlspecialchars(trim(filter_input(INPUT_POST, 'username')));
+        $first_name = htmlspecialchars(trim(filter_input(INPUT_POST, 'first_name')));
+        $last_name = htmlspecialchars(trim(filter_input(INPUT_POST, 'last_name')));
+        $email_address = htmlspecialchars(trim(filter_input(INPUT_POST, 'email_address')));
         $password = filter_input(INPUT_POST, 'password');
+        $invite_code = htmlspecialchars(trim(filter_input(INPUT_POST, 'invite_code')));
 
+        //if user has not entered an invite code, exit script; this will prevent spam registrations while site is live
+        if ($invite_code !== "green_teamis_awesome!") {
+            $no_invite = "You don't have permission to be registering. Get on outta here.";
+            include('Views/registration.php');
+            exit();
+        }
         //create associative array for all input
-        $input_array = array('username' => $username, 'first_name' => $first_name, 'last_name' => $last_name, 'email_address' => $email_address, 'password' => $password);
+        $input_array = array('Username' => $username, 'First Name' => $first_name, 'Last Name' => $last_name, 'Email Address' => $email_address, 'Password' => $password);
         //validate input before proceeding
         //variable to store result of validation
         $validation_result = Validation::is_valid($input_array);
-        if ($validation_result) {
+        if (count($validation_result) > 0) {
             //there's something wrong with the form input
             include('Views/registration.php');
             die();
@@ -91,19 +99,6 @@ switch ($action) {
             die();
             break;
         }
-
-    case 'facebook_login_api':
-        //TODO: make method call(s) to the model file in which Facebook authentication is done
-        //TODO: gather any necessary data pertaining to the user based on some sort of associated information (email address more than likely); store that locally for the session
-        //TODO: send logged-inuser to the game view so that they can start playing
-        die();
-        break;
-    case 'google_login_api':
-        //TODO: make method call(s) to the model file in which Google authentication is done
-        //TODO: gather any necessary data pertaining to the user based on some sort of associated information (email address more than likely); store that locally for the session
-        //TODO: send logged-in user to the game view so that they can start playing
-        die();
-        break;
     case 'logout';
         session_destroy();
         include("Views/login.php");
