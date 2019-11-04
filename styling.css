@@ -1,17 +1,31 @@
-.zombies_div_login input,
-.zombies_div_registration input {
-  width: 200px;
+.zombies_div_login input[type="text"],
+.zombies_div_registration input[type="text"] {
+  width: 100%;
+  display: inline-block;
+  border: solid 1px lightcoral;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  border-radius: 5px;
+  font-size: 20px;
 }
-
+.zombies_div_login input[type="password"],
+.zombies_div_registration input[type="password"] {
+  width: 100%;
+  border: solid 1px lightcoral;
+  border-radius: 5px;
+  font-size: 20px;
+}
 .zombies_div_login,
 .zombies_div_registration {
-  width: 300px;
+  width: 450px;
   margin: 0 auto;
   overflow: hidden;
   padding: 15px;
   border: solid red 3px;
   border-radius: 15px;
+  background-color: #f7b2b2;
 }
+
 .zombies_body_gameplay_container {
   margin: 0 auto;
   max-width: 1080px;
@@ -64,7 +78,7 @@ br {
 }
 
 .login_error {
-  color: red;
+  color: black;
   text-align: center;
 }
 
@@ -87,7 +101,7 @@ canvas {
 }
 .invite_code_invalid {
   text-align: center;
-  color: red;
+  color: black;
 }
 .logout_footer,
 .back_to_login_footer {

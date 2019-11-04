@@ -22,30 +22,33 @@
     </header>
     <div class="zombies_div_registration">
         <form method="POST" autocomplete="off" action=".">
-            <label>Username</label>
+            <label for="username">Username</label>
             <input type="text" name="username" class="textbox" <?php if (isset($username)) {
                                                                     echo "value='$username'";
                                                                 } ?>><br>
-            <label>First Name</label>
+            <label for="first_name">First Name</label>
             <input type="text" name="first_name" class="textbox" <?php if (isset($first_name)) {
                                                                         echo "value='$first_name'";
                                                                     } ?>><br>
-            <label>Last Name</label>
+            <label for="last_name">Last Name</label>
             <input type="text" name="last_name" class="textbox" <?php if (isset($last_name)) {
                                                                     echo "value='$last_name'";
                                                                 } ?>><br>
-            <label>Email Address</label>
+            <label for="email_address">Email Address</label>
             <input type="text" name="email_address" class="textbox" <?php if (isset($email_address)) {
                                                                         echo "value='$email_address'";
                                                                     } ?>><br>
-            <label>Password</label>
+            <label for="password">Password</label>
             <input type="password" name="password" class="textbox" <?php if (isset($password)) {
                                                                         echo "value='$password'";
                                                                     } ?>><br>
-            <label>Invite Code</label>
-            <input type="text" name="invite_code" class="textbox">
+            <label for="invite_code">Invite Code</label>
+            <input type="text" name="invite_code" class="textbox" <?php if (isset($invite_code)) {
+                                                                        echo "value='$invite_code'";
+                                                                    } ?>>
             <input type='hidden' name="action" value="submit_registration">
-            <br>
+            <br />
+            <br />
             <button type="submit">Register</button>
         </form>
         <br />
