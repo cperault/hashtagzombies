@@ -37,13 +37,7 @@
         <div class="zombies_div_login_alternatives">
             <p class="zombies_div_login_separator">or login through</p>
             <p class="zombies_div_login_facebook">
-                <img class="facebook_icon" alt="Facebook login icon" src="Media/facebook.png" height="30" width="30" />
-                <img class="facebook_icon" alt="Facebook login icon" src="Media/google.jpg" height="30" width="30" />
-                <p>Don't have Facebook or Google?</p>
-                <form action="index.php" method="POST">
-                    <input type="submit" value="Register using our form">
-                    <input type="hidden" name="action" value="register">
-                </form>
+                <?php include('Models/FacebookAPI.php'); ?>
             </p>
         </div>
     </div>

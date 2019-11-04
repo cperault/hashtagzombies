@@ -23,6 +23,7 @@ require_once('Models/Database.php');
 require_once('Models/PlayerDB.php');
 require_once('Models/Players.php');
 require_once('Models/Validation.php');
+
 //decide what to do based on the action(s) received from gameplay/forms
 switch ($action) {
     case 'login':
@@ -93,9 +94,11 @@ switch ($action) {
         }
 
     case 'facebook_login_api':
+        
         //TODO: make method call(s) to the model file in which Facebook authentication is done
         //TODO: gather any necessary data pertaining to the user based on some sort of associated information (email address more than likely); store that locally for the session
         //TODO: send logged-inuser to the game view so that they can start playing
+        //include("Views/facebook.php");
         die();
         break;
     case 'google_login_api':
