@@ -20,9 +20,7 @@
 </head>-->
 
 <body>
-    <div onload="startGame()">
-        
-    </div>
+    <?php include("Models/JS/map.html"); ?>
     <footer class="logout_footer">
         <form action="." method="POST">
             <input type="submit" value="Logout">
