@@ -59,18 +59,18 @@ switch ($action) {
         break;
     case 'submit_registration':
         //get data from the form
-        $username = htmlspecialchars(filter_input(INPUT_POST, 'username'));
-        $first_name = htmlspecialchars(filter_input(INPUT_POST, 'first_name'));
-        $last_name = htmlspecialchars(filter_input(INPUT_POST, 'last_name'));
-        $email_address = htmlspecialchars(filter_input(INPUT_POST, 'email_address'));
+        $username = htmlspecialchars(trim(filter_input(INPUT_POST, 'username')));
+        $first_name = htmlspecialchars(trim(filter_input(INPUT_POST, 'first_name')));
+        $last_name = htmlspecialchars(trim(filter_input(INPUT_POST, 'last_name')));
+        $email_address = htmlspecialchars(trim(filter_input(INPUT_POST, 'email_address')));
         $password = filter_input(INPUT_POST, 'password');
 
         //create associative array for all input
-        $input_array = array('username' => $username, 'first_name' => $first_name, 'last_name' => $last_name, 'email_address' => $email_address, 'password' => $password);
+        $input_array = array('Username' => $username, 'First Name' => $first_name, 'Last Name' => $last_name, 'Email Address' => $email_address, 'Password' => $password);
         //validate input before proceeding
         //variable to store result of validation
         $validation_result = Validation::is_valid($input_array);
-        if ($validation_result) {
+        if (count($validation_result) > 0) {
             //there's something wrong with the form input
             include('Views/registration.php');
             die();

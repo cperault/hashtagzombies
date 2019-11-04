@@ -10,19 +10,6 @@
 
 class Validation
 {
-    //function to validate length
-    public static function is_valid_length($input_value = '')
-    {
-        //initial validator variable
-        $valid = false;
-        $length = mb_strlen($input_value);
-        //cannot be more than 20 characters
-        if ($length >= 1 && $length <= 20) {
-            $valid = true;
-        }
-        return $valid;
-    }
-
     //function to validate proper email entry
     public static function is_valid_email($email = '')
     {
@@ -30,52 +17,94 @@ class Validation
         $valid = false;
         //remove illegal characters from the input
         $email = filter_var($email, FILTER_SANITIZE_EMAIL);
-        //validate the sanitized email address
+        //validate the sanitized email address; returns true if filter_var passes validation of the email
         if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
             $valid = true;
         }
         return $valid;
     }
-    //function to validate form input; receives in array of input so that it is extensible in any validation scenario
+
+    //function to validate input is neither empty nor null
+    public static function input_is_present($input = '')
+    {
+        $valid = false;
+        if (trim($input) !== '') {
+            $valid = true;
+        }
+        return $valid;
+    }
+
+    //function to validate input deos not contain special characters
+    public static function input_contains_special_characters($input = '')
+    {
+        $valid = false;
+        if (preg_match('/[#$%^&*()+=\-\[\]\';,.\/{}|":<>?~\\\\]/', $input) === 1) {
+            $valid = true;
+        }
+        return $valid;
+    }
+
+    //function to validate each input value
     public static function is_valid($input = [])
     {
-        //initial validator variable
-        $valid = false;
-        $message = []; //array to store erroroneous input
-        //iterate through the array of input values
-        foreach ($input as $key => $value) {
-            //check to make sure no value is empty
-            if (trim($value) === '') {
-                $valid = false;
-                $message[] = $value . " cannot be blank.";
-            } else {
-                $valid = true;
-            }
-            //validate email
-            if ($key === "email") {
-                if (!Validation::is_valid_email($value)) {
-                    $valid = false;
-                    $message[] = $value . " is not a valid email address.";
-                } else {
-                    $valid = true;
-                }
-            }
-            //validate username, first name, and last name
-            if ($key === "username" || $key === "first_name" || $key === "last_name") {
-                if (!Validation::is_valid_length($value)) {
-                    $valid = false;
-                    $message[] = $value . " cannot exceed 20 characters.";
-                } else {
-                    $valid = true;
-                }
-            }
-        }
-        if (count($message) > 0) {
-            $validation_result = array('valid' => $valid, 'errors' => $message);
-        } else {
-            $validation_result = $valid;
-        }
+        //array to store validation result(s)
+        $result = [];
 
-        return $validation_result;
+        //iterate through the array of input values received
+        foreach ($input as $key => $value) {
+            //length of input received
+            $length = strlen($value);
+            switch ($key) {
+                case 'Username';
+                    //check username is not empty 
+                    if (!Validation::input_is_present($value)) {
+                        $result[] = $key . " is required";
+                    }
+                    //username must be between 5 and 20 characters
+                    elseif ($length < 5 || $length > 20) {
+                        $result[] = $key . " must be between 5 and 20 characters";
+                    }
+                    //username cannot contain special characters
+                    if (Validation::input_contains_special_characters($value)) {
+                        $result[] = $key . " cannot contain special characters";
+                    }
+                    break;
+                case 'First Name':
+                case 'Last Name':
+                    //check if first or last name is not empty
+                    if (!Validation::input_is_present($value)) {
+                        $result[] = $key . " is required";
+                    }
+                    //first or last name must not exceed 50 characters
+                    elseif ($length <= 0 || $length > 50) {
+                        $result[] = $key . " must be between 1 and 50 characters";
+                    }
+                    //first or last name cannot contain special characters
+                    if (Validation::input_contains_special_characters($value)) {
+                        $result[] = $key . " cannot contain special characters";
+                    }
+                    break;
+                case 'Email Address':
+                    //check that email address is not empty
+                    if (!Validation::input_is_present($value)) {
+                        $result[] = $key  . " is required";
+                    }
+                    //validate proper email format
+                    elseif (!Validation::is_valid_email($value)) {
+                        $result[] = $key . " is invalid";
+                    }
+                    break;
+                case 'Password':
+                    //check that password is not empty
+                    if (!Validation::input_is_present($value)) {
+                        $result[] = $key  . " is required";
+                    }
+                    //check that password is between 10 and 100 characters
+                    elseif ($length < 10 || $length > 100) {
+                        $result[] = $key . " must be between 10 and 100 characters";
+                    }
+            }
+        }
+        return $result;
     }
 }

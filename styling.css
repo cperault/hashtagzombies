@@ -79,3 +79,13 @@ br {
 canvas {
   border-radius: 12px;
 }
+.error_text {
+  font-weight: bold;
+}
+.error_text,
+.error_text_header {
+  text-align: center;
+}
+.error_text_header {
+  text-decoration: underline;
+}
