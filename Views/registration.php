@@ -48,7 +48,9 @@
             <br>
             <button type="submit">Register</button>
         </form>
-        <br>
+        <br />
+
+        <br />
         <?php if (isset($validation_result)) {
             if (count($validation_result) > 1) {
                 echo "<p class='error_text_header'>" . "Please correct the following errors: " . "</p>";
@@ -62,7 +64,12 @@
             echo "<p class='invite_code_invalid'>" . $no_invite . "</p>";
         } ?>
     </div>
-
+    <footer class="back_to_login_footer">
+        <form method="POST" action=".">
+            <input type="submit" value="Back to Login" class="back_to_login_button">
+            <input type="hidden" name="action" value="login">
+        </form>
+    </footer>
 </body>
 
 

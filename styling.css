@@ -72,10 +72,6 @@ br {
   text-align: center;
 }
 
-.logout_footer {
-  text-align: center;
-}
-
 canvas {
   border-radius: 12px;
 }
@@ -92,4 +88,9 @@ canvas {
 .invite_code_invalid {
   text-align: center;
   color: red;
+}
+.logout_footer,
+.back_to_login_footer {
+  margin-top: 10px;
+  text-align: center;
 }

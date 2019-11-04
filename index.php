@@ -99,21 +99,6 @@ switch ($action) {
             die();
             break;
         }
-
-    case 'facebook_login_api':
-
-        //TODO: make method call(s) to the model file in which Facebook authentication is done
-        //TODO: gather any necessary data pertaining to the user based on some sort of associated information (email address more than likely); store that locally for the session
-        //TODO: send logged-inuser to the game view so that they can start playing
-        //include("Views/facebook.php");
-        die();
-        break;
-    case 'google_login_api':
-        //TODO: make method call(s) to the model file in which Google authentication is done
-        //TODO: gather any necessary data pertaining to the user based on some sort of associated information (email address more than likely); store that locally for the session
-        //TODO: send logged-in user to the game view so that they can start playing
-        die();
-        break;
     case 'logout';
         session_destroy();
         include("Views/login.php");

@@ -38,7 +38,7 @@
             <p class="zombies_div_login_separator">or login through</p>
             <p class="zombies_div_login_facebook">
                 <?php include('Models/FacebookAPI.php'); ?>
-                <p>Don't have Facebook or Google?</p>
+                <p>Don't have Facebook?</p>
                 <form action="index.php" method="POST">
                     <input type="submit" value="Register using our form">
                     <input type="hidden" name="action" value="register">
