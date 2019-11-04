@@ -17,12 +17,13 @@ and open the template in the editor.
     </head>
     <body onload="startGame()">
         <script>
-            var spawnrate = 3;
             var playerSprite;
             var obstacles = [];
             var enemies = [];
             var blockW = 32;
             var blockH = 32;
+            var CWIDTH= 800;
+            var CHEIGHT= 600;
              //make map
               var map = [
               0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -126,20 +127,17 @@ and open the template in the editor.
              
             
               function updateGameArea(){
-                   for (i = 0; i < obstacles.length; i++){
-                        if (playerSprite.collide(obstacles[i]) === "top"){
+                   for (var i = 0; i < obstacles.length; i++){
+                        if (playerSprite.collide(obstacles[i]) === "top" || playerSprite.y >= CHEIGHT-blockH){
                           gameArea.clear();
                           playerSprite.speedX = 0;
                           playerSprite.speedY = 0;
-                          if (gameArea.key && (gameArea.key === 38 || gameArea.key === 87)){ moveUp();}
+                          if(gameArea.key && (gameArea.key === 38 || gameArea.key === 87)){ moveUp();}
                           if(gameArea.key && (gameArea.key === 37 || gameArea.key === 65)){ moveLeft();}
                           if(gameArea.key && (gameArea.key === 39 || gameArea.key === 68)) { moveRight();}
                           
-//                              for (i = 0; i < enemies.length; i++){
-//                                 enemies[i].update();
-//                             }
                         }
-                        else if (playerSprite.collide(obstacles[i]) === "bottom"){
+                        else if (playerSprite.collide(obstacles[i]) === "bottom" || playerSprite.y <= 0){
                           gameArea.clear();
                           playerSprite.speedX = 0;
                           playerSprite.speedY = 0;
@@ -148,7 +146,7 @@ and open the template in the editor.
                           if(gameArea.key && (gameArea.key === 39 || gameArea.key === 68)) { moveRight();}
                           
                         }
-                        else if (playerSprite.collide(obstacles[i]) === "left"){
+                        else if (playerSprite.collide(obstacles[i]) === "left" || playerSprite.x >= CWIDTH -blockW){
                           gameArea.clear();
                           playerSprite.speedX = 0;
                           playerSprite.speedY = 0;
@@ -157,7 +155,7 @@ and open the template in the editor.
                           if(gameArea.key && (gameArea.key === 37 || gameArea.key === 65)){ moveLeft();}
                       }
                           
-                        else if(playerSprite.collide(obstacles[i]) === "right"){
+                        else if(playerSprite.collide(obstacles[i]) === "right" || playerSprite.x <= 0){
                           gameArea.clear();
                           playerSprite.speedX = 0;
                           playerSprite.speedY = 0;
@@ -166,6 +164,7 @@ and open the template in the editor.
                           if(gameArea.key && (gameArea.key === 39 || gameArea.key === 68)) { moveRight();}
                           
                         }
+                        
                       else {
                       gameArea.clear();
                       playerSprite.speedX = 0;
@@ -178,25 +177,24 @@ and open the template in the editor.
                        
                        playerSprite.newPos();
                        playerSprite.update();
-                       for (i = 0; i <obstacles.length; i++){
+                       for (var i = 0; i <obstacles.length; i++){
                               obstacles[i].update();
-                             }
+                        }
                       }
                    
             }
             
-            var WIDTH=1200;
-            var HEIGHT=800;
+            
             var gameArea = {
                 canvas : document.createElement("canvas"),
                 start : function (){
-                    this.canvas.width = WIDTH;
-                    this.canvas.height = HEIGHT;
+                    this.canvas.width = CWIDTH;
+                    this.canvas.height = CHEIGHT;
                     this.context = this.canvas.getContext("2d");
                     document.body.insertBefore(this.canvas, document.body.childNodes[0]);
                     this.frameNo = 0;
                     //FRAMERATE
-                    this.interval = setInterval(updateGameArea, 40);
+                    this.interval = setInterval(updateGameArea, 20);
                     window.addEventListener('keydown', function (e) {
                         gameArea.key = e.keyCode;
                     });

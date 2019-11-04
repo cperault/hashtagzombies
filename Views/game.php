@@ -14,14 +14,14 @@
     <title>#ZOMBIES</title>
     <link href="styling.css" rel="stylesheet" type="text/css" />
     <script src="https://cdn.jsdelivr.net/processing.js/1.4.8/processing.min.js"></script>
-    <script src="Models/JS/bullet.js"></script>
+    <script src="Models/JS/map.js" type="text/javascript"></script>
+<!--    <script src="Models/JS/bullet.js"></script>
     <script src="Models/JS/movement.js"></script>
-</head>
+</head>-->
 
 <body>
-    <div class="zombies_body_gameplay_container">
-        <canvas id="canvas"></canvas>
-        <script src="Models/JS/actions.js"></script>
+    <div onload="startGame()">
+        
     </div>
     <footer class="logout_footer">
         <form action="." method="POST">
