@@ -1,0 +1,7 @@
+{
+    "name": "cricri/zombies",
+    "description": "This is a zombie survival game made with PHP and love.",
+    "require": {
+	"facebook/graph-sdk" : "~5.0"
+     }
+}
