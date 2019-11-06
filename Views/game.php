@@ -15,9 +15,6 @@
     <link href="styling.css" rel="stylesheet" type="text/css" />
     <script src="https://cdn.jsdelivr.net/processing.js/1.4.8/processing.min.js"></script>
     <script src="Models/JS/map.js" type="text/javascript"></script>
-<!--    <script src="Models/JS/bullet.js"></script>
-    <script src="Models/JS/movement.js"></script>
-</head>-->
 
 <body>
     <?php include("Models/JS/map.html"); ?>

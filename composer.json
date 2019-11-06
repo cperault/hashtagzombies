@@ -2,6 +2,7 @@
     "name": "cricri/zombies",
     "description": "This is a zombie survival game made with PHP and love.",
     "require": {
-	"facebook/graph-sdk" : "~5.0"
+	"facebook/graph-sdk" : "~5.0",
+        "phpmailer/phpmailer": "^6.1"
      }
 }
