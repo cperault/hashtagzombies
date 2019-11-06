@@ -21,7 +21,7 @@
 <body>
     <div class="zombies_body_gameplay_container">
         <canvas id="canvas"></canvas>
-        <script src="Models/JS/actions.js"></script>
+        <script src="Models/JS/map.js"></script>
     </div>
     <footer class="logout_footer">
         <form action="." method="POST">

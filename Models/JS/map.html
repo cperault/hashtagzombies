@@ -20,7 +20,7 @@ and open the template in the editor.
             var spawnrate = 3;
             var playerSprite;
             var obstacles = [];
-            var enemies = []
+            var enemies = [];
             var blockW = 32;
             var blockH = 32;
              //make map
@@ -127,9 +127,8 @@ and open the template in the editor.
                 } 
                 
              
-            
               function updateGameArea(){
-                   for (i = 0; i <=obstacles.length; i++){
+                   for (var i = 0; i < obstacles.length; i++){
                         if (playerSprite.collide(obstacles[i]) === "top"){
                           gameArea.clear();
                           playerSprite.speedX = 0;
@@ -139,12 +138,10 @@ and open the template in the editor.
                           if(gameArea.key && (gameArea.key === 39 || gameArea.key === 68)) { moveRight();}
                           playerSprite.newPos();
                       playerSprite.update();
-                              for (i = 0; i <=obstacles.length; i++){
+                              for (var i = 0; i < obstacles.length; i++){
                                  obstacles[i].update();
                              }
-                             for (i = 0; i <=enemies.length; i++){
-                                 enemies[i].update();
-                             }
+
                         }
                         else if (playerSprite.collide(obstacles[i]) === "bottom"){
                           gameArea.clear();
@@ -155,11 +152,8 @@ and open the template in the editor.
                           if(gameArea.key && (gameArea.key === 39 || gameArea.key === 68)) { moveRight();}
                           playerSprite.newPos();
                       playerSprite.update();
-                              for (i = 0; i <=obstacles.length; i++){
+                              for (var i = 0; i < obstacles.length; i++){
                                  obstacles[i].update();
-                             }
-                             for (i = 0; i <=enemies.length; i++){
-                                 enemies[i].update();
                              }
                         }
                         else if (playerSprite.collide(obstacles[i]) === "left"){
@@ -171,14 +165,8 @@ and open the template in the editor.
                           if(gameArea.key && (gameArea.key === 37 || gameArea.key === 65)){ moveLeft();}
                         playerSprite.newPos();
                       playerSprite.update();
-                              for (i = 0; i <=obstacles.length; i++){
+                              for (var i = 0; i < obstacles.length; i++){
                                  obstacles[i].update();
-                             }
-                              for (i = 0; i <=enemies.length; i++){
-                                 enemies[i].update();
-                             }
-                             for (i = 0; i <=enemies.length; i++){
-                                 enemies[i].update();
                              }
                         }
                         else if(playerSprite.collide(obstacles[i]) === "right"){
@@ -190,11 +178,8 @@ and open the template in the editor.
                           if(gameArea.key && (gameArea.key === 39 || gameArea.key === 68)) { moveRight();}
                             playerSprite.newPos();
                              playerSprite.update();
-                              for (i = 0; i <=obstacles.length; i++){
+                              for (var i = 0; i < obstacles.length; i++){
                                  obstacles[i].update();
-                             }
-                             for (i = 0; i <=enemies.length; i++){
-                                 enemies[i].update();
                              }
                         }
                       else {
@@ -207,11 +192,8 @@ and open the template in the editor.
                       if(gameArea.key && (gameArea.key === 39 || gameArea.key === 68)) {moveRight();} 
                       playerSprite.newPos();
                       playerSprite.update();
-                              for (i = 0; i <=obstacles.length; i++){
+                              for (var i = 0; i < obstacles.length; i++){
                                  obstacles[i].update();
-                             }
-                             for (i = 0; i <=enemies.length; i++){
-                                 enemies[i].update();
                              }
                       }
                        
