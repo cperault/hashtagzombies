@@ -60,11 +60,15 @@
             } else {
                 echo "<p class='error_text_header'>" . "Please correct the following error: " . "</p>";
             }
-            foreach ($validation_result as $error) {
-                echo "<p class='error_text'>" . $error . "</p>";
+            foreach ($validation_result as $validation_error) {
+                echo "<p class='error_text'>" . $validation_error . "</p>";
             }
-        } elseif (isset($no_invite)) {
-            echo "<p class='invite_code_invalid'>" . $no_invite . "</p>";
+        } elseif (isset($no_invite_error)) {
+            echo "<p class='invite_code_invalid'>" . $no_invite_error . "</p>";
+        } elseif (isset($email_in_use_error)) {
+            echo "<p class='error_text'>" . $email_in_use_error . "</p>";
+        } elseif (isset($email_send_error)) {
+            echo "<p class='error_text'>" . $email_send_error . "</p>";
         } ?>
     </div>
     <footer class="back_to_login_footer">
