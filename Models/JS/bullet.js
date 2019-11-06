@@ -32,15 +32,11 @@ Bullet.prototype.fire = function(rounds) {
         }
       break;
     case 38:
-      
-        ctx.beginPath();
+    
+        ctx = gameArea.context;
         ctx.fillStyle = "red";
-        ctx.arc(this.xPos, this.yPos, 50, 0, 2 * Math.PI);
-        ctx.stroke();
-        this.yPos -= this.speed;
-        if (this.yPos <= 0) {
-          rounds.shift();
-        }
+        ctx.fillRect(this.x, this.y, this.width, this.height);
+      
       break;
   }
   
