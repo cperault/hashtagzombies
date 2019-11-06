@@ -28,10 +28,8 @@
 
 .zombies_body_gameplay_container {
   margin: 0 auto;
-  max-width: 1080px;
-  min-width: 1050px;
-  max-height: 960px;
-  min-height: 960px;
+  width: 1200px;
+  height: 800px;
   border: solid red 3px;
   border-radius: 15px;
 }

@@ -1,7 +1,7 @@
 var spawnrate = 3;
             var playerSprite;
             var obstacles = [];
-            var enemies = []
+            var enemies = [];
             var blockW = 32;
             var blockH = 32;
              //make map
@@ -37,15 +37,12 @@ var spawnrate = 3;
                 var mapIndex = 0;
                 for (var y = 0; y <= 19; y++){
                     for (var x = 0; x <=24; x++, mapIndex++){
+                        
                         var tile_x = x * blockW;
                         var tile_y = y * blockH;
                         
                         var tileType = map[mapIndex];
-                        if(tileType === 0){
-                            
-                            enemies.push(new component(blockW/2, blockH/2, "red", tile_x, tile_y));
-                        }
-                        else if (tileType === 1){
+                         if (tileType === 1){
                             obstacles.push(new component(blockW, blockH, "black", tile_x, tile_y));
                         }
                         else if(tileType === 2){
@@ -54,7 +51,7 @@ var spawnrate = 3;
                         else if(tileType === 3){
                             obstacles.push(new component(blockW/2, blockH/2, "pink", tile_x, tile_y));
                         }
-                        else {
+                        else if (tileType === 4) {
                             obstacles.push(new component(blockW/2, blockH/2, "yellow", tile_x, tile_y));
                         }
                     }
@@ -79,7 +76,6 @@ var spawnrate = 3;
                     this.x += this.speedX;
                     this.y += this.speedY;
                 };
-                //Collision Detection
                 this.collide= function(otherobj){
                     var myleft = this.x;
                     var myright = this.x + (this.width);
@@ -111,8 +107,7 @@ var spawnrate = 3;
              
             
               function updateGameArea(){
-                  //Collision detection should loop to check for each map tile; currently only grabs the first 'wall' tile for detection. FIX THIS.
-                  for (i = 0; i <=obstacles.length; i++){
+                   for (i = 0; i < obstacles.length; i++){
                         if (playerSprite.collide(obstacles[i]) === "top"){
                           gameArea.clear();
                           playerSprite.speedX = 0;
@@ -120,14 +115,10 @@ var spawnrate = 3;
                           if (gameArea.key && (gameArea.key === 38 || gameArea.key === 87)){ moveUp();}
                           if(gameArea.key && (gameArea.key === 37 || gameArea.key === 65)){ moveLeft();}
                           if(gameArea.key && (gameArea.key === 39 || gameArea.key === 68)) { moveRight();}
-                          playerSprite.newPos();
-                      playerSprite.update();
-                              for (i = 0; i <=obstacles.length; i++){
-                                 obstacles[i].update();
-                             }
-                             for (i = 0; i <=enemies.length; i++){
-                                 enemies[i].update();
-                             }
+                          
+//                              for (i = 0; i < enemies.length; i++){
+//                                 enemies[i].update();
+//                             }
                         }
                         else if (playerSprite.collide(obstacles[i]) === "bottom"){
                           gameArea.clear();
@@ -136,14 +127,7 @@ var spawnrate = 3;
                           if(gameArea.key && (gameArea.key === 40 || gameArea.key === 83)){ moveDown();}
                           if(gameArea.key && (gameArea.key === 37 || gameArea.key === 65)){ moveLeft();}
                           if(gameArea.key && (gameArea.key === 39 || gameArea.key === 68)) { moveRight();}
-                          playerSprite.newPos();
-                      playerSprite.update();
-                              for (i = 0; i <=obstacles.length; i++){
-                                 obstacles[i].update();
-                             }
-                             for (i = 0; i <=enemies.length; i++){
-                                 enemies[i].update();
-                             }
+                          
                         }
                         else if (playerSprite.collide(obstacles[i]) === "left"){
                           gameArea.clear();
@@ -152,53 +136,33 @@ var spawnrate = 3;
                           if (gameArea.key && (gameArea.key === 38 || gameArea.key === 87)){ moveUp();}
                           if(gameArea.key && (gameArea.key === 40 || gameArea.key === 83)){ moveDown();}
                           if(gameArea.key && (gameArea.key === 37 || gameArea.key === 65)){ moveLeft();}
-                        playerSprite.newPos();
-                      playerSprite.update();
-                              for (i = 0; i <=obstacles.length; i++){
-                                 obstacles[i].update();
-                             }
-                              for (i = 0; i <=enemies.length; i++){
-                                 enemies[i].update();
-                             }
-                             for (i = 0; i <=enemies.length; i++){
-                                 enemies[i].update();
-                             }
-                        }
+                      }
+                          
                         else if(playerSprite.collide(obstacles[i]) === "right"){
                           gameArea.clear();
                           playerSprite.speedX = 0;
                           playerSprite.speedY = 0;
-                          if (gameArea.key && (gameArea.key === 38 || gameArea.key === 87)){ moveUp();}
+                          if(gameArea.key && (gameArea.key === 38 || gameArea.key === 87)){ moveUp();}
                           if(gameArea.key && (gameArea.key === 40 || gameArea.key === 83)){ moveDown();}
                           if(gameArea.key && (gameArea.key === 39 || gameArea.key === 68)) { moveRight();}
-                            playerSprite.newPos();
-                             playerSprite.update();
-                              for (i = 0; i <=obstacles.length; i++){
-                                 obstacles[i].update();
-                             }
-                             for (i = 0; i <=enemies.length; i++){
-                                 enemies[i].update();
-                             }
+                          
                         }
                       else {
                       gameArea.clear();
                       playerSprite.speedX = 0;
                       playerSprite.speedY = 0;
-                      if (gameArea.key && (gameArea.key === 38 || gameArea.key === 87)){ moveUp();}
+                      if(gameArea.key && (gameArea.key === 38 || gameArea.key === 87)){ moveUp();}
                       if(gameArea.key && (gameArea.key === 40 || gameArea.key === 83)){ moveDown();}
                       if(gameArea.key && (gameArea.key === 37 || gameArea.key === 65)){ moveLeft();}
-                      if(gameArea.key && (gameArea.key === 39 || gameArea.key === 68)) {moveRight();} 
-                      playerSprite.newPos();
-                      playerSprite.update();
-                              for (i = 0; i <=obstacles.length; i++){
-                                 obstacles[i].update();
-                             }
-                             for (i = 0; i <=enemies.length; i++){
-                                 enemies[i].update();
-                             }
+                      if(gameArea.key && (gameArea.key === 39 || gameArea.key === 68)) {moveRight();}  
                       }
                        
-                         }
+                       playerSprite.newPos();
+                       playerSprite.update();
+                       for (i = 0; i <obstacles.length; i++){
+                              obstacles[i].update();
+                             }
+                      }
                    
             }
             
@@ -213,7 +177,7 @@ var spawnrate = 3;
                     document.body.insertBefore(this.canvas, document.body.childNodes[0]);
                     this.frameNo = 0;
                     //FRAMERATE
-                    this.interval = setInterval(updateGameArea, 20);
+                    this.interval = setInterval(updateGameArea, 40);
                     window.addEventListener('keydown', function (e) {
                         gameArea.key = e.keyCode;
                     });
@@ -244,3 +208,7 @@ var spawnrate = 3;
                     playerSprite.speedX = 0;
                 }
                 
+            
+           
+            
+            
