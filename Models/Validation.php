@@ -55,6 +55,13 @@ class Validation
             //length of input received
             $length = strlen($value);
             switch ($key) {
+                case 'Login username':
+                case 'Login password':
+                    //check username is not empty 
+                    if (!Validation::input_is_present($value)) {
+                        $result[] = $key . " is required";
+                    }
+                    break;
                 case 'Username';
                     //check username is not empty 
                     if (!Validation::input_is_present($value)) {
