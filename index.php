@@ -14,7 +14,7 @@ use PHPMailer\PHPMailer\Exception;
 //load the autoloader from Composer
 require_once('vendor/autoload.php');
 //load CSS into all pages
-require("Views/styling.php");
+require_once("Views/styling.php");
 //load the files from Models
 require_once('Models/Database.php');
 require_once('Models/PlayerDB.php');
@@ -55,36 +55,54 @@ switch ($action) {
         $username = htmlspecialchars(filter_input(INPUT_POST, 'username'));
         //get the password
         $password = filter_input(INPUT_POST, 'password');
-
-        //while a user should not be able to login without an active account, prevent them from being able to login prior to verifying (URL hijacking to /login.php or them going back to login without verifying)
-        $activated = PlayerDB::is_activated($username);
-        if (!$activated) {
-            $message = "Your email address was never verified upon registering. For security reasons, you must first confirm your email address.";
-            $resend = true;
-            $_SESSION['user_needing_verified'] = $username;
-            $_SESSION['user_email_needing_verified'] = PlayerDB::get_email_address($username);
-            include('Views/login_confirmation.php');
+        //create associative array for all input
+        $input_array = array('Login username' => $username, 'Login password' => $password);
+        //validate input before proceeding
+        //variable to store result of validation
+        $validation_result = Validation::is_valid($input_array);
+        if (count($validation_result) > 0) {
+            //there's something wrong with the form input
+            include('Views/login.php');
             die();
         } else {
-            //retrieve the hashed password from the users table by username
-            $hash_from_db = PlayerDB::get_player_password($username);
-            //check the entered password against the hashed password received from the Players table
-            if (!password_verify($password, $hash_from_db)) {
-                //password does not match--exit script and redirect to login
-                $login_result = "Incorrect login. Please try again.";
-                include("Views/login.php");
+            //check to make sure that the user hasn't already registered
+            $email_address = PlayerDB::get_email_address($username);
+
+            if (!PlayerDB::is_registered($email_address)) {
+                $message = "Sorry, incorrect login. Please try again.";
+                include('Views/login.php');
                 die();
             } else {
-                //password matches--save the logged-in player in the session and then proceed to the gameplay page
-                $_SESSION["authenticated"] = "true";
-                //get the player ID
-                $player_id = PlayerDB::get_player_id($username);
-                $_SESSION["current_player"] = $player_id;
-                $player = PlayerDB::get_player_object($player_id);
-                require('Views/game.php');
+                //while a user should not be able to login without an active account, prevent them from being able to login prior to verifying (URL hijacking to /login.php or them going back to login without verifying)
+                $activated = PlayerDB::is_activated($username);
+                if (!$activated) {
+                    $message = "Your email address was never verified upon registering. For security reasons, you must first confirm your email address.";
+                    $resend = true;
+                    $_SESSION['user_needing_verified'] = $username;
+                    $_SESSION['user_email_needing_verified'] = PlayerDB::get_email_address($username);
+                    include('Views/login_confirmation.php');
+                    die();
+                } else {
+                    //retrieve the hashed password from the users table by username
+                    $hash_from_db = PlayerDB::get_player_password($username);
+                    //check the entered password against the hashed password received from the Players table
+                    if (!password_verify($password, $hash_from_db)) {
+                        //password does not match--exit script and redirect to login
+                        $login_result = "Incorrect login. Please try again.";
+                        include("Views/login.php");
+                        die();
+                    } else {
+                        //password matches--save the logged-in player in the session and then proceed to the gameplay page
+                        $_SESSION["authenticated"] = "true";
+                        //get the player ID
+                        $player_id = PlayerDB::get_player_id($username);
+                        $_SESSION["current_player"] = $player_id;
+                        $player = PlayerDB::get_player_object($player_id);
+                        include('Views/game.php');
+                    }
+                }
             }
         }
-        die();
         break;
     case 'register':
         //get the form data
@@ -218,7 +236,6 @@ switch ($action) {
         } catch (Exception $exception) {
             $email_result = "Uh oh. " . $mail->ErrorInfo;
         }
-
         if ($sent !== "success") {
             $email_send_error = "I'm sorry, there was an error in sending your verification email. Please try again in a few minutes";
             include("Views/registration.php");
