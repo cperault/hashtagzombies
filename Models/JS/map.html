@@ -14,7 +14,6 @@ and open the template in the editor.
         border: 1px solid black;
       }
     </style>
-    <script src="bullet.js"></script>
   </head>
   <body onload="startGame()" class="zombies_body_gameplay_container">
     <script>
@@ -25,7 +24,6 @@ and open the template in the editor.
       var blockH = 32;
       var CWIDTH = 1200;
       var CHEIGHT = 800;
-      var rounds = [];
       //make map
       // comment below prevents formatting from messing up the 25x20 map matrix
       // prettier-ignore
@@ -237,37 +235,6 @@ and open the template in the editor.
           for (var b = 0; b < obstacles.length; b++){
               obstacles[b].update();
           }
-          if (gameArea.click){
-            shoot();
-          }
-          for (var v = 0; v < rounds.length; v++){
-            switch(rounds[v].dir){
-              case 87:
-                rounds[v].yPos -= 2;
-                ctx = gameArea.context;
-                ctx.fillStyle = "red";
-                ctx.fillRect(rounds[v].xPos, rounds[v].yPos, 3, 3);
-                break;
-              case 83:
-                rounds[v].yPos += 2;
-                ctx = gameArea.context;
-                ctx.fillStyle = "red";
-                ctx.fillRect(rounds[v].xPos, rounds[v].yPos, 3, 3);
-                break;
-              case 65:
-                rounds[v].xPos -= 2;
-                ctx = gameArea.context;
-                ctx.fillStyle = "red";
-                ctx.fillRect(rounds[v].xPos, rounds[v].yPos, 3, 3);
-                break;
-              case 68:
-                rounds[v].xPos += 2;
-                ctx = gameArea.context;
-                ctx.fillStyle = "red";
-                ctx.fillRect(rounds[v].xPos, rounds[v].yPos, 3, 3);
-                break;
-            }
-          }
           
           }
 
@@ -287,12 +254,6 @@ and open the template in the editor.
           window.addEventListener("keyup", function(e) {
             gameArea.key = false;
           });
-          window.addEventListener("mousedown", function(e) {
-            gameArea.click = true;
-          });
-          window.addEventListener("mouseup", function(e) {
-            gameArea.click = false;
-          });
         },
         clear: function() {
           this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
@@ -316,10 +277,6 @@ and open the template in the editor.
         playerSprite.speedY = 0;
         playerSprite.speedX = 0;
       }
-      function shoot() {
-        rounds.push(new Bullet(4,playerSprite.x, playerSprite.y, gameArea.key));
-        console.log(rounds.length);
-      }
     </script>
   </body>
 </html>
