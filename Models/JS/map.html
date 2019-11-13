@@ -26,6 +26,10 @@ and open the template in the editor.
       var CWIDTH = 1200;
       var CHEIGHT = 800;
       var rounds = [];
+      var dir;
+      var timer;
+      var weapons = ["gun", "melee"];
+      var cycle = 0;
       //make map
       // comment below prevents formatting from messing up the 25x20 map matrix
       // prettier-ignore
@@ -237,35 +241,62 @@ and open the template in the editor.
           for (var b = 0; b < obstacles.length; b++){
               obstacles[b].update();
           }
-          if (gameArea.click){
-            shoot();
-          }
           for (var v = 0; v < rounds.length; v++){
             switch(rounds[v].dir){
               case 87:
+                if(cycle === 0) {
                 rounds[v].yPos -= 2;
                 ctx = gameArea.context;
+                ctx.beginPath();
+                ctx.arc(rounds[v].xPos, rounds[v].yPos, 2, 0, 2 * Math.PI, false);
+                ctx.lineWidth = 3;
                 ctx.fillStyle = "red";
-                ctx.fillRect(rounds[v].xPos, rounds[v].yPos, 3, 3);
+                ctx.fill();
+                //ctx.fillRect(rounds[v].xPos, rounds[v].yPos, 3, 3);
+                } else if (cycle === 1) {
+                  rounds[v].yPos -= 2;
+                ctx = gameArea.context;
+                ctx.beginPath();
+                ctx.arc(rounds[v].xPos, rounds[v].yPos, 5, 0, 2 * Math.PI, false);
+                ctx.lineWidth = 3;
+                ctx.fillStyle = "red";
+                ctx.fill();
+                }
                 break;
               case 83:
                 rounds[v].yPos += 2;
                 ctx = gameArea.context;
+                ctx.beginPath();
+                ctx.arc(rounds[v].xPos, rounds[v].yPos, 2, 0, 2 * Math.PI, false);
+                ctx.lineWidth = 3;
                 ctx.fillStyle = "red";
-                ctx.fillRect(rounds[v].xPos, rounds[v].yPos, 3, 3);
+                ctx.fill();
                 break;
               case 65:
                 rounds[v].xPos -= 2;
-                ctx = gameArea.context;
+                ctx.beginPath();
+                ctx.arc(rounds[v].xPos, rounds[v].yPos, 2, 0, 2 * Math.PI, false);
+                ctx.lineWidth = 3;
                 ctx.fillStyle = "red";
-                ctx.fillRect(rounds[v].xPos, rounds[v].yPos, 3, 3);
+                ctx.fill();
                 break;
               case 68:
                 rounds[v].xPos += 2;
-                ctx = gameArea.context;
+                ctx.beginPath();
+                ctx.arc(rounds[v].xPos, rounds[v].yPos, 2, 0, 2 * Math.PI, false);
+                ctx.lineWidth = 3;
                 ctx.fillStyle = "red";
-                ctx.fillRect(rounds[v].xPos, rounds[v].yPos, 3, 3);
+                ctx.fill();
                 break;
+            }
+            if (rounds[v].collide(obstacles)){
+              rounds.shift();
+            }
+          }
+          if (gameArea.key && gameArea.key === 67) {
+            cycle++;
+            if(cycle >= weapons.length) {
+              cycle = 0;
             }
           }
           
@@ -288,10 +319,15 @@ and open the template in the editor.
             gameArea.key = false;
           });
           window.addEventListener("mousedown", function(e) {
+            timer = setInterval(function(){
+              rounds.push(new Bullet(4,playerSprite.x, playerSprite.y, dir, 3, 3));
+              console.log(rounds.length);
+            }, 500);
             gameArea.click = true;
           });
           window.addEventListener("mouseup", function(e) {
             gameArea.click = false;
+            clearInterval(timer);
           });
         },
         clear: function() {
@@ -302,24 +338,24 @@ and open the template in the editor.
       //player movement controls
       function moveUp() {
         playerSprite.speedY -= 1;
+        dir = 87;
       }
       function moveDown() {
         playerSprite.speedY += 1;
+        dir = 83;
       }
       function moveLeft() {
         playerSprite.speedX -= 1;
+        dir = 65;
       }
       function moveRight() {
         playerSprite.speedX += 1;
+        dir = 68;
       }
       function stopMove() {
         playerSprite.speedY = 0;
         playerSprite.speedX = 0;
       }
-      function shoot() {
-        rounds.push(new Bullet(4,playerSprite.x, playerSprite.y, gameArea.key));
-        console.log(rounds.length);
-      }
     </script>
   </body>
 </html>
