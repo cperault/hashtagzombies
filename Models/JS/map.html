@@ -9,11 +9,6 @@ and open the template in the editor.
     <title>TODO supply a title</title>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <style>
-      canvas {
-        border: 1px solid black;
-      }
-    </style>
     <script src="bullet.js"></script>
   </head>
   <body onload="startGame()" class="zombies_body_gameplay_container">
@@ -143,133 +138,117 @@ and open the template in the editor.
       }
 
       function updateGameArea() {
-          var collisionCheck = false;
-          var c = 0;
-          do {
-              collisionCheck = playerSprite.collide(obstacles[c]);
-              c++;
+        var collisionCheck = false;
+        var c = 0;
+        do {
+          collisionCheck = playerSprite.collide(obstacles[c]);
+          c++;
+        } while (collisionCheck === false && c < obstacles.length);
+        if (collisionCheck === "top" || playerSprite.y >= CHEIGHT - blockH) {
+          playerSprite.speedX = 0;
+          playerSprite.speedY = 0;
+          if (gameArea.key && (gameArea.key === 38 || gameArea.key === 87)) {
+            moveUp();
           }
-          while (collisionCheck === false && c < obstacles.length);
-          if (
-            collisionCheck === "top" ||
-            playerSprite.y >= CHEIGHT - blockH
-          ) {
-            
-            playerSprite.speedX = 0;
-            playerSprite.speedY = 0;
-            if (gameArea.key && (gameArea.key === 38 || gameArea.key === 87)) {
-              moveUp();
-            }
-            if (gameArea.key && (gameArea.key === 37 || gameArea.key === 65)) {
-              moveLeft();
-            }
-            if (gameArea.key && (gameArea.key === 39 || gameArea.key === 68)) {
-              moveRight();
-            }
-          } else if (
-            collisionCheck === "bottom" ||
-            playerSprite.y <= 0
-          ) {
-            
-            playerSprite.speedX = 0;
-            playerSprite.speedY = 0;
-            if (gameArea.key && (gameArea.key === 40 || gameArea.key === 83)) {
-              moveDown();
-            }
-            if (gameArea.key && (gameArea.key === 37 || gameArea.key === 65)) {
-              moveLeft();
-            }
-            if (gameArea.key && (gameArea.key === 39 || gameArea.key === 68)) {
-              moveRight();
-            }
-          } else if (
-            collisionCheck === "left" ||
-            playerSprite.x >= CWIDTH - blockW
-          ) {
-           
-            playerSprite.speedX = 0;
-            playerSprite.speedY = 0;
-            if (gameArea.key && (gameArea.key === 38 || gameArea.key === 87)) {
-              moveUp();
-            }
-            if (gameArea.key && (gameArea.key === 40 || gameArea.key === 83)) {
-              moveDown();
-            }
-            if (gameArea.key && (gameArea.key === 37 || gameArea.key === 65)) {
-              moveLeft();
-            }
-          } else if (
-            collisionCheck === "right" ||
-            playerSprite.x <= 0
-          ) {
-          
-            playerSprite.speedX = 0;
-            playerSprite.speedY = 0;
-            if (gameArea.key && (gameArea.key === 38 || gameArea.key === 87)) {
-              moveUp();
-            }
-            if (gameArea.key && (gameArea.key === 40 || gameArea.key === 83)) {
-              moveDown();
-            }
-            if (gameArea.key && (gameArea.key === 39 || gameArea.key === 68)) {
-              moveRight();
-            }
-          } else {
- 
-            playerSprite.speedX = 0;
-            playerSprite.speedY = 0;
-            if (gameArea.key && (gameArea.key === 38 || gameArea.key === 87)) {
-              moveUp();
-            }
-            if (gameArea.key && (gameArea.key === 40 || gameArea.key === 83)) {
-              moveDown();
-            }
-            if (gameArea.key && (gameArea.key === 37 || gameArea.key === 65)) {
-              moveLeft();
-            }
-            if (gameArea.key && (gameArea.key === 39 || gameArea.key === 68)) {
-              moveRight();
-            }
+          if (gameArea.key && (gameArea.key === 37 || gameArea.key === 65)) {
+            moveLeft();
           }
-          gameArea.clear();
-          playerSprite.newPos();
-          playerSprite.update();
-          for (var b = 0; b < obstacles.length; b++){
-              obstacles[b].update();
+          if (gameArea.key && (gameArea.key === 39 || gameArea.key === 68)) {
+            moveRight();
           }
-          if (gameArea.click){
-            shoot();
-          }
-          for (var v = 0; v < rounds.length; v++){
-            switch(rounds[v].dir){
-              case 87:
-                rounds[v].yPos -= 2;
-                ctx = gameArea.context;
-                ctx.fillStyle = "red";
-                ctx.fillRect(rounds[v].xPos, rounds[v].yPos, 3, 3);
-                break;
-              case 83:
-                rounds[v].yPos += 2;
-                ctx = gameArea.context;
-                ctx.fillStyle = "red";
-                ctx.fillRect(rounds[v].xPos, rounds[v].yPos, 3, 3);
-                break;
-              case 65:
-                rounds[v].xPos -= 2;
-                ctx = gameArea.context;
-                ctx.fillStyle = "red";
-                ctx.fillRect(rounds[v].xPos, rounds[v].yPos, 3, 3);
-                break;
-              case 68:
-                rounds[v].xPos += 2;
-                ctx = gameArea.context;
-                ctx.fillStyle = "red";
-                ctx.fillRect(rounds[v].xPos, rounds[v].yPos, 3, 3);
-                break;
-            }
+        } else if (collisionCheck === "bottom" || playerSprite.y <= 0) {
+          playerSprite.speedX = 0;
+          playerSprite.speedY = 0;
+          if (gameArea.key && (gameArea.key === 40 || gameArea.key === 83)) {
+            moveDown();
           }
-          
+          if (gameArea.key && (gameArea.key === 37 || gameArea.key === 65)) {
+            moveLeft();
           }
+          if (gameArea.key && (gameArea.key === 39 || gameArea.key === 68)) {
+            moveRight();
+          }
+        } else if (
+          collisionCheck === "left" ||
+          playerSprite.x >= CWIDTH - blockW
+        ) {
+          playerSprite.speedX = 0;
+          playerSprite.speedY = 0;
+          if (gameArea.key && (gameArea.key === 38 || gameArea.key === 87)) {
+            moveUp();
+          }
+          if (gameArea.key && (gameArea.key === 40 || gameArea.key === 83)) {
+            moveDown();
+          }
+          if (gameArea.key && (gameArea.key === 37 || gameArea.key === 65)) {
+            moveLeft();
+          }
+        } else if (collisionCheck === "right" || playerSprite.x <= 0) {
+          playerSprite.speedX = 0;
+          playerSprite.speedY = 0;
+          if (gameArea.key && (gameArea.key === 38 || gameArea.key === 87)) {
+            moveUp();
+          }
+          if (gameArea.key && (gameArea.key === 40 || gameArea.key === 83)) {
+            moveDown();
+          }
+          if (gameArea.key && (gameArea.key === 39 || gameArea.key === 68)) {
+            moveRight();
+          }
+        } else {
+          playerSprite.speedX = 0;
+          playerSprite.speedY = 0;
+          if (gameArea.key && (gameArea.key === 38 || gameArea.key === 87)) {
+            moveUp();
+          }
+          if (gameArea.key && (gameArea.key === 40 || gameArea.key === 83)) {
+            moveDown();
+          }
+          if (gameArea.key && (gameArea.key === 37 || gameArea.key === 65)) {
+            moveLeft();
+          }
+          if (gameArea.key && (gameArea.key === 39 || gameArea.key === 68)) {
+            moveRight();
+          }
+        }
+        gameArea.clear();
+        playerSprite.newPos();
+        playerSprite.update();
+        for (var b = 0; b < obstacles.length; b++) {
+          obstacles[b].update();
+        }
+        if (gameArea.click) {
+          shoot();
+        }
+        for (var v = 0; v < rounds.length; v++) {
+          switch (rounds[v].dir) {
+            case 87:
+              rounds[v].yPos -= 2;
+              ctx = gameArea.context;
+              ctx.fillStyle = "red";
+              ctx.fillRect(rounds[v].xPos, rounds[v].yPos, 3, 3);
+              break;
+            case 83:
+              rounds[v].yPos += 2;
+              ctx = gameArea.context;
+              ctx.fillStyle = "red";
+              ctx.fillRect(rounds[v].xPos, rounds[v].yPos, 3, 3);
+              break;
+            case 65:
+              rounds[v].xPos -= 2;
+              ctx = gameArea.context;
+              ctx.fillStyle = "red";
+              ctx.fillRect(rounds[v].xPos, rounds[v].yPos, 3, 3);
+              break;
+            case 68:
+              rounds[v].xPos += 2;
+              ctx = gameArea.context;
+              ctx.fillStyle = "red";
+              ctx.fillRect(rounds[v].xPos, rounds[v].yPos, 3, 3);
+              break;
+          }
+        }
+      }
 
       var gameArea = {
         canvas: document.createElement("canvas"),
@@ -287,12 +266,12 @@ and open the template in the editor.
           window.addEventListener("keyup", function(e) {
             gameArea.key = false;
           });
-          window.addEventListener("mousedown", function(e) {
-            gameArea.click = true;
-          });
-          window.addEventListener("mouseup", function(e) {
-            gameArea.click = false;
-          });
+          window.addEventListener("mousedown", function(e) {
+            gameArea.click = true;
+          });
+          window.addEventListener("mouseup", function(e) {
+            gameArea.click = false;
+          });
         },
         clear: function() {
           this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
@@ -316,10 +295,12 @@ and open the template in the editor.
         playerSprite.speedY = 0;
         playerSprite.speedX = 0;
       }
-      function shoot() {
-        rounds.push(new Bullet(4,playerSprite.x, playerSprite.y, gameArea.key));
-        console.log(rounds.length);
-      }
+      function shoot() {
+        rounds.push(
+          new Bullet(4, playerSprite.x, playerSprite.y, gameArea.key)
+        );
+        console.log(rounds.length);
+      }
     </script>
   </body>
 </html>
