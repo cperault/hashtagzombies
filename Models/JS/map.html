@@ -14,6 +14,7 @@ and open the template in the editor.
         border: 1px solid black;
       }
     </style>
+    <script src="Models/JS/bullet.js"></script>
   </head>
   <body onload="startGame()" class="zombies_body_gameplay_container">
     <script>
@@ -27,6 +28,12 @@ and open the template in the editor.
       var blockH = 32;
       var CWIDTH = 1200;
       var CHEIGHT = 800;
+      var rounds = [];
+      var dir;
+      var timer;
+      var weapons = ["gun", "melee"];
+      var cycle = 0;
+      var zombHit = 3;
       //make map
       // comment below prevents formatting from messing up the 25x20 map matrix
       // prettier-ignore
@@ -58,6 +65,9 @@ and open the template in the editor.
         var playerSpriteImage = new Image();
         playerSpriteImage.src = "Media/Sprites/KevinHumanman.png";
         playerSprite = new component(playerSpriteImage, 32, 65, 32, 32, 32, 32, 32, 32);
+        var zombSpriteImage = new Image();
+        zombSpriteImage.src = "Media/Sprites/ZombieSprite1.png";
+        zombSprite = new component(zombSpriteImage, 32, 65, 32, 32, 150, 32, 32, 32);
         var floorTileImage = new Image();
         floorTileImage.src = "Media/Sprites/FloorTile1.bmp";
         var wallTileImage = new Image();
@@ -68,7 +78,7 @@ and open the template in the editor.
           for (var x = 0; x <= 24; x++, mapIndex++) {
             var tile_x = x * blockW;
             var tile_y = y * blockH;
-            
+
             var tileType = map[mapIndex];
             if (tileType === 1) {
               obstacles.push(
@@ -152,7 +162,6 @@ and open the template in the editor.
         };
       }
       function updateGameArea() {
-         
         if (gameArea.key){
         if(gameArea.frameNo < 24){
             gameArea.frameNo += 1;
@@ -165,6 +174,14 @@ and open the template in the editor.
           }
           else {
             playerSprite.sy = 0;
+          }
+          if ((gameArea.frameNo >=0 && gameArea.frameNo <= 6) || (gameArea.frameNo >=13 && gameArea.frameNo <= 18)){
+            zombSprite.sy = 64;}
+          else if(gameArea.frameNo >= 7 && gameArea.frameNo <= 12){
+            zombSprite.sy = 32;
+          }
+          else {
+            zombSprite.sy = 0;
           }
          }
          else {
@@ -219,6 +236,79 @@ and open the template in the editor.
           }
           playerSprite.newPos();
           playerSprite.update();
+          zombSprite.update();
+
+          for (var v = 0; v < rounds.length; v++){
+            switch(rounds[v].dir){
+              case 87:
+                rounds[v].yPos -= 2;
+                ctx = gameArea.context;
+                ctx.beginPath();
+                ctx.arc(rounds[v].xPos, rounds[v].yPos, 2, 0, 2 * Math.PI, false);
+                ctx.lineWidth = 3;
+                ctx.fillStyle = "red";
+                ctx.fill();
+                break;
+              case 83:
+                rounds[v].yPos += 2;
+                ctx = gameArea.context;
+                ctx.beginPath();
+                ctx.arc(rounds[v].xPos, rounds[v].yPos, 2, 0, 2 * Math.PI, false);
+                ctx.lineWidth = 3;
+                ctx.fillStyle = "red";
+                ctx.fill();
+                break;
+              case 65:
+                rounds[v].xPos -= 2;
+                ctx = gameArea.context;
+                ctx.beginPath();
+                ctx.arc(rounds[v].xPos, rounds[v].yPos, 2, 0, 2 * Math.PI, false);
+                ctx.lineWidth = 3;
+                ctx.fillStyle = "red";
+                ctx.fill();
+                break;
+              case 68:
+                rounds[v].xPos += 2;
+                ctx = gameArea.context;
+                ctx.beginPath();
+                ctx.arc(rounds[v].xPos, rounds[v].yPos, 2, 0, 2 * Math.PI, false);
+                ctx.lineWidth = 3;
+                ctx.fillStyle = "red";
+                ctx.fill();
+                break;
+            }
+            if (rounds[v].collide(obstacles)){
+              rounds.splice(v, 1);
+            }
+            if (rounds[v].xPos >= zombSprite.x && rounds[v].xPos <= (zombSprite.x + zombSprite.width) && rounds[v].yPos >= zombSprite.y && rounds[v].yPos <= (zombSprite.y + zombSprite.width)){
+              rounds.splice(v, 1);
+              zombHit--;
+              if(zombHit === 0){
+                
+              }
+            }
+          }
+          //Zombie movement
+          //move left
+          if(zombSprite.x > playerSprite.x){
+            zombSprite.x -= .5;
+            zombSprite.sx = 96;
+          }
+          //move right
+          if(zombSprite.x < playerSprite.x){
+            zombSprite.x += .5;
+            zombSprite.sx = 64;
+          }
+          //move up
+          if(zombSprite.y > playerSprite.y){
+            zombSprite.y -= .5;
+            zombSprite.sx = 0;
+          }
+          //move down
+          if(zombSprite.y < playerSprite.y){
+            zombSprite.y += .5;
+            zombSprite.sx = 32;
+          }
           }
       var gameArea = {
         canvas: document.createElement("canvas"),
@@ -229,13 +319,24 @@ and open the template in the editor.
           document.body.insertBefore(this.canvas, document.body.childNodes[0]);
           this.frameNo = 0;
           //FRAMERATE
-          this.interval = setInterval(updateGameArea, 40);
+          this.interval = setInterval(updateGameArea, 20);
           window.addEventListener("keydown", function(e) {
             gameArea.key = e.keyCode;
           });
           window.addEventListener("keyup", function(e) {
             gameArea.key = false;
           });
+          window.addEventListener("mousedown", function(e) {
+            timer = setInterval(function() {
+              rounds.push(new Bullet(4, playerSprite.x + 16, playerSprite.y + 16, dir, 3, 3));
+              console.log(rounds.length);
+            }, 500);
+            gameArea.click = true;
+          })
+          window.addEventListener("mouseup", function(e){
+            gameArea.click = false;
+            clearInterval(timer);
+          })
         },
         clear: function() {
           this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
@@ -245,19 +346,22 @@ and open the template in the editor.
       function moveUp() {
         playerSprite.speedY -= 1;
         playerSprite.sx = 0;
-   
+        dir = 87;
       }
       function moveDown() {
         playerSprite.speedY += 1;
         playerSprite.sx = 32;
+        dir = 83;
       }
       function moveLeft() {
         playerSprite.speedX -= 1;
         playerSprite.sx = 96;
+        dir = 65;
       }
       function moveRight() {
         playerSprite.speedX += 1;
         playerSprite.sx = 64;
+        dir = 68;
       }
       function stopMove() {
         playerSprite.speedY = 0;
