@@ -109,3 +109,86 @@ canvas {
 .div_code_resend {
   text-align: center;
 }
+
+.game_outer_interface_div_left {
+  border: solid red 3px;
+  border-radius: 15px;
+  margin-top: 15px;
+}
+
+.character_creation_container_div {
+  border: solid red 3px;
+  border-radius: 15px;
+  margin: 0 auto;
+  display: flex;
+  height: 450px;
+  align-items: center;
+  text-align: center;
+  padding: 20px;
+  max-width: 900px;
+  background-image: url("Media/spooky_mall.png");
+  color: white;
+}
+.character_creation_details_div,
+.character_creation_preview_div {
+  /* border: solid black 3px;
+  border-radius: 15px; */
+  margin: 0 auto;
+}
+
+.character_creation_details_div {
+  padding: 20px;
+  margin-bottom: 10px;
+}
+.character_creation_details_div input {
+  margin: 5px;
+}
+
+.scrollable_avatar_selector {
+  /* border: solid 3px black;
+  border-radius: 15px; */
+  display: grid;
+  column-gap: 10px;
+  grid-template-columns: auto auto auto;
+  padding: 10px;
+  margin-bottom: 20px;
+}
+
+.scrollable_avatar_selector img,
+.character_preview_display_div img {
+  border-radius: 15px;
+  height: 100px;
+  width: 100px;
+}
+
+.avatar_item {
+  border: 2px solid white;
+  border-radius: 15px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+/* this will be a separate div inside the preview div where the character details are displayed*/
+.character_preview_display_div {
+  /* border: solid black 3px;
+  border-radius: 15px; */
+  padding: 10px;
+  margin: 10px;
+}
+.character_preview_display_div label {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+@media only screen and (max-width: 880px) {
+  .character_creation_container_div {
+    display: flex;
+    padding: 0;
+    flex-direction: column-reverse;
+    height: 650px;
+  }
+  .character_creation_preview_div {
+    margin-bottom: 10px;
+  }
+}

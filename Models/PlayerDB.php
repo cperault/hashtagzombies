@@ -56,18 +56,19 @@ class PlayerDB
     public static function get_player_object($player_id)
     {
         $db = Database::getDB();
-        $query = 'SELECT playerUsername, playerFirstName, playerLastName, playerEmailAddress, playerPassword
+        $query = 'SELECT playerUsername, playerFirstName, playerLastName, playerEmailAddress
                   FROM Players WHERE playerID = :player_id';
         $statement = $db->prepare($query);
-        $statement->bindValue('player_id', $player_id);
+        $statement->bindValue(':player_id', $player_id);
         $statement->execute();
-        $player = [];
+        $player = $statement->fetchAll();
+        $playerArray = [];
 
         foreach ($player as $p) {
-            $player[] = new Player($p['playerID'], $p['playerUsername'], $p['playerFirstName'], $p['playerLastName'], $p['playerEmailAddress'], $p['playerPassword']);
+            $playerArray[] = new Players($p['playerID'], $p['playerUsername'], $p['playerFirstName'], $p['playerLastName'], $p['playerEmailAddress']);
         }
         $statement->closeCursor();
-        return $player;
+        return $playerArray;
     }
 
     //query to check if the email being used to register is already being used
@@ -150,5 +151,23 @@ class PlayerDB
         $player_email_address = $statement->fetch();
         $statement->closeCursor();
         return $player_email_address['playerEmailAddress'];
+    }
+
+    //query to check if the user has a character created
+    public static function has_character($player_id)
+    {
+        $db = Database::getDB();
+        $query = 'SELECT playerUsername FROM Players WHERE hasCharacter = 1';
+        $statement = $db->prepare($query);
+        $statement->bindValue(':player_id', $player_id);
+        $statement->execute();
+
+        $character_created = false;
+        //check if record found, return true or false
+        if ($statement->rowCount() >= 1) {
+            $character_created = true;
+        }
+        $statement->closeCursor();
+        return $character_created;
     }
 }

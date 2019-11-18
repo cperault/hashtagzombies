@@ -17,19 +17,10 @@ require_once('vendor/autoload.php');
 require_once("Views/styling.php");
 //load the files from Models
 require_once('Models/Database.php');
-require_once('Models/PlayerDB.php');
 require_once('Models/Players.php');
+require_once('Models/PlayerDB.php');
 require_once('Models/Validation.php');
 require_once('Models/Confirmation.php');
-
-//get the value of the POST or GET data from form actions
-$action = filter_input(INPUT_POST, 'action');
-if ($action === NULL) {
-    $action = filter_input(INPUT_GET, 'action');
-    if ($action === NULL) {
-        $action = 'login';
-    }
-}
 
 //instantiate PHPMailer object
 //$mail = new PHPMailer(true); //true enables exception handling
@@ -44,6 +35,14 @@ if ($action === NULL) {
 //$mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;         // Enable TLS encryption; `PHPMailer::ENCRYPTION_SMTPS` also accepted
 //$mail->Port       = 587;
 
+//get the value of the POST or GET data from form actions
+$action = filter_input(INPUT_POST, 'action');
+if ($action === NULL) {
+    $action = filter_input(INPUT_GET, 'action');
+    if ($action === NULL) {
+        $action = 'login';
+    }
+}
 //decide what to do based on the action(s) received from gameplay/forms
 switch ($action) {
     case 'login':
@@ -97,7 +96,18 @@ switch ($action) {
                         //get the player ID
                         $player_id = PlayerDB::get_player_id($username);
                         $_SESSION["current_player"] = $player_id;
-                        $player = PlayerDB::get_player_object($player_id);
+                        $player = PlayerDB::get_player_object($player_id)[0];
+                        //store player object in session
+                        $_SESSION["logged_in_player"] = $player;
+                        //check to see if user has created a character yet
+                        $has_character = PlayerDB::has_character($player_id);
+                        if ($has_character) {
+                            $character = CharacterDB::get_character_object($player_id)[0];
+                        }
+                        $left_panel_headers = ["Welcome, " . $player->username . ".", "Character Name: " . $has_character == false ? $character->name : "You haven't created a character yet." . "<form action='.' method='POST'><input type='submit' value='Create character'/><input type='hidden' name='action' value='create_character'/></form>", "Zombies killed: ", "Inventory", "Health"];
+                        $_SESSION["panel_headers"] = $left_panel_headers;
+                        //TODO: dummy user with five items, health bar, username; login and show on
+                        //TODO: interface for user information/stats (profile, username, character name, inventory, health, etc.)
                         include('Views/game.php');
                     }
                 }
@@ -131,11 +141,6 @@ switch ($action) {
             include('Views/registration.php');
             die();
         }
-
-
-        //TODO: dummy user with five items, health bar, username; login and show on
-        //TODO: interface for user information/stats (profile, username, character name, inventory, health, etc.)
-
 
         //create associative array for all input
         $input_array = array('Username' => $username, 'First Name' => $first_name, 'Last Name' => $last_name, 'Email Address' => $email_address, 'Password' => $password);
@@ -246,6 +251,18 @@ switch ($action) {
             die();
         }
         break;
+    case 'create_character':
+        include("Views/character_create.php");
+        die();
+        exit();
+    case 'save_preview':
+        //get the avatar and name chosen
+        $avatar_chosen = "2";
+        $name_chosen = htmlspecialchars(trim(filter_input(INPUT_POST, 'character_name')));
+        //go back to the character creation view to display a preview
+        include("Views/character_create.php");
+        die();
+        exit();
     case 'logout';
         session_destroy();
         include("Views/login.php");

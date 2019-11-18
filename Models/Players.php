@@ -8,16 +8,15 @@
 \******************************************************************************************************************/
 class Players
 {
-    private $player_id, $username, $first_name, $last_name, $email_address, $password;
+    public $player_id, $username, $first_name, $last_name, $email_address;
 
-    function __construct($player_id, $username, $first_name, $last_name, $email_address, $password)
+    function __construct($player_id, $username, $first_name, $last_name, $email_address)
     {
         $this->player_id = $player_id;
         $this->username = $username;
         $this->first_name = $first_name;
         $this->last_name = $last_name;
         $this->email_address = $email_address;
-        $this->password = $password;
     }
     function getPlayerID()
     {
@@ -39,10 +38,6 @@ class Players
     {
         return $this->email_address;
     }
-    function getPassword()
-    {
-        return $this->password;
-    }
     function setUserID($player_id)
     {
         $this->player_id = $player_id;
@@ -62,9 +57,5 @@ class Players
     function setEmailAddress($email_address)
     {
         $this->email_address = $email_address;
-    }
-    function setPassword($password)
-    {
-        $this->password = $password;
     }
 }
