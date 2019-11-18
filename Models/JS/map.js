@@ -1,11 +1,17 @@
-var spawnrate = 3;
-            var playerSprite;
-            var obstacles = [];
-            var enemies = [];
-            var blockW = 32;
-            var blockH = 32;
-             //make map
-              var map = [
+ var playerSprite;
+      var wallTile;
+      var floorTile;
+      var floor = [];
+      var obstacles = [];
+      var enemies = [];
+      var blockW = 32;
+      var blockH = 32;
+      var CWIDTH = 1200;
+      var CHEIGHT = 800;
+      //make map
+      // comment below prevents formatting from messing up the 25x20 map matrix
+      // prettier-ignore
+      var map = [
               0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
               0,0,0,1,0,0,0,0,0,1,1,1,1,1,1,1,0,0,0,0,0,0,0,1,0,
               0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,
@@ -27,188 +33,242 @@ var spawnrate = 3;
               0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,4,0,0,0,0,0,0,
               0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
               ];
-              
-              
-            function startGame(){
-                gameArea.start();
-                 //player
-                playerSprite = new component(16, 16, "blue", 32, 32);
-                //map elements
-                var mapIndex = 0;
-                for (var y = 0; y <= 19; y++){
-                    for (var x = 0; x <=24; x++, mapIndex++){
-                        
-                        var tile_x = x * blockW;
-                        var tile_y = y * blockH;
-                        
-                        var tileType = map[mapIndex];
-                         if (tileType === 1){
-                            obstacles.push(new component(blockW, blockH, "black", tile_x, tile_y));
-                        }
-                        else if(tileType === 2){
-                            obstacles.push(new component(blockW/2, blockH/2, "green", tile_x, tile_y));
-                        }
-                        else if(tileType === 3){
-                            obstacles.push(new component(blockW/2, blockH/2, "pink", tile_x, tile_y));
-                        }
-                        else if (tileType === 4) {
-                            obstacles.push(new component(blockW/2, blockH/2, "yellow", tile_x, tile_y));
-                        }
-                    }
-                }
-            }  
-            
-             //COMPONENTS
-            //sprites
-            function component(width, height, color, x, y) {
-                this.width = width;
-                this.height = height;
-                this.x = x;
-                this.y = y;
-                this.speedX = 0;
-                this.speedY = 0;
-                this.update=function(){
-                    ctx = gameArea.context;
-                    ctx.fillStyle = color;
-                    ctx.fillRect(this.x, this.y, this.width, this.height);
-                };
-                this.newPos = function(){
-                    this.x += this.speedX;
-                    this.y += this.speedY;
-                };
-                this.collide= function(otherobj){
-                    var myleft = this.x;
-                    var myright = this.x + (this.width);
-                    var mytop = this.y;
-                    var mybottom = this.y + (this.height);
-                    var otherleft = otherobj.x;
-                    var otherright = otherobj.x + (otherobj.width);
-                    var othertop = otherobj.y;
-                    var otherbottom = otherobj.y + (otherobj.height);
-                    var crash = false;
-                    
-                    if (myleft === otherright && (mytop <= otherbottom && mybottom >= othertop)){
-                        crash = "right";
-                    }
-                    if (myright === otherleft && (mytop <= otherbottom && mybottom >= othertop)){
-                        crash = "left";
-                    }
-                    if (mytop === otherbottom && (myright >= otherleft && myleft <= otherright)){
-                        crash = "bottom";
-                    }
-                    if (mybottom === othertop && (myright >= otherleft && myleft <= otherright)){
-                        crash = "top";
-                    }
-                    
-                    return crash;
-                  }
-                } 
-                
-             
-            
-              function updateGameArea(){
-                   for (i = 0; i < obstacles.length; i++){
-                        if (playerSprite.collide(obstacles[i]) === "top"){
-                          gameArea.clear();
-                          playerSprite.speedX = 0;
-                          playerSprite.speedY = 0;
-                          if (gameArea.key && (gameArea.key === 38 || gameArea.key === 87)){ moveUp();}
-                          if(gameArea.key && (gameArea.key === 37 || gameArea.key === 65)){ moveLeft();}
-                          if(gameArea.key && (gameArea.key === 39 || gameArea.key === 68)) { moveRight();}
-                          
-//                              for (i = 0; i < enemies.length; i++){
-//                                 enemies[i].update();
-//                             }
-                        }
-                        else if (playerSprite.collide(obstacles[i]) === "bottom"){
-                          gameArea.clear();
-                          playerSprite.speedX = 0;
-                          playerSprite.speedY = 0;
-                          if(gameArea.key && (gameArea.key === 40 || gameArea.key === 83)){ moveDown();}
-                          if(gameArea.key && (gameArea.key === 37 || gameArea.key === 65)){ moveLeft();}
-                          if(gameArea.key && (gameArea.key === 39 || gameArea.key === 68)) { moveRight();}
-                          
-                        }
-                        else if (playerSprite.collide(obstacles[i]) === "left"){
-                          gameArea.clear();
-                          playerSprite.speedX = 0;
-                          playerSprite.speedY = 0;
-                          if (gameArea.key && (gameArea.key === 38 || gameArea.key === 87)){ moveUp();}
-                          if(gameArea.key && (gameArea.key === 40 || gameArea.key === 83)){ moveDown();}
-                          if(gameArea.key && (gameArea.key === 37 || gameArea.key === 65)){ moveLeft();}
-                      }
-                          
-                        else if(playerSprite.collide(obstacles[i]) === "right"){
-                          gameArea.clear();
-                          playerSprite.speedX = 0;
-                          playerSprite.speedY = 0;
-                          if(gameArea.key && (gameArea.key === 38 || gameArea.key === 87)){ moveUp();}
-                          if(gameArea.key && (gameArea.key === 40 || gameArea.key === 83)){ moveDown();}
-                          if(gameArea.key && (gameArea.key === 39 || gameArea.key === 68)) { moveRight();}
-                          
-                        }
-                      else {
-                      gameArea.clear();
-                      playerSprite.speedX = 0;
-                      playerSprite.speedY = 0;
-                      if(gameArea.key && (gameArea.key === 38 || gameArea.key === 87)){ moveUp();}
-                      if(gameArea.key && (gameArea.key === 40 || gameArea.key === 83)){ moveDown();}
-                      if(gameArea.key && (gameArea.key === 37 || gameArea.key === 65)){ moveLeft();}
-                      if(gameArea.key && (gameArea.key === 39 || gameArea.key === 68)) {moveRight();}  
-                      }
-                       
-                       playerSprite.newPos();
-                       playerSprite.update();
-                       for (i = 0; i <obstacles.length; i++){
-                              obstacles[i].update();
-                             }
-                      }
-                   
+      function startGame() {
+        gameArea.start();
+        //player
+        var playerSpriteImage = new Image();
+        playerSpriteImage.src = "Media/Sprites/KevinHumanman.png";
+        playerSprite = new component(playerSpriteImage, 32, 65, 32, 32, 32, 32, 32, 32, "player");
+        var floorTileImage = new Image();
+        floorTileImage.src = "Media/Sprites/FloorTile1.bmp";
+        var wallTileImage = new Image();
+        wallTileImage.src = "Media/Sprites/WallTile1.bmp";
+        //map elements
+        var mapIndex = 0;
+        for (var y = 0; y <= 19; y++) {
+          for (var x = 0; x <= 24; x++, mapIndex++) {
+            var tile_x = x * blockW;
+            var tile_y = y * blockH;
+
+            var tileType = map[mapIndex];
+            if (tileType === 1) {
+              obstacles.push(
+                new component(wallTileImage, 0, 0, 32, 32, tile_x, tile_y, 32, 32, "wall")
+              );
+              } else if (tileType === 0){
+                  var r = rand(0, 99);
+              }
+//            } else if (tileType === 2) {
+//              obstacles.push(
+//                new component(wallTileImage, 0, 0, 32, 32, tile_x, tile_y, 32, 32, "food")
+//              );
+//            } else if (tileType === 3) {
+//              obstacles.push(
+//                new component(wallTileImage, 0, 0, 32, 32, tile_x, tile_y, 32, 32, "medicine")
+//              );
+//            } else if (tileType === 4) {
+//              obstacles.push(
+//                new component(wallTileImage, 0, 0, 32, 32, tile_x, tile_y, 32, 32, "weapon")
+//              );
+//            } else if (tileType === 0){
+//                floor.push(
+//                new component(floorTileImage, 0, 0, 32, 32, tile_x, tile_y, 32, 32, "tile")
+//                );
+//            }
+          }
+        }
+      }
+
+      //COMPONENTS
+      //sprites
+      function component(img, sx, sy, sWidth, sHeight, x, y, width, height, category) {
+        this.width = width;
+        this.height = height;
+        this.x = x;
+        this.y = y;
+        this.speedX = 0;
+        this.speedY = 0;
+        this.sx = sx;
+        this.sy = sy;
+        this.img = img;
+        this.sWidth = sWidth;
+        this.sHeight = sHeight;
+        this.category = category;
+        this.update = function() {
+          ctx = gameArea.context;
+          ctx.drawImage(img, this.sx, this.sy, sWidth, sHeight, this.x, this.y, width, height);
+        };
+        this.newPos = function() {
+          this.x += this.speedX;
+          this.y += this.speedY;
+        };
+        this.collide = function(otherobj) {
+          var myleft = this.x;
+          var myright = this.x + this.width;
+          var mytop = this.y;
+          var mybottom = this.y + this.height;
+          var otherleft = otherobj.x;
+          var otherright = otherobj.x + otherobj.width;
+          var othertop = otherobj.y;
+          var otherbottom = otherobj.y + otherobj.height;
+          var crash = false;
+
+          if (
+            myleft === otherright &&
+            (mytop <= otherbottom && mybottom >= othertop)
+          ) {
+            crash = "right";
+          }
+          if (
+            myright === otherleft &&
+            (mytop <= otherbottom && mybottom >= othertop)
+          ) {
+            crash = "left";
+          }
+          if (
+            mytop === otherbottom &&
+            (myright >= otherleft && myleft <= otherright)
+          ) {
+            crash = "bottom";
+          }
+          if (
+            mybottom === othertop &&
+            (myright >= otherleft && myleft <= otherright)
+          ) {
+            crash = "top";
+          }
+          return crash;
+        };
+      }
+
+      function updateGameArea() {
+         
+        if (gameArea.key){
+        if(gameArea.frameNo < 24){
+            gameArea.frameNo += 1;
+          } else (gameArea.frameNo = 0);
+        
+          if ((gameArea.frameNo >=0 && gameArea.frameNo <= 6) || (gameArea.frameNo >=13 && gameArea.frameNo <= 18)){
+            playerSprite.sy = 64;}
+          else if(gameArea.frameNo >= 7 && gameArea.frameNo <= 12){
+            playerSprite.sy = 32;
+          }
+          else {
+            playerSprite.sy = 0;
+          }
+         }
+         else {
+             playerSprite.sy = 64;
+         }
+          playerSprite.speedX = 0;
+          playerSprite.speedY = 0;
+          moveKeys();
+          var collisionCheck = false;
+          var c = 0;
+          do {
+              collisionCheck = playerSprite.collide(obstacles[c]);
+              c++;
+          }
+          while (collisionCheck === false && c < obstacles.length);
+          if (
+            collisionCheck === "top" ||
+            playerSprite.y >= CHEIGHT - blockH
+          ) {
+            if (gameArea.key && (gameArea.key === 40 || gameArea.key === 83)) {
+              stopMove();
             }
-            
-            var WIDTH=1200;
-            var HEIGHT=800;
-            var gameArea = {
-                canvas : document.createElement("canvas"),
-                start : function (){
-                    this.canvas.width = WIDTH;
-                    this.canvas.height = HEIGHT;
-                    this.context = this.canvas.getContext("2d");
-                    document.body.insertBefore(this.canvas, document.body.childNodes[0]);
-                    this.frameNo = 0;
-                    //FRAMERATE
-                    this.interval = setInterval(updateGameArea, 40);
-                    window.addEventListener('keydown', function (e) {
-                        gameArea.key = e.keyCode;
-                    });
-                    window.addEventListener('keyup', function(e){
-                        gameArea.key = false;
-                    });
-                },
-                clear: function() {
-                    this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-                }
-            };
- 
-            //player movement controls
-                function moveUp(){
-                    playerSprite.speedY -= 1;
-                }
-                function moveDown(){
-                    playerSprite.speedY += 1;
-                }
-                function moveLeft(){
-                    playerSprite.speedX -= 1;
-                }
-                function moveRight() {
-                    playerSprite.speedX += 1;
-                }
-                function stopMove(){
-                    playerSprite.speedY = 0;
-                    playerSprite.speedX = 0;
-                }
-                
-            
-           
-            
-            
+          }if (
+            collisionCheck === "bottom" ||
+            playerSprite.y <= 0
+          ) {
+             if (gameArea.key && (gameArea.key === 38 || gameArea.key === 87)) {
+              stopMove();
+            }
+          }if (
+            collisionCheck === "left" ||
+            playerSprite.x >= CWIDTH - blockW
+          ) {
+            if (gameArea.key && (gameArea.key === 39 || gameArea.key === 68)) {
+              stopMove();
+            }
+          }if (
+            collisionCheck === "right" ||
+            playerSprite.x <= 0
+          ) {
+            if (gameArea.key && (gameArea.key === 37 || gameArea.key === 65)) {
+              stopMove();
+            }
+          } 
+          gameArea.clear();
+          for (var f = 0; f < floor.length; f++){
+              floor[f].update();
+          }
+          for (var b = 0; b < obstacles.length; b++){
+              obstacles[b].update();
+          }
+          playerSprite.newPos();
+          playerSprite.update();
+          }
+
+      var gameArea = {
+        canvas: document.createElement("canvas"),
+        start: function() {
+          this.canvas.width = CWIDTH;
+          this.canvas.height = CHEIGHT;
+          this.context = this.canvas.getContext("2d");
+          var screen = document.getElementByID("gameScreen");
+          screen.insertBefore(this.canvas, screen.childNodes[0]);
+          this.frameNo = 0;
+          //FRAMERATE
+          this.interval = setInterval(updateGameArea, 20);
+          window.addEventListener("keydown", function(e) {
+            gameArea.key = e.keyCode;
+          });
+          window.addEventListener("keyup", function(e) {
+            gameArea.key = false;
+          });
+        },
+        clear: function() {
+          this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        }
+      };
+
+      //player movement controls
+      function moveUp() {
+        playerSprite.speedY -= 1;
+        playerSprite.sx = 0;
+      }
+      function moveDown() {
+        playerSprite.speedY += 1;
+        playerSprite.sx = 32;
+      }
+      function moveLeft() {
+        playerSprite.speedX -= 1;
+        playerSprite.sx = 96;
+      }
+      function moveRight() {
+        playerSprite.speedX += 1;
+        playerSprite.sx = 64;
+      }
+      function stopMove() {
+        playerSprite.speedY = 0;
+        playerSprite.speedX = 0;
+      }
+      
+      function moveKeys(){
+           if (gameArea.key && (gameArea.key === 38 || gameArea.key === 87)) {
+              moveUp();
+            }
+            if (gameArea.key && (gameArea.key === 40 || gameArea.key === 83)) {
+              moveDown();
+            }
+            if (gameArea.key && (gameArea.key === 37 || gameArea.key === 65)) {
+              moveLeft();
+            }
+            if (gameArea.key && (gameArea.key === 39 || gameArea.key === 68)) {
+              moveRight();
+            }
+            if(!gameArea.key){
+                stopMove();
+            }
+      }
