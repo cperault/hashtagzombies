@@ -1,4 +1,5 @@
- var playerSprite;
+
+      var playerSprite;
       var wallTile;
       var floorTile;
       var floor = [];
@@ -15,7 +16,7 @@
               0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
               0,0,0,1,0,0,0,0,0,1,1,1,1,1,1,1,0,0,0,0,0,0,0,1,0,
               0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,
-              0,0,0,1,0,0,0,1,2,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,
+              0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,
               0,0,0,1,0,0,0,1,0,0,0,0,0,1,1,1,1,1,1,1,1,0,0,1,0,
               0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,
               0,1,0,0,0,0,0,1,0,0,1,1,1,1,1,1,1,0,0,0,1,0,0,1,0,
@@ -23,14 +24,14 @@
               0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,
               0,1,0,0,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,1,0,
               0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,
-              0,0,0,0,1,0,0,0,3,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,
+              0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,
               0,0,0,0,1,0,0,0,1,1,1,0,0,0,1,0,0,0,0,1,0,0,1,0,0,
               0,0,0,0,1,0,1,0,1,0,0,0,0,0,0,0,0,0,1,1,0,0,1,0,0,
               0,0,1,0,1,0,1,0,1,0,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,
               0,0,1,0,1,0,1,0,1,0,0,0,0,1,1,1,1,0,0,0,1,0,1,0,0,
               0,0,1,0,1,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,1,0,1,0,0,
               0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,
-              0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,4,0,0,0,0,0,0,
+              0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
               0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
               ];
       function startGame() {
@@ -43,42 +44,38 @@
         floorTileImage.src = "Media/Sprites/FloorTile1.bmp";
         var wallTileImage = new Image();
         wallTileImage.src = "Media/Sprites/WallTile1.bmp";
+        var foodSpriteImage = new Image();
+        foodSpriteImage.src = "Media/Sprites/borger.png";
+        var medSpriteImage = new Image();
+        medSpriteImage.src = "Media/Sprites/meds.png";
         //map elements
         var mapIndex = 0;
         for (var y = 0; y <= 19; y++) {
           for (var x = 0; x <= 24; x++, mapIndex++) {
             var tile_x = x * blockW;
             var tile_y = y * blockH;
-
             var tileType = map[mapIndex];
             if (tileType === 1) {
               obstacles.push(
-                new component(wallTileImage, 0, 0, 32, 32, tile_x, tile_y, 32, 32, "wall")
+                new component(wallTileImage, 0, 0, 32, 32, tile_x, tile_y, 32, 32, "tile")
               );
-              } else if (tileType === 0){
-                  var r = rand(0, 99);
-              }
-//            } else if (tileType === 2) {
-//              obstacles.push(
-//                new component(wallTileImage, 0, 0, 32, 32, tile_x, tile_y, 32, 32, "food")
-//              );
-//            } else if (tileType === 3) {
-//              obstacles.push(
-//                new component(wallTileImage, 0, 0, 32, 32, tile_x, tile_y, 32, 32, "medicine")
-//              );
-//            } else if (tileType === 4) {
-//              obstacles.push(
-//                new component(wallTileImage, 0, 0, 32, 32, tile_x, tile_y, 32, 32, "weapon")
-//              );
-//            } else if (tileType === 0){
-//                floor.push(
-//                new component(floorTileImage, 0, 0, 32, 32, tile_x, tile_y, 32, 32, "tile")
-//                );
-//            }
+            } else if (tileType === 0) {
+                floor.push(
+                new component(floorTileImage, 0, 0, 32, 32, tile_x, tile_y, 32, 32, "tile")
+                );
+                var r = Math.random() * 100;
+                if(r >= 98){
+                    obstacles.push(
+                            new component(medSpriteImage, 0, 0, 32, 32, tile_x + 8, tile_y + 8, 16, 16, "med"));
+                } else if (r > 0 && r < 3){
+                    obstacles.push(
+                            new component(foodSpriteImage, 0, 0, 32, 32, tile_x + 8, tile_y + 8, 16, 16, "food"));
+                }
+            }    
+//              
           }
         }
       }
-
       //COMPONENTS
       //sprites
       function component(img, sx, sy, sWidth, sHeight, x, y, width, height, category) {
@@ -90,9 +87,6 @@
         this.speedY = 0;
         this.sx = sx;
         this.sy = sy;
-        this.img = img;
-        this.sWidth = sWidth;
-        this.sHeight = sHeight;
         this.category = category;
         this.update = function() {
           ctx = gameArea.context;
@@ -112,7 +106,6 @@
           var othertop = otherobj.y;
           var otherbottom = otherobj.y + otherobj.height;
           var crash = false;
-
           if (
             myleft === otherright &&
             (mytop <= otherbottom && mybottom >= othertop)
@@ -140,7 +133,6 @@
           return crash;
         };
       }
-
       function updateGameArea() {
          
         if (gameArea.key){
@@ -163,6 +155,8 @@
           playerSprite.speedX = 0;
           playerSprite.speedY = 0;
           moveKeys();
+          
+          //COLLISION CHECK LOGIC
           var collisionCheck = false;
           var c = 0;
           do {
@@ -170,6 +164,8 @@
               c++;
           }
           while (collisionCheck === false && c < obstacles.length);
+        
+        if(collisionCheck !== false){
           if (
             collisionCheck === "top" ||
             playerSprite.y >= CHEIGHT - blockH
@@ -198,7 +194,13 @@
             if (gameArea.key && (gameArea.key === 37 || gameArea.key === 65)) {
               stopMove();
             }
-          } 
+          }
+          if (obstacles[c].category === "med" || obstacles[c].category === "food"){
+              if (gameArea.key && gameArea.key === 71){
+                    obstacles.splice(c, 1);
+              }
+          }
+        }
           gameArea.clear();
           for (var f = 0; f < floor.length; f++){
               floor[f].update();
@@ -209,18 +211,16 @@
           playerSprite.newPos();
           playerSprite.update();
           }
-
       var gameArea = {
         canvas: document.createElement("canvas"),
         start: function() {
           this.canvas.width = CWIDTH;
           this.canvas.height = CHEIGHT;
           this.context = this.canvas.getContext("2d");
-          var screen = document.getElementByID("gameScreen");
-          screen.insertBefore(this.canvas, screen.childNodes[0]);
+          document.body.insertBefore(this.canvas, document.body.childNodes[0]);
           this.frameNo = 0;
           //FRAMERATE
-          this.interval = setInterval(updateGameArea, 20);
+          this.interval = setInterval(updateGameArea, 40);
           window.addEventListener("keydown", function(e) {
             gameArea.key = e.keyCode;
           });
@@ -232,11 +232,11 @@
           this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
         }
       };
-
       //player movement controls
       function moveUp() {
         playerSprite.speedY -= 1;
         playerSprite.sx = 0;
+   
       }
       function moveDown() {
         playerSprite.speedY += 1;
