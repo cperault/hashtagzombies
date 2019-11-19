@@ -283,6 +283,8 @@ switch ($action) {
         die;
         break;
     case 'dashboard':
+        $player_id = $_SESSION["current_player"];
+        $player = PlayerDB::get_player_object($player_id)[0];
         include("Views/game.php");
         die;
         break;

@@ -21,15 +21,23 @@
         <table class="game_profile_table">
             <tr>
                 <th>Username</th>
-                <th>Character</th>
-                <th>Character Level</th>
+                <?php if (isset($character_object)) {
+                    echo "<th>Character</th>";
+                    echo "<th>Character Level</th>";
+                } else {
+                    echo "<th>Character</th>";
+                } ?>
                 <th>Health</th>
                 <th>Inventory</th>
             </tr>
             <tr>
                 <td><?php echo htmlspecialchars($player->username); ?></td>
-                <td><?php echo htmlspecialchars($character_object->character_name); ?></td>
-                <td><?php echo htmlspecialchars($character_object->character_level); ?></td>
+                <?php if (isset($character_object)) {
+                    echo "<td>" . htmlspecialchars($character_object->character_name) . "</td>";
+                    echo "<td>" . htmlspecialchars($character_object->character_level) . "</td>";
+                } else {
+                    echo "<form action='.' method='POST'><td class='create_character_button'><input type='submit' value='Create character'/><input type='hidden' name='action' value='create_character'/></form></td>";
+                } ?>
                 <td id="character_health_status">100</td>
                 <!--default 100; this will need to be dynamically updated throughout gameplay by targeting the `element by id` selector and changing innerText-->
                 <!--Would be cool to setup different colors for health ranges; green for 100-90, orange 89-70, yellow 69-50, etc. I will set that up. :) -->
