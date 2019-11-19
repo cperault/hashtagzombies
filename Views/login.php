@@ -34,6 +34,15 @@
             <br>
             <button type="submit">Login</button>
         </form>
+        <br />
+        <div class="zombies_div_login_alternatives">
+            <p class="zombies_div_login_facebook">
+                <form action="index.php" method="POST">
+                    <input type="submit" value="Register using our form">
+                    <input type="hidden" name="action" value="register">
+                </form>
+            </p>
+        </div>
         <br>
         <?php if (isset($validation_result) && !empty($validation_result)) {
             if (count($validation_result) > 1) {
