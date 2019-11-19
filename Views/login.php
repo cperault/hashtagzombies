@@ -36,9 +36,10 @@
         </form>
         <br />
         <div class="zombies_div_login_alternatives">
+            <hr>
             <p class="zombies_div_login_facebook">
                 <form action="index.php" method="POST">
-                    <input type="submit" value="Register using our form">
+                    <input type="submit" value="Register">
                     <input type="hidden" name="action" value="register">
                 </form>
             </p>
