@@ -1,43 +1,26 @@
-var Bullet = function(speed, xPos, yPos, dir) {
+var Bullet = function(speed, xPos, yPos, dir, width, height) {
   this.speed = speed;
-  //this.type = type;
   this.xPos = xPos;
   this.yPos = yPos;
   this.dir = dir;
+  this.width = width;
+  this.height = height;
 };
-Bullet.prototype.fire = function(rounds) {
-  switch(this.dir){
-    case 37:
-        processingInstance.fill(255, 0, 0);
-        this.xPos -= this.speed;
-        processingInstance.ellipse(this.xPos, this.yPos, 5, 5);
-        if (this.yPos <= 0) {
-          rounds.shift();
-        }
-      break;
-    case 39:
-        processingInstance.fill(255, 0, 0);
-        this.xPos += this.speed;
-        processingInstance.ellipse(this.xPos, this.yPos, 5, 5);
-        if (this.yPos <= 0) {
-          rounds.shift();
-        }
-      break;
-    case 40:
-        processingInstance.fill(255, 0, 0);
-        this.yPos += this.speed;
-        processingInstance.ellipse(this.xPos, this.yPos, 5, 5);
-        if (this.yPos <= 0) {
-          rounds.shift();
-        }
-      break;
-    case 38:
-    
-        ctx = gameArea.context;
-        ctx.fillStyle = "red";
-        ctx.fillRect(this.x, this.y, this.width, this.height);
-      
-      break;
+Bullet.prototype.collide = function(otherobj) {
+  for (var i = 0; i < otherobj.length; i++){
+  var myleft = this.xPos;
+  var myright = this.xPos + this.width;
+  var mytop = this.yPos;
+  var mybottom = this.yPos + this.height;
+  var otherleft = otherobj[i].x;
+  var otherright = otherobj[i].x + otherobj[i].width;
+  var othertop = otherobj[i].y;
+  var otherbottom = otherobj[i].y + otherobj[i].height;
+
+  if (myleft >= otherleft && myright <= otherright && mytop >= othertop && mybottom <= otherbottom){
+    return true;
   }
-  
+  }
+  return false;
+
 };
