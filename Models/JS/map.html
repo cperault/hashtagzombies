@@ -205,28 +205,6 @@ and open the template in the editor.
           moveKeys();
           playerSprite.newPos();
           
-          //Zombie movement - Player Tracking
-          //move left
-          if(zombSprite.x > playerSprite.x){
-            zombSprite.x -= .5;
-            zombSprite.sx = 96;
-          }
-          //move right
-          if(zombSprite.x < playerSprite.x){
-            zombSprite.x += .5;
-            zombSprite.sx = 64;
-          }
-          //move up
-          if(zombSprite.y > playerSprite.y){
-            zombSprite.y -= .5;
-            zombSprite.sx = 0;
-          }
-          //move down
-          if(zombSprite.y < playerSprite.y){
-            zombSprite.y += .5;
-            zombSprite.sx = 32;
-          }
-          
           //COLLISION CHECK LOGIC
           contactItemIndex = -1;
           collisionCheck = [];
