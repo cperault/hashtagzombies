@@ -18,6 +18,7 @@ and open the template in the editor.
   </head>
   <body onload="startGame()" class="zombies_body_gameplay_container">
     <script>
+      var inventory = [];
       var playerSprite;
       var wallTile;
       var floorTile;
@@ -31,11 +32,9 @@ and open the template in the editor.
       var rounds = [];
       var dir;
       var timer;
-      var weapons = ["gun", "melee"];
       var cycle = 0;
-      var zombHit = 3;
-      var inventory = [];
-      var contactItemIndex = -1;
+      var zombies = [];
+      var killCount = 0;
       //make map
       // comment below prevents formatting from messing up the 25x20 map matrix
       // prettier-ignore
@@ -66,10 +65,19 @@ and open the template in the editor.
         //player
         var playerSpriteImage = new Image();
         playerSpriteImage.src = "Media/Sprites/KevinHumanman.png";
-        playerSprite = new component(playerSpriteImage, 32, 65, 30, 32, 32, 32, 30, 30, "player");
+        playerSprite = new component(playerSpriteImage, 32, 65, 32, 32, 32, 32, 30, 30, "player", 10);
         var zombSpriteImage = new Image();
         zombSpriteImage.src = "Media/Sprites/ZombieSprite1.png";
-        zombSprite = new component(zombSpriteImage, 32, 65, 32, 32, 150, 32, 30, 30, "zombie");
+        zombSprite = new component(zombSpriteImage, 32, 65, 32, 32, 150, 32, 30, 30, "zombie", 3);
+        zombies.push(zombSprite);
+        var zombSpriteImage = new Image();
+        zombSpriteImage.src = "Media/Sprites/ZombieSprite1.png";
+        zomb1 = new component(zombSpriteImage, 32, 65, 32, 32, 350, 350, 30, 30, "zombie", 3);
+        zombies.push(zomb1);
+        var zombSpriteImage = new Image();
+        zombSpriteImage.src = "Media/Sprites/ZombieSprite1.png";
+        zomb2 = new component(zombSpriteImage, 32, 65, 32, 32, 150, 250, 30, 30, "zombie", 3);
+        zombies.push(zomb2);
         var floorTileImage = new Image();
         floorTileImage.src = "Media/Sprites/FloorTile1.bmp";
         var wallTileImage = new Image();
@@ -108,7 +116,7 @@ and open the template in the editor.
       }
       //COMPONENTS
       //sprites
-      function component(img, sx, sy, sWidth, sHeight, x, y, width, height, category) {
+      function component(img, sx, sy, sWidth, sHeight, x, y, width, height, category, health) {
         this.width = width;
         this.height = height;
         this.x = x;
@@ -118,6 +126,7 @@ and open the template in the editor.
         this.sx = sx;
         this.sy = sy;
         this.category = category;
+        this.health = health;
         this.update = function() {
           ctx = gameArea.context;
           ctx.drawImage(img, this.sx, this.sy, sWidth, sHeight, this.x, this.y, width, height);
@@ -304,7 +313,6 @@ and open the template in the editor.
               obstacles[b].update();
           }         
           playerSprite.update();
-          zombSprite.update();
 
           for (var v = 0; v < rounds.length; v++){
             switch(rounds[v].dir){
@@ -348,15 +356,45 @@ and open the template in the editor.
             if (rounds[v].collide(obstacles)){
               rounds.splice(v, 1);
             }
-            if (rounds[v].xPos >= zombSprite.x && rounds[v].xPos <= (zombSprite.x + zombSprite.width) && rounds[v].yPos >= zombSprite.y && rounds[v].yPos <= (zombSprite.y + zombSprite.width)){
-              rounds.splice(v, 1);
-              zombHit--;
-              if(zombHit === 0){
-                
+          }
+          for (var n = 0; n < zombies.length; n++){
+            for (var f = 0; f < rounds.length; f++){
+              if (rounds[f].xPos >= zombies[n].x && rounds[f].xPos <= (zombies[n].x + zombies[n].width) && rounds[f].yPos >= zombies[n].y && rounds[f].yPos <= (zombies[n].y + zombies[n].width)){
+              rounds.splice(f, 1);
+              zombies[n].health-= 1;
+              console.log(zombies[n].health);
+              if(zombies[n].health === 0) {
+                zombies.splice(n, 1);
+                killCount++;
               }
             }
+            }
           }
-          
+          for (var q = 0; q < zombies.length; q++){
+            zombies[q].update();
+          //Zombie movement - Player Tracking
+          //move left
+          if(zombies[q].x > playerSprite.x){
+            zombies[q].x -= .5;
+            zombies[q].sx = 96;
+          }
+          //move right
+          if(zombies[q].x < playerSprite.x){
+            zombies[q].x += .5;
+            zombies[q].sx = 64;
+          }
+          //move up
+          if(zombies[q].y > playerSprite.y){
+            zombies[q].y -= .5;
+            zombies[q].sx = 0;
+          }
+          //move down
+          if(zombies[q].y < playerSprite.y){
+            zombies[q].y += .5;
+            zombies[q].sx = 32;
+          }
+        
+          }
           }
           
           

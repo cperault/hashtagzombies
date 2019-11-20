@@ -24,6 +24,16 @@ class Validation
         return $valid;
     }
 
+    //function to check if email address already has been used for registration
+    public static function email_address_is_available($email = '')
+    {
+        //check to make sure that the user hasn't already registered
+        if (!PlayerDB::is_registered($email)) {
+            $valid = true;
+        }
+        return $valid;
+    }
+
     //function to validate input is neither empty nor null
     public static function input_is_present($input = '')
     {
@@ -99,6 +109,8 @@ class Validation
                     //validate proper email format
                     elseif (!Validation::is_valid_email($value)) {
                         $result[] = $key . " is invalid";
+                    } elseif (!Validation::email_address_is_available($value)) {
+                        $result[] = $key . " provided has already been used";
                     }
                     break;
                 case 'Password':
@@ -110,6 +122,7 @@ class Validation
                     elseif ($length < 10 || $length > 100) {
                         $result[] = $key . " must be between 10 and 100 characters";
                     }
+                    break;
             }
         }
         return $result;

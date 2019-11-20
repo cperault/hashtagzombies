@@ -16,7 +16,7 @@
     <link href="styling.css" rel="stylesheet" type="text/css" />
 </head>
 
-<body>
+<body class="registration_body">
     <header>
         <h1 class="zombies_header_registration"><img src="Media/logo.jpeg" alt="Zombies bloody logo in all caps" height="150" width="500" /></h1>
     </header>

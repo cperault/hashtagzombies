@@ -13,10 +13,13 @@
     <meta charset="UTF-8">
     <title>#ZOMBIES</title>
     <link href="styling.css" rel="stylesheet" type="text/css" />
-    <script src="characterSelect.js"></script>
+    <script src="Models/JS/characterSelect.js"></script>
+</head>
+
+<body onload="hidePreviewDiv();">
     <div class="character_creation_container_div">
         <div class="character_creation_details_div">
-            <span style="font-size:20px;font-weight:bold;">Choose your hero:</span>
+            <span style="font-size:20px;font-weight:bold;">Choose your survivor:</span>
             <!--scrolling gridbox of vector/bitmap images can go here-->
             <div class="scrollable_avatar_selector">
                 <div class="avatar_item"><img id="character_image" src="Media/character_one.png" onclick="updateImage(this)"></div>
@@ -26,49 +29,30 @@
                 <div class="avatar_item"><img id="character_image" src="Media/character_five.png" onclick="updateImage(this)"></div>
                 <div class="avatar_item"><img id="character_image" src="Media/character_six.png" onclick="updateImage(this)"></div>
             </div>
-            <span style="font-size:20px;font-weight:bold;">Name your hero:</span>
-            <input type="text" id="character_text" value="" />
-            <input type="submit" value="Save" onclick="updateName()" />
+            <div id="selection_div">
+                <span style="font-size:20px;font-weight:bold;">Name your survivor:</span>
+                <input type="text" id="character_text" value="" />
+                <input type="submit" value="Save" onclick="updateName()" />
+            </div>
         </div>
         <div class="character_creation_preview_div">
-            <span style="font-size:20px;font-weight:bold;">Preview:</span>
+            <span id="preview_text" style="font-size:20px;font-weight:bold;"></span>
             <div class="character_preview_display_div">
                 <img id="character_selected">
             </div>
             <p id="character_name_chosen"></p>
+            <div id="save_selected_character_input"></div>
         </div>
 
     </div>
-    <footer class="logout_footer">
+    <footer class=" logout_footer">
         <form action="." method="POST">
             <input type="submit" value="Logout">
             <input type="hidden" name="action" value="logout">
+            <input type="submit" value="Dashboard">
+            <input type="hidden" name="action" value="dashboard">
         </form>
     </footer>
-    <script>
-        function updateImage(element) {
-            //variable to store value of image src (which is the relative image file path)
-            let name = "";
-            //get src of the image clicked
-            name = element.getAttribute("src");
-            //add src of image clicked to the image element based on which character is selected
-            imageElement = document.getElementById("character_selected");
-            imageElement.setAttribute("src", name);
-            nameLabel = document.getElementById("character_name_chosen");
-        }
+</body>
 
-        function updateName() {
-            //get text from the text field and remove whitespace
-            let text = document.getElementById("character_text").value.trim();
-            //get the name preview element
-            let previewName = document.getElementById("character_name_chosen");
-            //update the preview name
-            previewName.innerText = text;
-            //get text field element
-            let textfield = document.getElementById("character_text");
-            //clear the text from the text field element
-            textfield.value = "";
-        }
-    </script>
-
-    </html>
+</html>
