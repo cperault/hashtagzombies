@@ -16,11 +16,35 @@
     <link href="styling.css" rel="stylesheet" type="text/css" />
 </head>
 
-<body>
+<body class="login_body">
     <header>
         <h1 class="zombies_header_login"><img src="Media/logo.jpeg" alt="Zombies bloody logo in all caps" height="150" width="500" /></h1>
     </header>
     <div class="zombies_div_login">
+        <form method="POST" autocomplete="off" action=".">
+            <label for="username">Username </label>
+            <input type="text" name="username" class="textbox" <?php if (isset($username)) {
+                                                                    echo "value='$username'";
+                                                                } ?>><br>
+            <label for="password">Password </label>
+            <input type="password" name="password" class="textbox" <?php if (isset($password)) {
+                                                                        echo "value='$password'";
+                                                                    } ?>><br>
+            <input type='hidden' name="action" value="submit_login">
+            <br>
+            <button type="submit">Login</button>
+        </form>
+        <br />
+        <div class="zombies_div_login_alternatives">
+            <hr>
+            <p class="zombies_div_login_facebook">
+                <form action="index.php" method="POST">
+                    <input type="submit" value="Register">
+                    <input type="hidden" name="action" value="register">
+                </form>
+            </p>
+        </div>
+        <br>
         <?php if (isset($validation_result) && !empty($validation_result)) {
             if (count($validation_result) > 1) {
                 echo "<p class='error_text_header'>" . "Please correct the following errors: " . "</p>";
@@ -35,30 +59,6 @@
         } elseif (isset($login_result)) {
             echo "<p class='login_error'>" . $login_result . "</p>";
         } ?>
-        <form method="POST" autocomplete="off" action=".">
-            <label for="username">Username </label>
-            <input type="text" name="username" class="textbox" <?php if (isset($username)) {
-                                                                    echo "value='$username'";
-                                                                } ?>><br>
-            <label for="password">Password </label>
-            <input type="password" name="password" class="textbox" <?php if (isset($password)) {
-                                                                        echo "value='$password'";
-                                                                    } ?>><br>
-            <input type='hidden' name="action" value="submit_login">
-            <br>
-            <button type="submit">Login</button>
-        </form>
-        <br>
-        <div class="zombies_div_login_alternatives">
-            <p class="zombies_div_login_separator">or login through <?php include('Models/FacebookAPI.php'); ?></p>
-            <p class="zombies_div_login_facebook">
-                <p>Don't have Facebook?</p>
-                <form action="index.php" method="POST">
-                    <input type="submit" value="Register using our form">
-                    <input type="hidden" name="action" value="register">
-                </form>
-            </p>
-        </div>
     </div>
 </body>
 

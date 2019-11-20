@@ -8,32 +8,33 @@
 \******************************************************************************************************************/
 
 //import the PHPMailer classes installed from Composer
-//use PHPMailer\PHPMailer\PHPMailer;
-//use PHPMailer\PHPMailer\SMTP;
-//use PHPMailer\PHPMailer\Exception;
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\SMTP;
+use PHPMailer\PHPMailer\Exception;
 //load the autoloader from Composer
 require_once('vendor/autoload.php');
 //load CSS into all pages
 require_once("Views/styling.php");
 //load the files from Models
 require_once('Models/Database.php');
+require_once('Models/Characters.php');
 require_once('Models/Players.php');
 require_once('Models/PlayerDB.php');
 require_once('Models/Validation.php');
 require_once('Models/Confirmation.php');
 
 //instantiate PHPMailer object
-//$mail = new PHPMailer(true); //true enables exception handling
-//
-////SMTP server settings setup as shown in the library's documentation
-////$mail->SMTPDebug = SMTP::DEBUG_SERVER;                      // Enable verbose debug output
-//$mail->isSMTP();                                            // Send using SMTP
-//$mail->Host       = 'smtp.gmail.com';                       // Set the SMTP server to send through
-//$mail->SMTPAuth   = true;                                   // Enable SMTP authentication
-//$mail->Username   = 'hashtagzombies.development@gmail.com'; // SMTP username
-//$mail->Password   = 'zyrhoj-4vuqxi-xYkvuj';                 // SMTP password
-//$mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;         // Enable TLS encryption; `PHPMailer::ENCRYPTION_SMTPS` also accepted
-//$mail->Port       = 587;
+$mail = new PHPMailer(true); //true enables exception handling
+
+//SMTP server settings setup as shown in the library's documentation
+//$mail->SMTPDebug = SMTP::DEBUG_SERVER;                      // Enable verbose debug output
+$mail->isSMTP();                                            // Send using SMTP
+$mail->Host       = 'smtp.gmail.com';                       // Set the SMTP server to send through
+$mail->SMTPAuth   = true;                                   // Enable SMTP authentication
+$mail->Username   = 'hashtagzombies.development@gmail.com'; // SMTP username
+$mail->Password   = 'uodzpufieenhtdzt';                 // SMTP password
+$mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;         // Enable TLS encryption; `PHPMailer::ENCRYPTION_SMTPS` also accepted
+$mail->Port       = 587;
 
 //get the value of the POST or GET data from form actions
 $action = filter_input(INPUT_POST, 'action');
@@ -43,11 +44,20 @@ if ($action === NULL) {
         $action = 'login';
     }
 }
+
+if (isset($_SESSION["current_player"])) {
+    //check to see if user has created a character yet
+    $has_character = PlayerDB::has_character($player_id);
+    if ($has_character) {
+        $character = PlayerDB::get_character_object($player_id)[0];
+    }
+}
+
 //decide what to do based on the action(s) received from gameplay/forms
 switch ($action) {
     case 'login':
         include("Views/login.php");
-        die();
+        die;
         break;
     case 'submit_login':
         //get the username
@@ -62,15 +72,15 @@ switch ($action) {
         if (count($validation_result) > 0) {
             //there's something wrong with the form input
             include('Views/login.php');
-            die();
+            die;
         } else {
             //check to make sure that the user hasn't already registered
             $email_address = PlayerDB::get_email_address($username);
 
             if (!PlayerDB::is_registered($email_address)) {
-                $message = "Sorry, incorrect login. Please try again.";
+                $login_result = "Incorrect login. Please try again.";
                 include('Views/login.php');
-                die();
+                die;
             } else {
                 //while a user should not be able to login without an active account, prevent them from being able to login prior to verifying (URL hijacking to /login.php or them going back to login without verifying)
                 $activated = PlayerDB::is_activated($username);
@@ -80,7 +90,7 @@ switch ($action) {
                     $_SESSION['user_needing_verified'] = $username;
                     $_SESSION['user_email_needing_verified'] = PlayerDB::get_email_address($username);
                     include('Views/login_confirmation.php');
-                    die();
+                    die;
                 } else {
                     //retrieve the hashed password from the users table by username
                     $hash_from_db = PlayerDB::get_player_password($username);
@@ -89,7 +99,7 @@ switch ($action) {
                         //password does not match--exit script and redirect to login
                         $login_result = "Incorrect login. Please try again.";
                         include("Views/login.php");
-                        die();
+                        die;
                     } else {
                         //password matches--save the logged-in player in the session and then proceed to the gameplay page
                         $_SESSION["authenticated"] = "true";
@@ -102,10 +112,11 @@ switch ($action) {
                         //check to see if user has created a character yet
                         $has_character = PlayerDB::has_character($player_id);
                         if ($has_character) {
-                            //$character = CharacterDB::get_character_object($player_id)[0];
+                            $character = PlayerDB::get_character_object($player_id)[0];
                         }
-                        $left_panel_headers = ["Welcome, " . $player->username . ".", "Character Name: " . $has_character == false ? $character->name : "You haven't created a character yet." . "<form action='.' method='POST'><input type='submit' value='Create character'/><input type='hidden' name='action' value='create_character'/></form>", "Zombies killed: ", "Inventory", "Health"];
-                        $_SESSION["panel_headers"] = $left_panel_headers;
+                        $character_id = PlayerDB::get_character_id($player_id);
+                        $player = PlayerDB::get_player_object($player_id)[0];
+                        $character_object = PlayerDB::get_character_object($character_id)[0];
                         //TODO: dummy user with five items, health bar, username; login and show on
                         //TODO: interface for user information/stats (profile, username, character name, inventory, health, etc.)
                         include('Views/game.php');
@@ -117,7 +128,7 @@ switch ($action) {
     case 'register':
         //get the form data
         include('Views/registration.php');
-        die();
+        die;
         break;
     case 'submit_registration':
         //get data from the form
@@ -126,20 +137,13 @@ switch ($action) {
         $last_name = htmlspecialchars(trim(filter_input(INPUT_POST, 'last_name')));
         $email_address = htmlspecialchars(trim(filter_input(INPUT_POST, 'email_address')));
         $password = filter_input(INPUT_POST, 'password');
-        $invite_code = htmlspecialchars(trim(filter_input(INPUT_POST, 'invite_code')));
+        $invite_code = trim(filter_input(INPUT_POST, 'invite_code'));
 
         //if user has not entered an invite code, exit script; this will prevent spam registrations while site is live
         if ($invite_code !== "green_teamis_awesome!") {
             $no_invite_error = "You don't have permission to be registering. Get on outta here.";
             include('Views/registration.php');
-            die();
-        }
-
-        //check to make sure that the user hasn't already registered
-        if (PlayerDB::is_registered($email_address)) {
-            $email_in_use_error = "That email address has already been used for registration.";
-            include('Views/registration.php');
-            die();
+            die;
         }
 
         //create associative array for all input
@@ -147,10 +151,10 @@ switch ($action) {
         //validate input before proceeding
         //variable to store result of validation
         $validation_result = Validation::is_valid($input_array);
-        if (count($validation_result) > 0) {
+        if (count($validation_result, 1) > 0) {
             //there's something wrong with the form input
             include('Views/registration.php');
-            die();
+            die;
         } else {
             //salt
             $options = [
@@ -180,12 +184,6 @@ switch ($action) {
             } catch (Exception $exception) {
                 $email_result = "Uh oh. " . $mail->ErrorInfo;
             }
-
-            if ($sent !== "success") {
-                $email_send_error = "I'm sorry, there was an error in finishing your registration. Please try again in a few minutes";
-                include("Views/registration.php");
-                die();
-            }
             //add the user to the Players database
             PlayerDB::add_new_user($username, $first_name, $last_name, $email_address, $hash, $activation_secret);
             $player_id = PlayerDB::get_player_id($username);
@@ -193,7 +191,7 @@ switch ($action) {
             //redirect the player to the login screen and inform them to return with confirmation code
             $message = "Thank you for registering! A confirmation code has been sent to " . $email_address . ". Please enter that code below.";
             include("Views/login_confirmation.php");
-            die();
+            die;
         }
         break;
     case 'confirm_registration':
@@ -213,7 +211,7 @@ switch ($action) {
             PlayerDB::activate_user_account($username);
             include("Views/login.php");
         }
-        die();
+        die;
         break;
     case 'resend_verification_code':
         //get current username and email address of user needing to be reverified
@@ -244,28 +242,42 @@ switch ($action) {
         if ($sent !== "success") {
             $email_send_error = "I'm sorry, there was an error in sending your verification email. Please try again in a few minutes";
             include("Views/registration.php");
-            die();
+            die;
         } else {
             $message = "We have resent your verification code. Please check your email and enter it here.";
             include("Views/login_confirmation.php");
-            die();
+            die;
         }
         break;
     case 'create_character':
         include("Views/character_create.php");
-        die();
+        die;
         exit();
-    case 'save_preview':
-        //get the avatar and name chosen
-        $avatar_chosen = "2";
-        $name_chosen = htmlspecialchars(trim(filter_input(INPUT_POST, 'character_name')));
-        //go back to the character creation view to display a preview
-        include("Views/character_create.php");
-        die();
-        exit();
+    case 'save_character':
+        $player_id = $_SESSION["current_player"];
+        $player = PlayerDB::get_player_object($player_id)[0];
+        //get the character info
+        $character_name = htmlspecialchars(trim(filter_input(INPUT_POST, 'character_name')));
+        $character_image = htmlspecialchars(trim(filter_input(INPUT_POST, 'character_image')));
+        //save character to the database per user ID
+        PlayerDB::save_character($player_id, $character_name, $character_image);
+        //get character id
+        $character_id = PlayerDB::get_character_id($player_id);
+        $character_object = PlayerDB::get_character_object($character_id)[0];
+        //update has_character field in Players for player ID
+        PlayerDB::update_player_after_character_creation($player_id, $character_id);
+        include("Views/game.php");
+        die;
+        break;
+    case 'dashboard':
+        $player_id = $_SESSION["current_player"];
+        $player = PlayerDB::get_player_object($player_id)[0];
+        include("Views/game.php");
+        die;
+        break;
     case 'logout';
         session_destroy();
         include("Views/login.php");
-        die();
+        die;
         break;
 }

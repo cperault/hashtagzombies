@@ -23,7 +23,8 @@
   padding: 15px;
   border: solid red 3px;
   border-radius: 15px;
-  background-color: #f7b2b2;
+  background-color: white;
+  opacity: 0.8;
 }
 
 .zombies_body_gameplay_container {
@@ -47,6 +48,14 @@
 .zombies_header_registration,
 .zombies_header_gameplay {
   text-align: center;
+}
+
+.zombies_header_login img,
+.zombies_header_registration img {
+  border-radius: 15px;
+  border: solid red 3px;
+  width: auto;
+  opacity: 0.8;
 }
 
 br {
@@ -111,9 +120,8 @@ canvas {
 }
 
 .game_outer_interface_div_left {
-  border: solid red 3px;
   border-radius: 15px;
-  margin-top: 15px;
+  margin-top: 10px;
 }
 
 .character_creation_container_div {
@@ -161,12 +169,19 @@ canvas {
   width: 100px;
 }
 
+.hidden {
+  display: none;
+}
+
 .avatar_item {
-  border: 2px solid white;
+  border: 2px solid lightgray;
   border-radius: 15px;
   margin-top: 10px;
   margin-bottom: 10px;
   text-align: center;
+  height: 100px;
+  width: 100px;
+  background-color: lightgray;
 }
 
 /* this will be a separate div inside the preview div where the character details are displayed*/
@@ -179,6 +194,46 @@ canvas {
 .character_preview_display_div label {
   font-size: 20px;
   font-weight: bold;
+}
+.login_body,
+.registration_body {
+  min-width: 1280px;
+  max-width: 1280px;
+  background-image: url("Media/full_view_mall.jpg");
+  background-repeat: no-repeat;
+}
+
+.game_profile_table {
+  border: solid red 3px;
+  border-radius: 15px;
+}
+
+.game_profile_table {
+  width: 100%;
+}
+
+.game_profile_table td,
+.game_profile_table th {
+  text-align: center;
+}
+hr {
+  border: none;
+  border-top: 3px double red;
+  color: black;
+  overflow: visible;
+  width: 200px;
+  text-align: center;
+  height: 5px;
+  margin-top: 40px;
+  margin-bottom: 40px;
+}
+
+hr:after {
+  background: #fff;
+  content: "or";
+  padding: 0 4px;
+  position: relative;
+  top: -13px;
 }
 
 @media only screen and (max-width: 880px) {
