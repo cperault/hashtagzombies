@@ -34,6 +34,7 @@ and open the template in the editor.
       var cycle = 0;
       var zombies = [];
       var killCount = 0;
+      var zombFrame = 0;
       //make map
       // comment below prevents formatting from messing up the 25x20 map matrix
       // prettier-ignore
@@ -188,15 +189,6 @@ and open the template in the editor.
             playerSprite.sy = 0;
           }
           
-          //Zombie Animation
-          if ((gameArea.frameNo >=0 && gameArea.frameNo <= 6) || (gameArea.frameNo >=13 && gameArea.frameNo <= 18)){
-            zombSprite.sy = 64;}
-          else if(gameArea.frameNo >= 7 && gameArea.frameNo <= 12){
-            zombSprite.sy = 32;
-          }
-          else {
-            zombSprite.sy = 0;
-          }
          }
          else {
              playerSprite.sy = 64;
@@ -328,27 +320,51 @@ and open the template in the editor.
             }
           }
           for (var q = 0; q < zombies.length; q++){
+            zombFrame++;
             zombies[q].update();
           //Zombie movement - Player Tracking
           //move left
           if(zombies[q].x > playerSprite.x){
             zombies[q].x -= .5;
             zombies[q].sx = 96;
+            if((zombFrame >=0 && zombFrame <= 6) || (zombFrame >=13 && zombFrame <= 18)){
+              zombies[q].sy = 64;
+            } else {
+              zombies[q].sy = 0;
+            }
           }
           //move right
           if(zombies[q].x < playerSprite.x){
             zombies[q].x += .5;
             zombies[q].sx = 64;
+            if((zombFrame >=0 && zombFrame <= 6) || (zombFrame >=13 && zombFrame <= 18)){
+              zombies[q].sy = 64;
+            } else {
+              zombies[q].sy = 0;
+            }
           }
           //move up
           if(zombies[q].y > playerSprite.y){
             zombies[q].y -= .5;
             zombies[q].sx = 0;
+            if((zombFrame >=0 && zombFrame <= 6) || (zombFrame >=13 && zombFrame <= 18)){
+              zombies[q].sy = 32;
+            } else {
+              zombies[q].sy = 0;
+            }
           }
           //move down
           if(zombies[q].y < playerSprite.y){
             zombies[q].y += .5;
             zombies[q].sx = 32;
+            if((zombFrame >=0 && zombFrame <= 6) || (zombFrame >=13 && zombFrame <= 18)){
+              zombies[q].sy = 32;
+            } else {
+              zombies[q].sy = 0;
+            }
+          }
+          if(zombFrame >= 24){
+            zombFrame = 0;
           }
           }
           }
@@ -375,11 +391,12 @@ and open the template in the editor.
               rounds.push(new Bullet(4, playerSprite.x + 16, playerSprite.y + 16, dir, 3, 3));
             }, 500);
             gameArea.click = true;
-          })
+          });
           window.addEventListener("mouseup", function(e){
             gameArea.click = false;
             clearInterval(timer);
-          })
+          });
+          window.addEventListener("contextmenu", event => event.preventDefault());
         },
         clear: function() {
           this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
