@@ -320,7 +320,6 @@ and open the template in the editor.
               if (rounds[f].xPos >= zombies[n].x && rounds[f].xPos <= (zombies[n].x + zombies[n].width) && rounds[f].yPos >= zombies[n].y && rounds[f].yPos <= (zombies[n].y + zombies[n].width)){
               rounds.splice(f, 1);
               zombies[n].health-= 1;
-              console.log(zombies[n].health);
               if(zombies[n].health === 0) {
                 zombies.splice(n, 1);
                 killCount++;
@@ -351,7 +350,6 @@ and open the template in the editor.
             zombies[q].y += .5;
             zombies[q].sx = 32;
           }
-        
           }
           }
           
@@ -375,7 +373,6 @@ and open the template in the editor.
           window.addEventListener("mousedown", function(e) {
             timer = setInterval(function() {
               rounds.push(new Bullet(4, playerSprite.x + 16, playerSprite.y + 16, dir, 3, 3));
-              console.log(rounds.length);
             }, 500);
             gameArea.click = true;
           })
