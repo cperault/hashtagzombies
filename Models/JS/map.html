@@ -37,6 +37,7 @@ and open the template in the editor.
       var cycle = 0;
       var zombies = [];
       var killCount = 0;
+      var zombFrame = 0;
       //make map
       // comment below prevents formatting from messing up the 25x20 map matrix
       // prettier-ignore
@@ -197,15 +198,6 @@ and open the template in the editor.
             playerSprite.sy = 0;
           }
           
-          //Zombie Animation
-          if ((gameArea.frameNo >=0 && gameArea.frameNo <= 6) || (gameArea.frameNo >=13 && gameArea.frameNo <= 18)){
-            zombSprite.sy = 64;}
-          else if(gameArea.frameNo >= 7 && gameArea.frameNo <= 12){
-            zombSprite.sy = 32;
-          }
-          else {
-            zombSprite.sy = 0;
-          }
          }
          else {
              playerSprite.sy = 64;
@@ -216,7 +208,6 @@ and open the template in the editor.
           moveKeys();
           playerSprite.newPos();
           
-        
           //COLLISION CHECK LOGIC
           collisionCheck = [];
           var right = false;
@@ -346,7 +337,6 @@ and open the template in the editor.
               if (rounds[f].xPos >= zombies[n].x && rounds[f].xPos <= (zombies[n].x + zombies[n].width) && rounds[f].yPos >= zombies[n].y && rounds[f].yPos <= (zombies[n].y + zombies[n].width)){
               rounds.splice(f, 1);
               zombies[n].health-= 1;
-              console.log(zombies[n].health);
               if(zombies[n].health === 0) {
                 zombies.splice(n, 1);
                 killCount++;
@@ -354,28 +344,50 @@ and open the template in the editor.
             }
             }
           }
-          
+          if (zombFrame % 2 === 0){
           for (var q = 0; q < zombies.length; q++){
+            
+            zombies[q].update();
           //Zombie movement - Player Tracking
           //move left
           if(zombies[q].x > playerSprite.x){
-            zombies[q].x -= .5;
+            zombies[q].x -= 1;
             zombies[q].sx = 96;
+            if((zombFrame >=0 && zombFrame <= 6) || (zombFrame >=13 && zombFrame <= 18)){
+              zombies[q].sy = 64;
+            } else {
+              zombies[q].sy = 0;
+            }
           }
           //move right
           if(zombies[q].x < playerSprite.x){
-            zombies[q].x += .5;
+            zombies[q].x += 1;
             zombies[q].sx = 64;
+            if((zombFrame >=0 && zombFrame <= 6) || (zombFrame >=13 && zombFrame <= 18)){
+              zombies[q].sy = 64;
+            } else {
+              zombies[q].sy = 0;
+            }
           }
           //move up
           if(zombies[q].y > playerSprite.y){
-            zombies[q].y -= .5;
+            zombies[q].y -= 1;
             zombies[q].sx = 0;
+            if((zombFrame >=0 && zombFrame <= 6) || (zombFrame >=13 && zombFrame <= 18)){
+              zombies[q].sy = 32;
+            } else {
+              zombies[q].sy = 0;
+            }
           }
           //move down
-          if(zombies[q].y < playerSprite.y){
-            zombies[q].y += .5;
+         if(zombies[q].y < playerSprite.y){
+            zombies[q].y += 1;
             zombies[q].sx = 32;
+            if((zombFrame >=0 && zombFrame <= 6) || (zombFrame >=13 && zombFrame <= 18)){
+              zombies[q].sy = 32;
+            } else {
+              zombies[q].sy = 0;
+            }
           }
             //Zombie Collision/Pathfinding
             
@@ -384,22 +396,28 @@ and open the template in the editor.
                zombCollide = zombies[q].collide(obstacles[i]);
               
               if (zombCollide.includes("top")){
-                  zombies[q].y -= .5;
+                  zombies[q].y -= 1;
               }
               if(zombCollide.includes("right")){
-                  zombies[q].x += .5;
+                  zombies[q].x += 1;
               }
               if(zombCollide.includes("left")){
-                  zombies[q].x -= .5;
+                  zombies[q].x -= 1;
               }
               if(zombCollide.includes("bottom")){
-                  zombies[q].y += .5;
+                  zombies[q].y += 1;
               } 
             } 
-          }
+          
+          } 
+      }
           
           for (var z = 0; z < zombies.length; z++){
               zombies[z].update();
+          }
+          zombFrame++;
+          if(zombFrame >= 24){
+            zombFrame = 0;
           }
       }
           
@@ -423,14 +441,14 @@ and open the template in the editor.
           window.addEventListener("mousedown", function(e) {
             timer = setInterval(function() {
               rounds.push(new Bullet(4, playerSprite.x + 16, playerSprite.y + 16, dir, 3, 3));
-              console.log(rounds.length);
             }, 500);
             gameArea.click = true;
-          })
+          });
           window.addEventListener("mouseup", function(e){
             gameArea.click = false;
             clearInterval(timer);
-          })
+          });
+          window.addEventListener("contextmenu", event => event.preventDefault());
         },
         clear: function() {
           this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
