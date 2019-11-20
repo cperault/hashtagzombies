@@ -34,6 +34,8 @@ and open the template in the editor.
       var weapons = ["gun", "melee"];
       var cycle = 0;
       var zombHit = 3;
+      var inventory = [];
+      var contactItemIndex = -1;
       //make map
       // comment below prevents formatting from messing up the 25x20 map matrix
       // prettier-ignore
@@ -160,6 +162,10 @@ and open the template in the editor.
           }
           return crash;
         };
+        this.getCategory = function(){
+        category = this.category;
+        return category; 
+        };
       }
       function updateGameArea() {
           //Sprite Animation
@@ -198,7 +204,30 @@ and open the template in the editor.
           moveKeys();
           playerSprite.newPos();
           
+          //Zombie movement - Player Tracking
+          //move left
+          if(zombSprite.x > playerSprite.x){
+            zombSprite.x -= .5;
+            zombSprite.sx = 96;
+          }
+          //move right
+          if(zombSprite.x < playerSprite.x){
+            zombSprite.x += .5;
+            zombSprite.sx = 64;
+          }
+          //move up
+          if(zombSprite.y > playerSprite.y){
+            zombSprite.y -= .5;
+            zombSprite.sx = 0;
+          }
+          //move down
+          if(zombSprite.y < playerSprite.y){
+            zombSprite.y += .5;
+            zombSprite.sx = 32;
+          }
+          
           //COLLISION CHECK LOGIC
+          contactItemIndex = -1;
           collisionCheck = [];
           var right = false;
           var left = false;
@@ -207,18 +236,33 @@ and open the template in the editor.
           var c = 0;
           for (var i = 0; i < obstacles.length; i++)
             {
-              collisionCheck = playerSprite.collide(obstacles[c]);
-              c++;
-              if(collisionCheck.includes("top"))
-                {top = true;}
-              if(collisionCheck.includes("bottom"))
-                {bottom = true;}
-              if(collisionCheck.includes("right"))
-                {right = true;}
-              if(collisionCheck.includes("left"))
-                {left = true;}
+              collisionCheck = playerSprite.collide(obstacles[i]);
+                if(collisionCheck.includes("top"))
+                {top = true;
+                    if (obstacles[i].getCategory() !== "tile"){
+                        inventory.push(obstacles.splice(i, 1)); 
+                    }
+                 }
+               if(collisionCheck.includes("bottom"))
+                {bottom = true;
+                   if (obstacles[i].getCategory() !== "tile"){
+                        inventory.push(obstacles.splice(i, 1)); 
+                    }
+                }
+               if(collisionCheck.includes("right"))
+                {right = true; 
+                    if (obstacles[i].getCategory() !== "tile"){
+                        inventory.push(obstacles.splice(i, 1)); 
+                    }
+                 }  
+               if(collisionCheck.includes("left"))
+                {left = true;
+                    if (obstacles[i].getCategory() !== "tile"){
+                        inventory.push(obstacles.splice(i, 1)); 
+                    }
+                 }
+                c++;
           }
-        
          if (
             top === true ||
             playerSprite.y >= CHEIGHT - blockH
@@ -247,19 +291,18 @@ and open the template in the editor.
             if (gameArea.key && (gameArea.key === 37 || gameArea.key === 65)) {
               playerSprite.x += 1;
             }
-          }  
-//        if (obstacles[c].category === "med" || obstacles[c].category === "food"){
-//              if (gameArea.key && gameArea.key === 71){
-//                    obstacles.splice(c, 1);
-//              } 
-//        } 
+          }
+          if(gameArea.key && gameArea.key === 71){
+              window.alert(inventory.toString());
+          }
+          
           gameArea.clear();
           for (var f = 0; f < floor.length; f++){
               floor[f].update();
           }
           for (var b = 0; b < obstacles.length; b++){
               obstacles[b].update();
-          }
+          }         
           playerSprite.update();
           zombSprite.update();
 
@@ -313,27 +356,7 @@ and open the template in the editor.
               }
             }
           }
-          //Zombie movement - Player Tracking
-          //move left
-          if(zombSprite.x > playerSprite.x){
-            zombSprite.x -= .5;
-            zombSprite.sx = 96;
-          }
-          //move right
-          if(zombSprite.x < playerSprite.x){
-            zombSprite.x += .5;
-            zombSprite.sx = 64;
-          }
-          //move up
-          if(zombSprite.y > playerSprite.y){
-            zombSprite.y -= .5;
-            zombSprite.sx = 0;
-          }
-          //move down
-          if(zombSprite.y < playerSprite.y){
-            zombSprite.y += .5;
-            zombSprite.sx = 32;
-          }
+          
           }
           
           

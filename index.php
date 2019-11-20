@@ -101,9 +101,9 @@ switch ($action) {
                         $_SESSION["logged_in_player"] = $player;
                         //check to see if user has created a character yet
                         $has_character = PlayerDB::has_character($player_id);
-                        if ($has_character) {
-                            $character = CharacterDB::get_character_object($player_id)[0];
-                        }
+//                        if ($has_character) {
+//                            $character = CharacterDB::get_character_object($player_id)[0];
+//                        }
                         $left_panel_headers = ["Welcome, " . $player->username . ".", "Character Name: " . $has_character == false ? $character->name : "You haven't created a character yet." . "<form action='.' method='POST'><input type='submit' value='Create character'/><input type='hidden' name='action' value='create_character'/></form>", "Zombies killed: ", "Inventory", "Health"];
                         $_SESSION["panel_headers"] = $left_panel_headers;
                         //TODO: dummy user with five items, health bar, username; login and show on
