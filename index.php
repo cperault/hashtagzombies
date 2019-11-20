@@ -32,7 +32,7 @@ $mail->isSMTP();                                            // Send using SMTP
 $mail->Host       = 'smtp.gmail.com';                       // Set the SMTP server to send through
 $mail->SMTPAuth   = true;                                   // Enable SMTP authentication
 $mail->Username   = 'hashtagzombies.development@gmail.com'; // SMTP username
-$mail->Password   = 'zyrhoj-4vuqxi-xYkvuj';                 // SMTP password
+$mail->Password   = 'pugxor-1niwfa-Xyqxer';                 // SMTP password
 $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;         // Enable TLS encryption; `PHPMailer::ENCRYPTION_SMTPS` also accepted
 $mail->Port       = 587;
 
@@ -137,18 +137,11 @@ switch ($action) {
         $last_name = htmlspecialchars(trim(filter_input(INPUT_POST, 'last_name')));
         $email_address = htmlspecialchars(trim(filter_input(INPUT_POST, 'email_address')));
         $password = filter_input(INPUT_POST, 'password');
-        $invite_code = htmlspecialchars(trim(filter_input(INPUT_POST, 'invite_code')));
+        $invite_code = trim(filter_input(INPUT_POST, 'invite_code'));
 
         //if user has not entered an invite code, exit script; this will prevent spam registrations while site is live
         if ($invite_code !== "green_teamis_awesome!") {
             $no_invite_error = "You don't have permission to be registering. Get on outta here.";
-            include('Views/registration.php');
-            die;
-        }
-
-        //check to make sure that the user hasn't already registered
-        if (PlayerDB::is_registered($email_address)) {
-            $email_in_use_error = "That email address has already been used for registration.";
             include('Views/registration.php');
             die;
         }
@@ -158,7 +151,7 @@ switch ($action) {
         //validate input before proceeding
         //variable to store result of validation
         $validation_result = Validation::is_valid($input_array);
-        if (count($validation_result) > 0) {
+        if (count($validation_result, 1) > 0) {
             //there's something wrong with the form input
             include('Views/registration.php');
             die;
@@ -190,12 +183,6 @@ switch ($action) {
                 $sent = "success";
             } catch (Exception $exception) {
                 $email_result = "Uh oh. " . $mail->ErrorInfo;
-            }
-
-            if ($sent !== "success") {
-                $email_send_error = "I'm sorry, there was an error in finishing your registration. Please try again in a few minutes";
-                include("Views/registration.php");
-                die;
             }
             //add the user to the Players database
             PlayerDB::add_new_user($username, $first_name, $last_name, $email_address, $hash, $activation_secret);
