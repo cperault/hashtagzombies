@@ -1,6 +1,17 @@
 /* this file will handle all inventory actions in JS*/
 
 function viewInventory() {
-  //user has clicked the `view inventory button`; create modal and open in view
-  alert("Inventory modal will replace this alert. ^_^");
+  //change modal display from `none` to `block` to display
+  //get the modal container element
+  let modalContainer = (document.getElementById(
+    "inventory_modal_container_div"
+  ).style.display = "block");
+}
+
+//function to close modal
+function closeInventory() {
+  //change modal display from `block` to `none` to close it
+  let modalContainer = (document.getElementById(
+    "inventory_modal_container_div"
+  ).style.display = "none");
 }
