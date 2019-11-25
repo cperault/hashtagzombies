@@ -363,8 +363,6 @@ and open the template in the editor.
               if (playerSprite.health === 0){
                 clearInterval(gameArea.interval);
               }
-              console.log(playerSprite.health);
-              
             }
           }
           if (zombFrame % 2 === 0){
@@ -429,9 +427,8 @@ and open the template in the editor.
               }
               if(zombCollide.includes("bottom")){
                   zombies[q].y += 1;
-              } 
+              }
             } 
-          
           } 
       }
           
@@ -442,6 +439,7 @@ and open the template in the editor.
           if(zombFrame >= 24){
             zombFrame = 0;
           }
+          document.getElementById('character_health_status').innerHTML = playerSprite.health;
       }
           
           
@@ -456,6 +454,7 @@ and open the template in the editor.
           //FRAMERATE
           this.interval = setInterval(updateGameArea, 20);
           window.addEventListener("keydown", function(e) {
+            e.preventDefault();
             gameArea.key = e.keyCode;
           });
           window.addEventListener("keyup", function(e) {
@@ -471,7 +470,7 @@ and open the template in the editor.
             gameArea.click = false;
             clearInterval(timer);
           });
-          //window.addEventListener("contextmenu", event => event.preventDefault());
+          window.addEventListener("contextmenu", event => event.preventDefault());
         },
         clear: function() {
           this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);

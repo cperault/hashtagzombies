@@ -66,7 +66,7 @@
                 } else {
                     echo "<form action='.' method='POST'><td class='create_character_button'><input type='submit' value='Create character'/><input type='hidden' name='action' value='create_character'/></form></td>";
                 } ?>
-                <td id="character_health_status">100</td>
+                <td id="character_health_status"></td>
                 <!--default 100; this will need to be dynamically updated throughout gameplay by targeting the `element by id` selector and changing innerText-->
                 <!--Would be cool to setup different colors for health ranges; green for 100-90, orange 89-70, yellow 69-50, etc. I will set that up. :) -->
                 <td><input type="submit" value="View inventory" onclick="viewInventory()" id="btnViewInventory" /></td>
