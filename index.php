@@ -121,7 +121,7 @@ switch ($action) {
         die;
         break;
     case 'dashboard':
-        GameLoad::load_game_data("dashboard");
+        GameLoad::load_game_data();
         include("Views/game.php");
         die;
         break;
