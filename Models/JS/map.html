@@ -27,8 +27,10 @@ and open the template in the editor.
       var enemies = [];
       var blockW = 32;
       var blockH = 32;
-      var CWIDTH = 1216;
-      var CHEIGHT = 800;
+      var mapWidth = 26;
+      var mapHeight = 20;
+      var CWIDTH = mapWidth*blockW;
+      var CHEIGHT = mapHeight*blockH;
       var rounds = [];
       var dir;
       var timer;
@@ -94,8 +96,8 @@ and open the template in the editor.
         medSpriteImage.src = "Media/Sprites/meds.png";
         //map elements
         var mapIndex = 0;
-        for (var y = 0; y <= 24; y++) {
-          for (var x = 0; x <= 37; x++, mapIndex++) {
+        for (var y = 0; y <= mapHeight-1; y++) {
+          for (var x = 0; x <= mapWidth-1; x++, mapIndex++) {
             var tile_x = x * blockW;
             var tile_y = y * blockH;
             var tileType = map[mapIndex];
@@ -182,6 +184,8 @@ and open the template in the editor.
         return category; 
         };
       }
+      
+      
       function updateGameArea() {
           //Sprite Animation
         if (gameArea.key){
@@ -203,15 +207,13 @@ and open the template in the editor.
          else {
              playerSprite.sy = 64;
          }
-         
-         
-          playerSprite.speedX = 0;
+
+        playerSprite.speedX = 0;
           playerSprite.speedY = 0;
           moveKeys();
           playerSprite.newPos();
           
           //COLLISION CHECK LOGIC
-          contactItemIndex = -1;
           collisionCheck = [];
           var right = false;
           var left = false;
@@ -247,6 +249,8 @@ and open the template in the editor.
                  }
                 c++;
           }
+          
+          
          if (
             top === true ||
             playerSprite.y >= CHEIGHT - blockH
@@ -276,6 +280,7 @@ and open the template in the editor.
               playerSprite.x += 1;
             }
           }
+          
           if(gameArea.key && gameArea.key === 71){
               window.alert(inventory.toString());
           }
@@ -354,13 +359,14 @@ and open the template in the editor.
               console.log(playerSprite.health);
             }
           }
+          if (zombFrame % 2 === 0){
           for (var q = 0; q < zombies.length; q++){
             
             zombies[q].update();
           //Zombie movement - Player Tracking
           //move left
           if(zombies[q].x > playerSprite.x){
-            zombies[q].x -= .5;
+            zombies[q].x -= 1;
             zombies[q].sx = 96;
             if((zombFrame >=0 && zombFrame <= 6) || (zombFrame >=13 && zombFrame <= 18)){
               zombies[q].sy = 64;
@@ -370,7 +376,7 @@ and open the template in the editor.
           }
           //move right
           if(zombies[q].x < playerSprite.x){
-            zombies[q].x += .5;
+            zombies[q].x += 1;
             zombies[q].sx = 64;
             if((zombFrame >=0 && zombFrame <= 6) || (zombFrame >=13 && zombFrame <= 18)){
               zombies[q].sy = 64;
@@ -380,7 +386,7 @@ and open the template in the editor.
           }
           //move up
           if(zombies[q].y > playerSprite.y){
-            zombies[q].y -= .5;
+            zombies[q].y -= 1;
             zombies[q].sx = 0;
             if((zombFrame >=0 && zombFrame <= 6) || (zombFrame >=13 && zombFrame <= 18)){
               zombies[q].sy = 32;
@@ -389,8 +395,8 @@ and open the template in the editor.
             }
           }
           //move down
-          if(zombies[q].y < playerSprite.y){
-            zombies[q].y += .5;
+         if(zombies[q].y < playerSprite.y){
+            zombies[q].y += 1;
             zombies[q].sx = 32;
             if((zombFrame >=0 && zombFrame <= 6) || (zombFrame >=13 && zombFrame <= 18)){
               zombies[q].sy = 32;
@@ -398,12 +404,37 @@ and open the template in the editor.
               zombies[q].sy = 0;
             }
           }
+            //Zombie Collision/Pathfinding
+            
+            for(var i = 0; i < obstacles.length; i++){
+               var zombCollide = [];
+               zombCollide = zombies[q].collide(obstacles[i]);
+              
+              if (zombCollide.includes("top")){
+                  zombies[q].y -= 1;
+              }
+              if(zombCollide.includes("right")){
+                  zombies[q].x += 1;
+              }
+              if(zombCollide.includes("left")){
+                  zombies[q].x -= 1;
+              }
+              if(zombCollide.includes("bottom")){
+                  zombies[q].y += 1;
+              } 
+            } 
+          
+          } 
+      }
+          
+          for (var z = 0; z < zombies.length; z++){
+              zombies[z].update();
+          }
+          zombFrame++;
           if(zombFrame >= 24){
             zombFrame = 0;
           }
-          }
-          zombFrame++;
-          }
+      }
           
           
       var gameArea = {
