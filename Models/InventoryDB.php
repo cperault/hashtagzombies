@@ -13,7 +13,7 @@ class InventoryDB
     public static function get_all_inventory($player_id)
     {
         $db = Database::getDB();
-        $query = "SELECT inventory.item_id, inventory.item_qty, items.item_name, items.item_description
+        $query = "SELECT inventory.inventory_id, inventory.item_id, inventory.player_id, inventory.item_qty, items.item_name, items.item_description
                   FROM inventory
                   INNER JOIN Players ON inventory.player_id=Players.playerID
                   INNER JOIN items ON inventory.item_id=items.item_id

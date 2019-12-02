@@ -25,13 +25,18 @@
                     <th class="th_item">Item</th>
                     <th class="th_desc">Description</th>
                     <th class="th_qty">Quantity</th>
+                    <th class="th_action">Action</th>
                 </tr>
 
                 <?php foreach ($items as $item) : { ?>
-                        <tr>
+                        <tr id='<?php echo htmlspecialchars($item["inventory_id"]) ?>'>
                             <td><?php echo htmlspecialchars($item["item_name"]); ?></td>
                             <td><?php echo htmlspecialchars($item["item_description"]); ?></td>
                             <td><?php echo htmlspecialchars($item["item_qty"]); ?></td>
+                            <td>
+                                <input type="submit" value="Use" onclick="useItem()" id="btnUseInventory" />
+                                <input type="submit" value="Drop" onclick="dropItem()" id="btnDropInventory" />
+                            </td>
                         </tr>
                 <?php }
                     endforeach; ?>
