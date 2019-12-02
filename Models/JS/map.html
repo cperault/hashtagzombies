@@ -27,10 +27,10 @@ and open the template in the editor.
       var enemies = [];
       var blockW = 32;
       var blockH = 32;
-      var mapWidth = 26;
-      var mapHeight = 20;
-      var CWIDTH = mapWidth*blockW;
-      var CHEIGHT = mapHeight*blockH;
+      var mapWidth = 38;
+      var mapHeight = 25;
+      var CWIDTH = mapWidth * blockW;
+      var CHEIGHT = mapHeight * blockH;
       var rounds = [];
       var dir;
       var timer;
@@ -43,28 +43,36 @@ and open the template in the editor.
     //
     //make map
       // comment below prevents formatting from messing up the 25x20 map matrix
+      var hCount = 0;
+      //make map
+      // comment below prevents formatting from messing up the 38x25 map matrix
       // prettier-ignore
       var map = [
-              0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,
-              0,0,0,1,0,0,0,0,0,1,1,1,1,1,1,1,0,0,0,0,0,0,0,1,0,1,
-              0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,1,
-              0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,1,
-              0,0,0,1,0,0,0,1,0,0,0,0,0,1,1,1,1,1,1,1,1,0,0,1,0,1,
-              0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,1,
-              0,1,0,0,0,0,0,1,0,0,1,1,1,1,1,1,1,0,0,0,1,0,0,1,0,1,
-              0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,1,
-              0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,
-              0,1,0,0,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,1,0,1,
-              0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,1,
-              0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,
-              0,0,0,0,1,0,0,0,1,1,1,0,0,0,1,0,0,0,0,1,0,0,1,0,0,0,
-              0,0,0,0,1,0,1,0,1,0,0,0,0,0,0,0,0,0,1,1,0,0,1,0,0,0,
-              0,0,1,0,1,0,1,0,1,0,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,
-              0,0,1,0,1,0,1,0,1,0,0,0,0,1,1,1,1,0,0,0,1,0,1,0,0,0,
-              0,0,1,0,1,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,1,0,1,0,0,0,
-              0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,
-              0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-              0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+              0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+              0,0,0,1,0,0,0,0,0,1,1,1,1,1,1,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+              0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+              0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+              0,0,0,1,0,0,0,1,0,0,0,0,0,1,1,1,1,1,1,1,1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+              0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+              0,1,0,0,0,0,0,1,0,0,1,1,1,1,1,1,1,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+              0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+              0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+              0,1,0,0,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+              0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+              0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+              0,0,0,0,1,0,0,0,1,1,1,0,0,0,1,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+              0,0,0,0,1,0,1,0,1,0,0,0,0,0,0,0,0,0,1,1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+              0,0,1,0,1,0,1,0,1,0,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+              0,0,1,0,1,0,1,0,1,0,0,0,0,1,1,1,1,0,0,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+              0,0,1,0,1,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+              0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+              0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+              0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+              0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+              1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+              0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+              0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+              0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
               ];
       
     //Create game canvas and load game area. 
@@ -73,18 +81,66 @@ and open the template in the editor.
         //player
         var playerSpriteImage = new Image();
         playerSpriteImage.src = "Media/Sprites/KevinHumanman.png";
-        playerSprite = new component(playerSpriteImage, 32, 65, 32, 32, 32, 32, 30, 30, "player", 10);
+        playerSprite = new component(
+          playerSpriteImage,
+          32,
+          65,
+          32,
+          32,
+          32,
+          32,
+          30,
+          30,
+          "player",
+          100
+        );
         var zombSpriteImage = new Image();
         zombSpriteImage.src = "Media/Sprites/ZombieSprite1.png";
-        zombSprite = new component(zombSpriteImage, 32, 65, 32, 32, 150, 32, 30, 30, "zombie", 3);
+        zombSprite = new component(
+          zombSpriteImage,
+          32,
+          65,
+          32,
+          32,
+          150,
+          32,
+          30,
+          30,
+          "zombie",
+          3
+        );
         zombies.push(zombSprite);
         var zombSpriteImage = new Image();
         zombSpriteImage.src = "Media/Sprites/ZombieSprite1.png";
-        zomb1 = new component(zombSpriteImage, 32, 65, 32, 32, 350, 350, 30, 30, "zombie", 3);
+        zomb1 = new component(
+          zombSpriteImage,
+          32,
+          65,
+          32,
+          32,
+          350,
+          350,
+          30,
+          30,
+          "zombie",
+          3
+        );
         zombies.push(zomb1);
         var zombSpriteImage = new Image();
         zombSpriteImage.src = "Media/Sprites/ZombieSprite1.png";
-        zomb2 = new component(zombSpriteImage, 32, 65, 32, 32, 150, 250, 30, 30, "zombie", 3);
+        zomb2 = new component(
+          zombSpriteImage,
+          32,
+          65,
+          32,
+          32,
+          150,
+          250,
+          30,
+          30,
+          "zombie",
+          3
+        );
         zombies.push(zomb2);
         var floorTileImage = new Image();
         floorTileImage.src = "Media/Sprites/FloorTile1.bmp";
@@ -98,8 +154,8 @@ and open the template in the editor.
         
         //assign map elements
         var mapIndex = 0;
-        for (var y = 0; y <= mapHeight-1; y++) {
-          for (var x = 0; x <= mapWidth-1; x++, mapIndex++) {
+        for (var y = 0; y <= mapHeight - 1; y++) {
+          for (var x = 0; x <= mapWidth - 1; x++, mapIndex++) {
             var tile_x = x * blockW;
             var tile_y = y * blockH;
             var tileType = map[mapIndex];
@@ -107,13 +163,51 @@ and open the template in the editor.
             //make walls array
             if (tileType === 1) {
               obstacles.push(
-                new component(wallTileImage, 0, 0, 32, 32, tile_x, tile_y, 32, 32, "tile")
+                new component(
+                  wallTileImage,
+                  0,
+                  0,
+                  32,
+                  32,
+                  tile_x,
+                  tile_y,
+                  32,
+                  32,
+                  "tile"
+                )
               );
             
             //make floor array
             } else if (tileType === 0) {
-                floor.push(
-                new component(floorTileImage, 0, 0, 32, 32, tile_x, tile_y, 32, 32, "tile")
+              floor.push(
+                new component(
+                  floorTileImage,
+                  0,
+                  0,
+                  32,
+                  32,
+                  tile_x,
+                  tile_y,
+                  32,
+                  32,
+                  "tile"
+                )
+              );
+              var r = Math.random() * 100;
+              if (r >= 98) {
+                obstacles.push(
+                  new component(
+                    medSpriteImage,
+                    0,
+                    0,
+                    32,
+                    32,
+                    tile_x + 8,
+                    tile_y + 8,
+                    16,
+                    16,
+                    "med"
+                  )
                 );
                 //add items on floor tiles and push to obstacles array
                 var r = Math.random() * 100;
@@ -126,11 +220,42 @@ and open the template in the editor.
                 }
             }    
 //              
+              } else if (r > 0 && r < 3) {
+                obstacles.push(
+                  new component(
+                    foodSpriteImage,
+                    0,
+                    0,
+                    32,
+                    32,
+                    tile_x + 8,
+                    tile_y + 8,
+                    16,
+                    16,
+                    "food"
+                  )
+                );
+              }
+            }
+            //
           }
         }
-      }
+     
       //COMPONENTS
-      function component(img, sx, sy, sWidth, sHeight, x, y, width, height, category, health) {
+      //sprites
+      function component(
+        img,
+        sx,
+        sy,
+        sWidth,
+        sHeight,
+        x,
+        y,
+        width,
+        height,
+        category,
+        health = 0
+      ) {
         this.width = width;
         this.height = height;
         this.x = x;
@@ -143,7 +268,17 @@ and open the template in the editor.
         this.health = health;
         this.update = function() {
           ctx = gameArea.context;
-          ctx.drawImage(img, this.sx, this.sy, sWidth, sHeight, this.x, this.y, width, height);
+          ctx.drawImage(
+            img,
+            this.sx,
+            this.sy,
+            sWidth,
+            sHeight,
+            this.x,
+            this.y,
+            width,
+            height
+          );
         };
         this.newPos = function() {
           this.x += this.speedX;
@@ -171,10 +306,9 @@ and open the template in the editor.
       }
           return crash;
         };
-        
-        this.getCategory = function(){
-        category = this.category;
-        return category; 
+        this.getCategory = function() {
+          category = this.category;
+          return category;
         };
       }
       
@@ -185,18 +319,21 @@ and open the template in the editor.
             //frame loop
             if(gameArea.frameNo < 24){
             gameArea.frameNo += 1;
-          } else (gameArea.frameNo = 0);
-        
+          } else gameArea.frameNo = 0;
+
           //playerSprite Animation
-          if ((gameArea.frameNo >=0 && gameArea.frameNo <= 6) || (gameArea.frameNo >=13 && gameArea.frameNo <= 18)){
-            playerSprite.sy = 64;}
-          else if(gameArea.frameNo >= 7 && gameArea.frameNo <= 12){
+          if (
+            (gameArea.frameNo >= 0 && gameArea.frameNo <= 6) ||
+            (gameArea.frameNo >= 13 && gameArea.frameNo <= 18)
+          ) {
+            playerSprite.sy = 64;
+          } else if (gameArea.frameNo >= 7 && gameArea.frameNo <= 12) {
             playerSprite.sy = 32;
-          }
-          else {
+          } else {
             playerSprite.sy = 0;
           }
          }
+         
          else {
              playerSprite.sy = 64;
          }
@@ -218,7 +355,7 @@ and open the template in the editor.
                 currentItemIndex = i;
                 }
             }
-            }
+          }
             
           //Check collision and prevent movement through obstacles
           collisionCheck = false;
@@ -244,7 +381,8 @@ and open the template in the editor.
           
           //Temporary Inventory Out - grabbing category deletes walls for some godforsaken reason
           document.getElementById("inventory_placeholder").innerHTML = JSON.stringify(inventory);
-           //update zombies - movement = half player speed
+          
+        //update zombies - movement = half player speed
           if (zombFrame % 2 === 0){ 
           //Zombie movement - Player Tracking
           
@@ -312,11 +450,9 @@ and open the template in the editor.
               currentZom.speedX = 0;
               currentZom.speedY = 0;
             } 
-          currentZom.newPos();
+            currentZom.newPos();
           } 
-      }
-          
-          
+      } 
           zombFrame++;
           if(zombFrame >= 24){
             zombFrame = 0;
@@ -329,10 +465,13 @@ and open the template in the editor.
           for (var f = 0; f < floor.length; f++){
               floor[f].update();
           }
+          
           for (var b = 0; b < obstacles.length; b++){
               obstacles[b].update();
-          }         
+          } 
+          
           playerSprite.update();
+          
           for (var z = 0; z < zombies.length; z++){
               zombies[z].update();
           }
@@ -386,17 +525,40 @@ and open the template in the editor.
             for (var f = 0; f < rounds.length; f++){
               if (rounds[f].xPos >= zombies[n].x && rounds[f].xPos <= (zombies[n].x + zombies[n].width) && rounds[f].yPos >= zombies[n].y && rounds[f].yPos <= (zombies[n].y + zombies[n].width)){
               rounds.splice(f, 1);
-              zombies[n].health-= 1;
-              if(zombies[n].health === 0) {
+              zombies[n].health -= 1;
+              if (zombies[n].health === 0) {
                 zombies.splice(n, 1);
                 killCount++;
               }
             }
+          }
+          if (
+            playerSprite.x >= zombies[n].x &&
+            playerSprite.x <= zombies[n].x + zombies[n].width &&
+            playerSprite.y >= zombies[n].y &&
+            playerSprite.y <= zombies[n].y + zombies[n].width &&
+            playerSprite.y + playerSprite.width >= zombies[n].y &&
+            playerSprite.y + playerSprite.width <=
+              zombies[n].y + zombies[n].width &&
+            playerSprite.x + playerSprite.width >= zombies[n].x &&
+            playerSprite.x + playerSprite.width <=
+              zombies[n].x + zombies[n].width
+          ) {
+            if (hCount === 0) {
+              playerSprite.health--;
+            }
+            hCount++;
+            if (hCount >= 30) {
+              hCount = 0;
+            }
+            if (playerSprite.health === 0) {
+              clearInterval(gameArea.interval);
             }
           }   
       }
-          
-          
+      
+    }
+
       var gameArea = {
         canvas: document.createElement("canvas"),
         start: function() {
@@ -408,6 +570,7 @@ and open the template in the editor.
           //FRAMERATE
           this.interval = setInterval(updateGameArea, 20);
           window.addEventListener("keydown", function(e) {
+            e.preventDefault();
             gameArea.key = e.keyCode;
           });
           window.addEventListener("keyup", function(e) {
@@ -415,15 +578,26 @@ and open the template in the editor.
           });
           window.addEventListener("mousedown", function(e) {
             timer = setInterval(function() {
-              rounds.push(new Bullet(4, playerSprite.x + 16, playerSprite.y + 16, dir, 3, 3));
+              rounds.push(
+                new Bullet(
+                  4,
+                  playerSprite.x + 16,
+                  playerSprite.y + 16,
+                  dir,
+                  3,
+                  3
+                )
+              );
             }, 500);
             gameArea.click = true;
           });
-          window.addEventListener("mouseup", function(e){
+          window.addEventListener("mouseup", function(e) {
             gameArea.click = false;
             clearInterval(timer);
           });
-          window.addEventListener("contextmenu", event => event.preventDefault());
+          window.addEventListener("contextmenu", event =>
+            event.preventDefault()
+          );
         },
         clear: function() {
           this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
@@ -454,23 +628,23 @@ and open the template in the editor.
         playerSprite.speedY = 0;
         playerSprite.speedX = 0;
       }
-      
-      function moveKeys(){
-           if (gameArea.key && (gameArea.key === 38 || gameArea.key === 87)) {
-              moveUp();
-            }
-            if (gameArea.key && (gameArea.key === 40 || gameArea.key === 83)) {
-              moveDown();
-            }
-            if (gameArea.key && (gameArea.key === 37 || gameArea.key === 65)) {
-              moveLeft();
-            }
-            if (gameArea.key && (gameArea.key === 39 || gameArea.key === 68)) {
-              moveRight();
-            }
-            if(!gameArea.key){
-                stopMove();
-            }
+
+      function moveKeys() {
+        if (gameArea.key && (gameArea.key === 38 || gameArea.key === 87)) {
+          moveUp();
+        }
+        if (gameArea.key && (gameArea.key === 40 || gameArea.key === 83)) {
+          moveDown();
+        }
+        if (gameArea.key && (gameArea.key === 37 || gameArea.key === 65)) {
+          moveLeft();
+        }
+        if (gameArea.key && (gameArea.key === 39 || gameArea.key === 68)) {
+          moveRight();
+        }
+        if (!gameArea.key) {
+          stopMove();
+        }
       }
     </script>
   </body>
