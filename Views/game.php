@@ -43,6 +43,9 @@
                         ?>
 
     </div>
+<div id='inventory_placeholder'>
+    XXX
+</div>
     <?php include("Models/JS/map.html"); ?>
     <div class="game_outer_interface_div_left">
 
