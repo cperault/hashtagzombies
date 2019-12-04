@@ -7,14 +7,14 @@
  *Purpose: This is the controller.                                                                                 *
 \******************************************************************************************************************/
 
-//import the PHPMailer classes installed from Composer
-use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\SMTP;
-use PHPMailer\PHPMailer\Exception;
+////import the PHPMailer classes installed from Composer
+//use PHPMailer\PHPMailer\PHPMailer;
+//use PHPMailer\PHPMailer\SMTP;
+//use PHPMailer\PHPMailer\Exception;
 //load the autoloader from Composer
 require_once('vendor/autoload.php');
 //load CSS into all pages
-require_once("Views/styling.php");
+include("Views/styling.php");
 //load the files from Models
 require_once('Models/Database.php');
 require_once('Models/Characters.php');
@@ -28,18 +28,19 @@ require_once('Models/GameLoad.php');
 require_once('Models/Register.php');
 require_once('Models/UserLogin.php');
 
-//instantiate PHPMailer object
-$mail = new PHPMailer(true); //true enables exception handling
+////instantiate PHPMailer object
+//$mail = new PHPMailer(true); //true enables exception handling
+//
+////SMTP server settings setup as shown in the library's documentation
+////$mail->SMTPDebug = SMTP::DEBUG_SERVER;                      // Enable verbose debug output
+//$mail->isSMTP();                                            // Send using SMTP
+//$mail->Host       = 'smtp.gmail.com';                       // Set the SMTP server to send through
+//$mail->SMTPAuth   = true;                                   // Enable SMTP authentication
+//$mail->Username   = 'hashtagzombies.development@gmail.com'; // SMTP username
+//$mail->Password   = 'uodzpufieenhtdzt';                 // SMTP password
+//$mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;         // Enable TLS encryption; `PHPMailer::ENCRYPTION_SMTPS` also accepted
+//$mail->Port       = 587;
 
-//SMTP server settings setup as shown in the library's documentation
-//$mail->SMTPDebug = SMTP::DEBUG_SERVER;                      // Enable verbose debug output
-$mail->isSMTP();                                            // Send using SMTP
-$mail->Host       = 'smtp.gmail.com';                       // Set the SMTP server to send through
-$mail->SMTPAuth   = true;                                   // Enable SMTP authentication
-$mail->Username   = 'hashtagzombies.development@gmail.com'; // SMTP username
-$mail->Password   = 'uodzpufieenhtdzt';                 // SMTP password
-$mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;         // Enable TLS encryption; `PHPMailer::ENCRYPTION_SMTPS` also accepted
-$mail->Port       = 587;
 
 //get the value of the POST or GET data from form actions
 $action = filter_input(INPUT_POST, 'action');
@@ -125,10 +126,18 @@ switch ($action) {
         include("Views/game.php");
         die;
         break;
-    case 'logout';
+    case 'logout':
         session_destroy();
         //redirect to the login view
         include("Views/login.php");
         die;
+        break;
+    case 'use_item':
+        var_dump($_POST);
+        $message = json_encode(array('received' => $_POST), JSON_PRETTY_PRINT);
+        exit($message);
+        break;
+    case 'change_map':
+
         break;
 }

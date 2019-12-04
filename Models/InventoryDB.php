@@ -31,4 +31,6 @@ class InventoryDB
         $statement->closeCursor();
         return $stuff;
     }
+
+    //query to remove item from inventory
 }

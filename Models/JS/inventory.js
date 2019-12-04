@@ -6,7 +6,7 @@ function viewInventory() {
   let modalContainer = (document.getElementById(
     "inventory_modal_container_div"
   ).style.display = "block");
-  clearTimeout(gameArea.interval, 100000);
+  pauseGame();
 }
 
 //function to close modal
@@ -15,5 +15,18 @@ function closeInventory() {
   let modalContainer = (document.getElementById(
     "inventory_modal_container_div"
   ).style.display = "none");
-  gameArea.interval = setInterval(updateGameArea, 20);
+  resumeGame();
+}
+
+//function to use item in inventory
+function useItem(item) {
+  console.log("sending itemID: " + item);
+  let params = { item_to_remove: item };
+  let config = {
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json"
+    }
+  };
+  //axios request
 }
