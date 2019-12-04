@@ -6,6 +6,7 @@ function viewInventory() {
   let modalContainer = (document.getElementById(
     "inventory_modal_container_div"
   ).style.display = "block");
+  clearTimeout(gameArea.interval, 100000);
 }
 
 //function to close modal
@@ -14,4 +15,5 @@ function closeInventory() {
   let modalContainer = (document.getElementById(
     "inventory_modal_container_div"
   ).style.display = "none");
+  gameArea.interval = setInterval(updateGameArea, 20);
 }

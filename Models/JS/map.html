@@ -39,6 +39,8 @@ and open the template in the editor.
       var killCount = 0;
       var zombFrame = 0;
       var hCount = 0;
+      var charXP = 0;
+      var levelUP = 1;
       //make map
       // comment below prevents formatting from messing up the 38x25 map matrix
       // prettier-ignore
@@ -66,7 +68,7 @@ and open the template in the editor.
               0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
               1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
               0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-              0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+              0,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
               0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
               ];
       function startGame() {
@@ -212,6 +214,12 @@ and open the template in the editor.
                   )
                 );
               }
+            } else if (tileType === 3) {
+              var ctx = gameArea.context;
+              ctx.beginPath();
+              ctx.rect(tile_x, tile_y, 32, 32);
+              ctx.fillStyle = "blue";
+              ctx.fill();
             }
             //
           }
@@ -459,6 +467,13 @@ and open the template in the editor.
               if (zombies[n].health === 0) {
                 zombies.splice(n, 1);
                 killCount++;
+                charXP += 10;
+                if (charXP === (100 * levelUP)) {
+                  let charLevel = document.getElementById("charLevel");
+                  levelUP++;
+                  charLevel.innerText = levelUP;
+                  charXP = 0;
+                }
               }
             }
           }
@@ -571,7 +586,7 @@ and open the template in the editor.
         if (zombFrame >= 24) {
           zombFrame = 0;
         }
-
+        
         //get the element in which health is display 
         let healthStatus = document.getElementById("character_health_status");
         //extract the health value from within the healthStatus element
