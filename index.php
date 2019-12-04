@@ -14,7 +14,7 @@
 //load the autoloader from Composer
 require_once('vendor/autoload.php');
 //load CSS into all pages
-require_once("Views/styling.php");
+include("Views/styling.php");
 //load the files from Models
 require_once('Models/Database.php');
 require_once('Models/Characters.php');
@@ -40,6 +40,7 @@ require_once('Models/UserLogin.php');
 //$mail->Password   = 'uodzpufieenhtdzt';                 // SMTP password
 //$mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;         // Enable TLS encryption; `PHPMailer::ENCRYPTION_SMTPS` also accepted
 //$mail->Port       = 587;
+
 
 //get the value of the POST or GET data from form actions
 $action = filter_input(INPUT_POST, 'action');
@@ -125,10 +126,18 @@ switch ($action) {
         include("Views/game.php");
         die;
         break;
-    case 'logout';
+    case 'logout':
         session_destroy();
         //redirect to the login view
         include("Views/login.php");
         die;
+        break;
+    case 'use_item':
+        var_dump($_POST);
+        $message = json_encode(array('received' => $_POST), JSON_PRETTY_PRINT);
+        exit($message);
+        break;
+    case 'change_map':
+
         break;
 }
