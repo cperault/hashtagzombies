@@ -293,17 +293,23 @@ and open the template in the editor.
           var otherright = otherobj.x + otherobj.width;
           var othertop = otherobj.y;
           var otherbottom = otherobj.y + otherobj.height;
-          
           var crash = false;
           
-         if (
-            (myleft === otherright && mytop <= otherbottom && mybottom >= othertop) || 
-            (myright === otherleft && mytop <= otherbottom && mybottom >= othertop) || 
-            (mytop === otherbottom && myright >= otherleft && myleft <= otherright) ||
-            (mybottom === othertop && myright >= otherleft && myleft <= otherright)
-          ) {
-          crash = true;
-      }
+         if (myleft === otherright && mytop <= otherbottom && mybottom >= othertop)
+          {
+              crash += "left ";}
+     
+         if(myright === otherleft && mytop <= otherbottom && mybottom >= othertop) {
+             crash += "right ";
+         }
+         
+         if(mytop === otherbottom && myright >= otherleft && myleft <= otherright) {
+             crash += "top ";
+         }
+         if (mybottom === othertop && myright >= otherleft && myleft <= otherright)
+          {
+            crash += "bottom ";
+           }
           return crash;
         };
         this.getCategory = function() {
@@ -449,10 +455,30 @@ and open the template in the editor.
             if (zombieCollisionCheck !== false){
               currentZom.speedX = 0;
               currentZom.speedY = 0;
-            } 
-            currentZom.newPos();
-          } 
-      } 
+              
+              if(zombieCollisionCheck.includes("top") || zombieCollisionCheck.includes("bottom")){
+                  currentZom.speedX = 1;
+                  if(currentZom.collide(obstacles[zc] !== false)){
+                      currentZom.speedX = -1;
+                      if(currentZom.collide(obstacles[zc] !== false)){
+                          currentZom.speedX = 0;
+                      }
+                  }
+              }
+              
+              if(zombieCollisionCheck.includes("right") || zombieCollisionCheck.includes("left")){
+                  currentZom.speedY = 1;
+                  if(currentZom.collide(obstacles[zc] !== false)){
+                      currentZom.speedY = -1;
+                      if(currentZom.collide(obstacles[zc] !== false)){
+                          currentZom.speedY = 0;
+                      }
+                  }
+              }
+        }
+            currentZom.newPos(); 
+        }
+    }
           zombFrame++;
           if(zombFrame >= 24){
             zombFrame = 0;
