@@ -481,10 +481,6 @@ and open the template in the editor.
             currentZom.newPos(); 
         }
     }
-          zombFrame++;
-          if(zombFrame >= 24){
-            zombFrame = 0;
-          }
           
           //Clear previous frame state
           gameArea.clear();
@@ -591,83 +587,6 @@ and open the template in the editor.
             }
           }
         }
-        if (zombFrame % 2 === 0) {
-          for (var q = 0; q < zombies.length; q++) {
-            zombies[q].update();
-            //Zombie movement - Player Tracking
-            //move left
-            if (zombies[q].x > playerSprite.x) {
-              zombies[q].x -= 1;
-              zombies[q].sx = 96;
-              if (
-                (zombFrame >= 0 && zombFrame <= 6) ||
-                (zombFrame >= 13 && zombFrame <= 18)
-              ) {
-                zombies[q].sy = 64;
-              } else {
-                zombies[q].sy = 0;
-              }
-            }
-            //move right
-            if (zombies[q].x < playerSprite.x) {
-              zombies[q].x += 1;
-              zombies[q].sx = 64;
-              if (
-                (zombFrame >= 0 && zombFrame <= 6) ||
-                (zombFrame >= 13 && zombFrame <= 18)
-              ) {
-                zombies[q].sy = 64;
-              } else {
-                zombies[q].sy = 0;
-              }
-            }
-            //move up
-            if (zombies[q].y > playerSprite.y) {
-              zombies[q].y -= 1;
-              zombies[q].sx = 0;
-              if (
-                (zombFrame >= 0 && zombFrame <= 6) ||
-                (zombFrame >= 13 && zombFrame <= 18)
-              ) {
-                zombies[q].sy = 32;
-              } else {
-                zombies[q].sy = 0;
-              }
-            }
-            //move down
-            if (zombies[q].y < playerSprite.y) {
-              zombies[q].y += 1;
-              zombies[q].sx = 32;
-              if (
-                (zombFrame >= 0 && zombFrame <= 6) ||
-                (zombFrame >= 13 && zombFrame <= 18)
-              ) {
-                zombies[q].sy = 32;
-              } else {
-                zombies[q].sy = 0;
-              }
-            }
-            //Zombie Collision/Pathfinding
-
-            for (var i = 0; i < obstacles.length; i++) {
-              var zombCollide = [];
-              zombCollide = zombies[q].collide(obstacles[i]);
-
-              if (zombCollide.includes("top")) {
-                zombies[q].y -= 1;
-              }
-              if (zombCollide.includes("right")) {
-                zombies[q].x += 1;
-              }
-              if (zombCollide.includes("left")) {
-                zombies[q].x -= 1;
-              }
-              if (zombCollide.includes("bottom")) {
-                zombies[q].y += 1;
-              }
-            }
-          }
-        }
 
         for (var z = 0; z < zombies.length; z++) {
           zombies[z].update();
@@ -683,7 +602,56 @@ and open the template in the editor.
         let health = parseInt(healthStatus.innerText);
         //substract damage from played based ono sprite's healthy which is calculated/updatedd on collisions with zombies
         healthStatus.innerText = playerSprite.health;
-      }
+        if(zombies.length === 0){
+        var mapIndex = 0;
+        for (var y = 0; y <= mapHeight - 1; y++) {
+          for (var x = 0; x <= mapWidth - 1; x++, mapIndex++) {
+            var tile_x = x * blockW;
+            var tile_y = y * blockH;
+            var tileType = map[mapIndex];
+            
+            var zombSpriteImage = new Image();
+            zombSpriteImage.src = "Media/Sprites/ZombieSprite1.png";
+              if (tileType === 0) {
+                var zombY = Math.floor(Math.random() * 800);
+                var zombX = Math.floor(Math.random() * 1216);
+                zombies.push(
+                  new component(
+                    zombSpriteImage,
+                    32,
+                    65,
+                    32,
+                    32,
+                    zombX,
+                    zombY,
+                    30,
+                    30,
+                    "zombie",
+                    3)
+                );
+                var zombY = Math.floor(Math.random() * 800);
+                var zombX = Math.floor(Math.random() * 1216);
+                zombies.push(
+                  new component(
+                    zombSpriteImage,
+                    32,
+                    65,
+                    32,
+                    32,
+                    zombX,
+                    zombY,
+                    30,
+                    30,
+                    "zombie",
+                    3)
+                );
+                mapIndex = 950;
+              }
+            }
+          }
+        }
+        }
+      
       
 
       var gameArea = {
