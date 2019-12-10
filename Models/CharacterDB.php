@@ -36,7 +36,7 @@ class CharacterDB
         $characterArray = [];
 
         foreach ($character as $c) {
-            $characterArray[] = new Characters($c['characterID'], $c['characterName'], $c['characterLevel']);
+            $characterArray[] = new Characters($c['characterID'], $c['characterName'], $c['characterLevel'], $c['characterImage']);
         }
         $statement->closeCursor();
         return $characterArray;
