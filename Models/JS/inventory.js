@@ -50,7 +50,7 @@ function discardItem(item) {
   //user cannot discard item if qty less than or equal to zero
   if (count >= 1) {
     console.log("Discarding item: " + item);
-    let url = "http://localhost:3001/discard_inventory_item";
+    let url = "httsp://hashtagzombies.herokuapp.com/discard_inventory_item";
     let method = "post";
     //set up request parameters
     let params = { action: "discard", itemID: item };
