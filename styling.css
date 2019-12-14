@@ -209,6 +209,15 @@ canvas {
 .game_profile_table {
   border: solid red 3px;
   border-radius: 15px;
+  padding: 10px;
+  display: flex;
+  align-content: center;
+}
+
+#character_image {
+  height: 80px;
+  width: 80px;
+  border-radius: 15px;
 }
 
 .game_profile_table {

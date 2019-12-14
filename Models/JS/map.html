@@ -45,6 +45,8 @@ and open the template in the editor.
     //make map
       // comment below prevents formatting from messing up the 25x20 map matrix
       var hCount = 0;
+      var charXP = 0;
+      var levelUP = 1;
       //make map
       // comment below prevents formatting from messing up the 38x25 map matrix
       // prettier-ignore
@@ -72,7 +74,7 @@ and open the template in the editor.
               0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
               1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
               0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-              0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+              0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
               0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
               ];
       
@@ -560,6 +562,13 @@ and open the template in the editor.
               if (zombies[n].health === 0) {
                 zombies.splice(n, 1);
                 killCount++;
+                charXP += 10;
+                if (charXP === (100 * levelUP)) {
+                  let charLevel = document.getElementById("charLevel");
+                  levelUP++;
+                  charLevel.innerText = levelUP;
+                  charXP = 0;
+                }
               }
             }
           }
