@@ -183,4 +183,26 @@ class PlayerDB
         $statement->execute();
         $statement->closeCursor();
     }
+    
+    public static function save_game($player_id, $savestate){
+         $db = Database::getDB();
+        $query = 'UPDATE Players
+                  SET savestate = :savestate WHERE playerID = :player_id'; 
+        $statement = $db->prepare($query);
+        $statement->bindValue(':player_id', $player_id);
+        $statement->bindValue(':savestate', $savestate);
+        $statement->execute();
+        $statement->closeCursor();
+    }
+    
+    public static function load_game($player_id){
+        $db = Database::getDB();
+        $query = 'SELECT savestate FROM Players where playerID = :player_id';
+        $statement = $db->prepare($query);
+        $statement->bindValue(':player_id', $player_id);
+        $statement->execute();
+        $save_game = $statement->fetch();
+        $statement->closeCursor();
+        return $save_game['savestate'];
+    }
 }

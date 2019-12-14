@@ -23,6 +23,12 @@ class GameLoad
         }
         //get all inventory for the logged in user
         $items = InventoryDB::get_all_inventory($_SESSION["player_id"]);
+        $gamestate = PlayerDB::load_game($_SESSION["player_id"]);
+        if (!isset($gamestate) || $gamestate == NULL || $gamestate == ''){
+            $gamestate = '{"level":1, "exp":0,"inventory":[]}';
+        }
         include('Views/game.php');
     }
+    
+    
 }

@@ -6,7 +6,7 @@ and open the template in the editor.
 -->
 <html>
   <head>
-    <title>TODO supply a title</title>
+    <title>#Zombies</title>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <style>
@@ -15,6 +15,7 @@ and open the template in the editor.
       }
     </style>
     <script src="Models/JS/bullet.js"></script>
+    <script src="gameState.js" type="text/javascript"></script>
   </head>
   <body onload="startGame()" class="zombies_body_gameplay_container">
     <script>
@@ -190,7 +191,8 @@ and open the template in the editor.
                   tile_y,
                   32,
                   32,
-                  "tile"
+                  "tile", 0
+                  
                 )
               );
               var r = Math.random() * 100;
@@ -206,7 +208,7 @@ and open the template in the editor.
                     tile_y + 8,
                     16,
                     16,
-                    "med"
+                    "med", 0
                   )
                 );
                 //add items on floor tiles and push to obstacles array
@@ -232,7 +234,7 @@ and open the template in the editor.
                     tile_y + 8,
                     16,
                     16,
-                    "food"
+                    "food", 0
                   )
                 );
               }
@@ -295,31 +297,29 @@ and open the template in the editor.
           var otherbottom = otherobj.y + otherobj.height;
           var crash = false;
           
-         if (myleft === otherright && mytop <= otherbottom && mybottom >= othertop)
-          {
-              crash += "left ";}
-     
-         if(myright === otherleft && mytop <= otherbottom && mybottom >= othertop) {
-             crash += "right ";
-         }
-         
-         if(mytop === otherbottom && myright >= otherleft && myleft <= otherright) {
-             crash += "top ";
-         }
-         if (mybottom === othertop && myright >= otherleft && myleft <= otherright)
-          {
-            crash += "bottom ";
-           }
-          return crash;
+         if ((myleft === otherright && mytop <= otherbottom && mybottom >= othertop) ||
+             (myright === otherleft && mytop <= otherbottom && mybottom >= othertop) ||
+             (mytop === otherbottom && myright >= otherleft && myleft <= otherright) ||
+             (mybottom === othertop && myright >= otherleft && myleft <= otherright) ||
+             (myleft <= 0) ||
+             (myright >= mapWidth * 32) ||
+             (mytop <= 0) ||
+             (mybottom >= mapHeight * 32)
+             ) {
+                crash = true;
+             }
+        
+            return crash;
         };
         this.getCategory = function() {
-          category = this.category;
-          return category;
+          var cat = this.category.toString();
+          return cat;
         };
       }
       
       //Update game area based on framrate
       function updateGameArea() {
+          
       //Sprite Animation
         if (gameArea.key){
             //frame loop
@@ -380,13 +380,12 @@ and open the template in the editor.
          //If object is grabbable, add to inventory and remove from map
           if (gameArea.key && gameArea.key === 71){
            if (currentItemIndex > -1){
-                 inventory.push(obstacles.splice(currentItemIndex, 1));
-                 currentItemIndex = -1; 
+                 var grabbed = obstacles.splice(currentItemIndex, 1);
+                 currentItemIndex = -1;
+                 inventory.push(grabbed.getCategory());
               }
           }
           
-          //Temporary Inventory Out - grabbing category deletes walls for some godforsaken reason
-          document.getElementById("inventory_placeholder").innerHTML = JSON.stringify(inventory);
           
         //update zombies - movement = half player speed
           if (zombFrame % 2 === 0){ 
@@ -394,91 +393,97 @@ and open the template in the editor.
           
           for(var q = 0; q < zombies.length; q++){
             var currentZom = zombies[q];
+            var distanceX = Math.abs(currentZom.x - playerSprite.x);
+            var distanceY = Math.abs(currentZom.y - playerSprite.y);
+            var facing = "S";
             currentZom.speedX = 0;
             currentZom.speedY = 0;
             
             //pathfinding priority
-          if (Math.abs(currentZom.x - playerSprite.x) > Math.abs(currentZom.y - playerSprite.y)){
+          if (distanceX > distanceY){
                 //move left
             if(currentZom.x > playerSprite.x){
-              currentZom.speedX -= 1;
-              currentZom.sx = 96;
-              if((zombFrame >=0 && zombFrame <= 6) || (zombFrame >=13 && zombFrame <= 18)){
-                currentZom.sy = 64;
-              } else {
-                currentZom.sy = 0;
+                zMoveLeft(currentZom);
+                facing = "W";
+            }
+            //move right
+            if(currentZom.x < playerSprite.x){
+                zMoveRight(currentZom);
+                facing = "E";
               }
-            }
-          //move right
-          if(currentZom.x < playerSprite.x){
-            currentZom.speedX += 1;
-            currentZom.sx = 64;
-            if((zombFrame >=0 && zombFrame <= 6) || (zombFrame >=13 && zombFrame <= 18)){
-              currentZom.sy = 64;
-            } else {
-              currentZom.sy = 0;
-            }
-            }
           }  
           
-         else {
+         else{
           //move up
           if(currentZom.y > playerSprite.y){
-            currentZom.speedY -= 1;
-            currentZom.sx = 0;
-            if((zombFrame >=0 && zombFrame <= 6) || (zombFrame >=13 && zombFrame <= 18)){
-              currentZom.sy = 32;
-            } else {
-              currentZom.sy = 0;
-            }
-          }
+           zMoveUp(currentZom);
+           facing = "N";
+           }
           //move down
             if(currentZom.y < playerSprite.y){
-            currentZom.speedY += 1;
-            currentZom.sx = 32;
-            if((zombFrame >=0 && zombFrame <= 6) || (zombFrame >=13 && zombFrame <= 18)){
-              currentZom.sy = 32;
-            } else {
-              currentZom.sy = 0;
-            }
+            zMoveDown(currentZom);
+            facing = "S";
             }
          }
+
         //Zombie Collision/Pathfinding
         var zombieCollisionCheck = false;
+       
         var zc = 0;
-        do {
+            //check if zombie is colliding with obstacle
+           do {
             zombieCollisionCheck = currentZom.collide(obstacles[zc]);
             zc++;
             }
+            
             while (zombieCollisionCheck === false && zc < obstacles.length);
           
             if (zombieCollisionCheck !== false){
               currentZom.speedX = 0;
               currentZom.speedY = 0;
-              
-              if(zombieCollisionCheck.includes("top") || zombieCollisionCheck.includes("bottom")){
-                  currentZom.speedX = 1;
-                  if(currentZom.collide(obstacles[zc] !== false)){
-                      currentZom.speedX = -1;
-                      if(currentZom.collide(obstacles[zc] !== false)){
-                          currentZom.speedX = 0;
-                      }
+              if (distanceX >= distanceY)
+              {
+                  //move up
+                if(currentZom.y > playerSprite.y){
+                 zMoveUp(currentZom);
+                 facing = "N";
+                 }
+                //move down
+                  else{
+                  zMoveDown(currentZom);
+                  facing = "S";
                   }
-              }
-              
-              if(zombieCollisionCheck.includes("right") || zombieCollisionCheck.includes("left")){
-                  currentZom.speedY = 1;
-                  if(currentZom.collide(obstacles[zc] !== false)){
-                      currentZom.speedY = -1;
-                      if(currentZom.collide(obstacles[zc] !== false)){
-                          currentZom.speedY = 0;
-                      }
+                  zombieCollisionCheck = currentZom.collide(obstacles[zc]);
+                  if (zombieCollisionCheck !== false && obstacles[zc].category === "tile"){
+                    currentZom.speedX = 0;
+                    currentZom.speedY = 0;
                   }
-              }
-        }
-            currentZom.newPos(); 
-        }
-    }
+                }   
+                  
+                else {
+                    //move left
+                    if(currentZom.x > playerSprite.x){
+                    zMoveLeft(currentZom);
+                    facing = "W";
+                    }
+            //move right
+                if(currentZom.x < playerSprite.x){
+                    zMoveRight(currentZom);
+                    facing = "E";
+                  }
+           
+                  zombieCollisionCheck = currentZom.collide(obstacles[zc]);
+                    if (zombieCollisionCheck !== false && obstacles[zc].category === "tile"){
+                    currentZom.speedX = 0;
+                    currentZom.speedY = 0;
+                    }
+           
+            }
+           }
+            
+           currentZom.newPos();
+          }
+      }
           zombFrame++;
           if(zombFrame >= 24){
             zombFrame = 0;
@@ -582,7 +587,13 @@ and open the template in the editor.
             }
           }   
       }
-      
+    
+        //listen for savegame
+      if (gameArea.key && gameArea.key === 32){
+          var save = saveGame("2", "15", inventory);
+          var decode = loadGame(save);
+          window.alert(JSON.stringify(decode));
+      }
     }
 
       var gameArea = {
@@ -672,6 +683,46 @@ and open the template in the editor.
           stopMove();
         }
       }
+      
+      //zombie movement controls
+      function zMoveUp(zombo){
+           zombo.speedY -= 1;
+           zombo.sx = 0;
+            if((zombFrame >=0 && zombFrame <= 6) || (zombFrame >=13 && zombFrame <= 18)){
+              zombo.sy = 32;
+            } else {
+              zombo.sy = 0;
+            }
+      }
+      function zMoveDown(zombo){
+          zombo.speedY += 1;
+            zombo.sx = 32;
+            if((zombFrame >=0 && zombFrame <= 6) || (zombFrame >=13 && zombFrame <= 18)){
+              zombo.sy = 32;
+            } else {
+              zombo.sy = 0;
+            }
+      }
+      function zMoveLeft(zombo){
+           zombo.speedX -= 1;
+              zombo.sx = 96;
+              if((zombFrame >=0 && zombFrame <= 6) || (zombFrame >=13 && zombFrame <= 18)){
+                zombo.sy = 64;
+              } else {
+                zombo.sy = 0;
+              }
+      }
+      function zMoveRight(zombo){
+            zombo.speedX += 1;
+            zombo.sx = 64;
+            if((zombFrame >=0 && zombFrame <= 6) || (zombFrame >=13 && zombFrame <= 18)){
+              zombo.sy = 64;
+            } else {
+              zombo.sy = 0;
+            }
+      }
+      
+
     </script>
   </body>
 </html>
