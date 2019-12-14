@@ -15,6 +15,7 @@ and open the template in the editor.
       }
     </style>
     <script src="Models/JS/bullet.js"></script>
+    <link href="/styling.css" rel="stylesheet" type="text/css" />
   </head>
   <body onload="startGame()" class="zombies_body_gameplay_container">
     <script>
@@ -40,8 +41,8 @@ and open the template in the editor.
       var zombFrame = 0;
       var currentItemIndex = -1;
 
-    //
-    //make map
+      //
+      //make map
       // comment below prevents formatting from messing up the 25x20 map matrix
       var hCount = 0;
       var charXP = 0;
@@ -76,9 +77,9 @@ and open the template in the editor.
               0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
               0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
               ];
-      
-    //Create game canvas and load game area. 
-    function startGame() {
+
+      //Create game canvas and load game area.
+      function startGame() {
         gameArea.start();
         //player
         var playerSpriteImage = new Image();
@@ -152,8 +153,7 @@ and open the template in the editor.
         foodSpriteImage.src = "Media/Sprites/borger.png";
         var medSpriteImage = new Image();
         medSpriteImage.src = "Media/Sprites/meds.png";
-        
-        
+
         //assign map elements
         var mapIndex = 0;
         for (var y = 0; y <= mapHeight - 1; y++) {
@@ -161,7 +161,7 @@ and open the template in the editor.
             var tile_x = x * blockW;
             var tile_y = y * blockH;
             var tileType = map[mapIndex];
-            
+
             //make walls array
             if (tileType === 1) {
               obstacles.push(
@@ -178,8 +178,8 @@ and open the template in the editor.
                   "tile"
                 )
               );
-            
-            //make floor array
+
+              //make floor array
             } else if (tileType === 0) {
               floor.push(
                 new component(
@@ -195,54 +195,57 @@ and open the template in the editor.
                   "tile"
                 )
               );
+              //add items on floor tiles and push to obstacles array
               var r = Math.random() * 100;
-              if (r >= 98) {
-                obstacles.push(
-                  new component(
-                    medSpriteImage,
-                    0,
-                    0,
-                    32,
-                    32,
-                    tile_x + 8,
-                    tile_y + 8,
-                    16,
-                    16,
-                    "med"
-                  )
-                );
-                //add items on floor tiles and push to obstacles array
-                var r = Math.random() * 100;
-                if(r >= 98){
-                    obstacles.push(
-                            new component(medSpriteImage, 0, 0, 32, 32, tile_x + 8, tile_y + 8, 16, 16, "med"));
-                } else if (r > 0 && r < 3){
-                    obstacles.push(
-                            new component(foodSpriteImage, 0, 0, 32, 32, tile_x + 8, tile_y + 8, 16, 16, "food"));
+                var medicineHealthAmount = 0;
+                if (r >= 98) {
+                  //medicine will be values of either 20, 50; get random # between 0 and 1 to decide
+                  var m = Math.random();
+                  if(m === 0)
+                  {
+                    medicineHealthAmount = 20;
+                  }
+                  else if (m === 1) {
+                    medicineHealthAmount = 50;
+                  }
+                  obstacles.push(
+                    new component(
+                      medSpriteImage,
+                      0,
+                      0,
+                      32,
+                      32,
+                      tile_x + 8,
+                      tile_y + 8,
+                      16,
+                      16,
+                      "med",
+                      medicineHealthAmount
+                    )
+                  );
                 }
-            }    
-//              
-              } else if (r > 0 && r < 3) {
-                obstacles.push(
-                  new component(
-                    foodSpriteImage,
-                    0,
-                    0,
-                    32,
-                    32,
-                    tile_x + 8,
-                    tile_y + 8,
-                    16,
-                    16,
-                    "food"
-                  )
-                );
-              }
+                
+                } else if (r > 0 && r < 3) {
+              obstacles.push(
+                new component(
+                  foodSpriteImage,
+                  0,
+                  0,
+                  32,
+                  32,
+                  tile_x + 8,
+                  tile_y + 8,
+                  16,
+                  16,
+                  "food"
+                )
+              );
             }
-            //
           }
+          //
         }
-     
+      }
+
       //COMPONENTS
       //sprites
       function component(
@@ -296,22 +299,37 @@ and open the template in the editor.
           var othertop = otherobj.y;
           var otherbottom = otherobj.y + otherobj.height;
           var crash = false;
-          
-         if (myleft === otherright && mytop <= otherbottom && mybottom >= othertop)
-          {
-              crash += "left ";}
-     
-         if(myright === otherleft && mytop <= otherbottom && mybottom >= othertop) {
-             crash += "right ";
-         }
-         
-         if(mytop === otherbottom && myright >= otherleft && myleft <= otherright) {
-             crash += "top ";
-         }
-         if (mybottom === othertop && myright >= otherleft && myleft <= otherright)
-          {
+
+          if (
+            myleft === otherright &&
+            mytop <= otherbottom &&
+            mybottom >= othertop
+          ) {
+            crash += "left ";
+          }
+
+          if (
+            myright === otherleft &&
+            mytop <= otherbottom &&
+            mybottom >= othertop
+          ) {
+            crash += "right ";
+          }
+
+          if (
+            mytop === otherbottom &&
+            myright >= otherleft &&
+            myleft <= otherright
+          ) {
+            crash += "top ";
+          }
+          if (
+            mybottom === othertop &&
+            myright >= otherleft &&
+            myleft <= otherright
+          ) {
             crash += "bottom ";
-           }
+          }
           return crash;
         };
         this.getCategory = function() {
@@ -319,13 +337,13 @@ and open the template in the editor.
           return category;
         };
       }
-      
+
       //Update game area based on framrate
       function updateGameArea() {
-      //Sprite Animation
-        if (gameArea.key){
-            //frame loop
-            if(gameArea.frameNo < 24){
+        //Sprite Animation
+        if (gameArea.key) {
+          //frame loop
+          if (gameArea.frameNo < 24) {
             gameArea.frameNo += 1;
           } else gameArea.frameNo = 0;
 
@@ -340,221 +358,240 @@ and open the template in the editor.
           } else {
             playerSprite.sy = 0;
           }
-         }
-         
-         else {
-             playerSprite.sy = 64;
-         }
+        } else {
+          playerSprite.sy = 64;
+        }
 
-         //get new player sprite position based on last frame input
-          playerSprite.newPos();
-          
-         //zero out movement incrementers
-          playerSprite.speedX = 0;
-          playerSprite.speedY = 0;
-          
-         //initialize movement controls
-          moveKeys();
-         
-         //detect if collision is with an obstacle that can be picked up
-          for(var i = 0; i < obstacles.length; i++){
-            if(playerSprite.collide(obstacles[i]) !== false){
-                if (obstacles[i].getCategory() !== "tile"){
-                currentItemIndex = i;
-                }
+        //get new player sprite position based on last frame input
+        playerSprite.newPos();
+
+        //zero out movement incrementers
+        playerSprite.speedX = 0;
+        playerSprite.speedY = 0;
+
+        //initialize movement controls
+        moveKeys();
+
+        //detect if collision is with an obstacle that can be picked up
+        for (var i = 0; i < obstacles.length; i++) {
+          if (playerSprite.collide(obstacles[i]) !== false) {
+            if (obstacles[i].getCategory() !== "tile") {
+              currentItemIndex = i;
             }
           }
-            
-          //Check collision and prevent movement through obstacles
-          collisionCheck = false;
-          var c = 0;
-          do {
-              collisionCheck = playerSprite.collide(obstacles[c]);
-              c++;
+        }
+
+        //Check collision and prevent movement through obstacles
+        collisionCheck = false;
+        var c = 0;
+        do {
+          collisionCheck = playerSprite.collide(obstacles[c]);
+          c++;
+        } while (collisionCheck === false && c < obstacles.length);
+
+        if (collisionCheck !== false) {
+          playerSprite.speedX = 0;
+          playerSprite.speedY = 0;
+        }
+
+        //If object is grabbable, add to inventory and remove from map
+        if (gameArea.key && gameArea.key === 71) {
+          if (currentItemIndex > -1) {
+            console.log(obstacles.splice(currentItemIndex, 1));
           }
-          while (collisionCheck === false && c < obstacles.length);
-          
-          if (collisionCheck !== false){
-              playerSprite.speedX = 0;
-              playerSprite.speedY = 0;
-          }
-         
-         //If object is grabbable, add to inventory and remove from map
-          if (gameArea.key && gameArea.key === 71){
-           if (currentItemIndex > -1){
-                 inventory.push(obstacles.splice(currentItemIndex, 1));
-                 currentItemIndex = -1; 
-              }
-          }
-          
-          //Temporary Inventory Out - grabbing category deletes walls for some godforsaken reason
-          //document.getElementById("inventory_placeholder").innerText = JSON.stringify(inventory);
-          
+        }
+
+        //Temporary Inventory Out - grabbing category deletes walls for some godforsaken reason
+        //document.getElementById("inventory_placeholder").innerText = JSON.stringify(inventory);
+
         //update zombies - movement = half player speed
-          if (zombFrame % 2 === 0){ 
+        if (zombFrame % 2 === 0) {
           //Zombie movement - Player Tracking
-          
-          for(var q = 0; q < zombies.length; q++){
+
+          for (var q = 0; q < zombies.length; q++) {
             var currentZom = zombies[q];
             currentZom.speedX = 0;
             currentZom.speedY = 0;
-            
+
             //pathfinding priority
-          if (Math.abs(currentZom.x - playerSprite.x) > Math.abs(currentZom.y - playerSprite.y)){
-                //move left
-            if(currentZom.x > playerSprite.x){
-              currentZom.speedX -= 1;
-              currentZom.sx = 96;
-              if((zombFrame >=0 && zombFrame <= 6) || (zombFrame >=13 && zombFrame <= 18)){
-                currentZom.sy = 64;
-              } else {
-                currentZom.sy = 0;
+            if (
+              Math.abs(currentZom.x - playerSprite.x) >
+              Math.abs(currentZom.y - playerSprite.y)
+            ) {
+              //move left
+              if (currentZom.x > playerSprite.x) {
+                currentZom.speedX -= 1;
+                currentZom.sx = 96;
+                if (
+                  (zombFrame >= 0 && zombFrame <= 6) ||
+                  (zombFrame >= 13 && zombFrame <= 18)
+                ) {
+                  currentZom.sy = 64;
+                } else {
+                  currentZom.sy = 0;
+                }
+              }
+              //move right
+              if (currentZom.x < playerSprite.x) {
+                currentZom.speedX += 1;
+                currentZom.sx = 64;
+                if (
+                  (zombFrame >= 0 && zombFrame <= 6) ||
+                  (zombFrame >= 13 && zombFrame <= 18)
+                ) {
+                  currentZom.sy = 64;
+                } else {
+                  currentZom.sy = 0;
+                }
+              }
+            } else {
+              //move up
+              if (currentZom.y > playerSprite.y) {
+                currentZom.speedY -= 1;
+                currentZom.sx = 0;
+                if (
+                  (zombFrame >= 0 && zombFrame <= 6) ||
+                  (zombFrame >= 13 && zombFrame <= 18)
+                ) {
+                  currentZom.sy = 32;
+                } else {
+                  currentZom.sy = 0;
+                }
+              }
+              //move down
+              if (currentZom.y < playerSprite.y) {
+                currentZom.speedY += 1;
+                currentZom.sx = 32;
+                if (
+                  (zombFrame >= 0 && zombFrame <= 6) ||
+                  (zombFrame >= 13 && zombFrame <= 18)
+                ) {
+                  currentZom.sy = 32;
+                } else {
+                  currentZom.sy = 0;
+                }
               }
             }
-          //move right
-          if(currentZom.x < playerSprite.x){
-            currentZom.speedX += 1;
-            currentZom.sx = 64;
-            if((zombFrame >=0 && zombFrame <= 6) || (zombFrame >=13 && zombFrame <= 18)){
-              currentZom.sy = 64;
-            } else {
-              currentZom.sy = 0;
-            }
-            }
-          }  
-          
-         else {
-          //move up
-          if(currentZom.y > playerSprite.y){
-            currentZom.speedY -= 1;
-            currentZom.sx = 0;
-            if((zombFrame >=0 && zombFrame <= 6) || (zombFrame >=13 && zombFrame <= 18)){
-              currentZom.sy = 32;
-            } else {
-              currentZom.sy = 0;
-            }
-          }
-          //move down
-            if(currentZom.y < playerSprite.y){
-            currentZom.speedY += 1;
-            currentZom.sx = 32;
-            if((zombFrame >=0 && zombFrame <= 6) || (zombFrame >=13 && zombFrame <= 18)){
-              currentZom.sy = 32;
-            } else {
-              currentZom.sy = 0;
-            }
-            }
-         }
-        //Zombie Collision/Pathfinding
-        var zombieCollisionCheck = false;
-        var zc = 0;
-        do {
-            zombieCollisionCheck = currentZom.collide(obstacles[zc]);
-            zc++;
-            }
-            while (zombieCollisionCheck === false && zc < obstacles.length);
-          
-            if (zombieCollisionCheck !== false){
+            //Zombie Collision/Pathfinding
+            var zombieCollisionCheck = false;
+            var zc = 0;
+            do {
+              zombieCollisionCheck = currentZom.collide(obstacles[zc]);
+              zc++;
+            } while (zombieCollisionCheck === false && zc < obstacles.length);
+
+            if (zombieCollisionCheck !== false) {
               currentZom.speedX = 0;
               currentZom.speedY = 0;
-              
-              if(zombieCollisionCheck.includes("top") || zombieCollisionCheck.includes("bottom")){
-                  currentZom.speedX = 1;
-                  if(currentZom.collide(obstacles[zc] !== false)){
-                      currentZom.speedX = -1;
-                      if(currentZom.collide(obstacles[zc] !== false)){
-                          currentZom.speedX = 0;
-                      }
+
+              if (
+                zombieCollisionCheck.includes("top") ||
+                zombieCollisionCheck.includes("bottom")
+              ) {
+                currentZom.speedX = 1;
+                if (currentZom.collide(obstacles[zc] !== false)) {
+                  currentZom.speedX = -1;
+                  if (currentZom.collide(obstacles[zc] !== false)) {
+                    currentZom.speedX = 0;
                   }
+                }
               }
-              
-              if(zombieCollisionCheck.includes("right") || zombieCollisionCheck.includes("left")){
-                  currentZom.speedY = 1;
-                  if(currentZom.collide(obstacles[zc] !== false)){
-                      currentZom.speedY = -1;
-                      if(currentZom.collide(obstacles[zc] !== false)){
-                          currentZom.speedY = 0;
-                      }
+
+              if (
+                zombieCollisionCheck.includes("right") ||
+                zombieCollisionCheck.includes("left")
+              ) {
+                currentZom.speedY = 1;
+                if (currentZom.collide(obstacles[zc] !== false)) {
+                  currentZom.speedY = -1;
+                  if (currentZom.collide(obstacles[zc] !== false)) {
+                    currentZom.speedY = 0;
                   }
+                }
               }
-        }
-            currentZom.newPos(); 
-        }
-    }
-          
-          //Clear previous frame state
-          gameArea.clear();
-          
-          //redraw canvas
-          for (var f = 0; f < floor.length; f++){
-              floor[f].update();
-          }
-          
-          for (var b = 0; b < obstacles.length; b++){
-              obstacles[b].update();
-          } 
-          
-          playerSprite.update();
-          
-          for (var z = 0; z < zombies.length; z++){
-              zombies[z].update();
-          }
-          
-          //shoot logic
-          for (var v = 0; v < rounds.length; v++){
-            switch(rounds[v].dir){
-              case 87:
-                rounds[v].yPos -= 2;
-                ctx = gameArea.context;
-                ctx.beginPath();
-                ctx.arc(rounds[v].xPos, rounds[v].yPos, 2, 0, 2 * Math.PI, false);
-                ctx.lineWidth = 3;
-                ctx.fillStyle = "red";
-                ctx.fill();
-                break;
-              case 83:
-                rounds[v].yPos += 2;
-                ctx = gameArea.context;
-                ctx.beginPath();
-                ctx.arc(rounds[v].xPos, rounds[v].yPos, 2, 0, 2 * Math.PI, false);
-                ctx.lineWidth = 3;
-                ctx.fillStyle = "red";
-                ctx.fill();
-                break;
-              case 65:
-                rounds[v].xPos -= 2;
-                ctx = gameArea.context;
-                ctx.beginPath();
-                ctx.arc(rounds[v].xPos, rounds[v].yPos, 2, 0, 2 * Math.PI, false);
-                ctx.lineWidth = 3;
-                ctx.fillStyle = "red";
-                ctx.fill();
-                break;
-              case 68:
-                rounds[v].xPos += 2;
-                ctx = gameArea.context;
-                ctx.beginPath();
-                ctx.arc(rounds[v].xPos, rounds[v].yPos, 2, 0, 2 * Math.PI, false);
-                ctx.lineWidth = 3;
-                ctx.fillStyle = "red";
-                ctx.fill();
-                break;
             }
-            if (rounds[v].collide(obstacles)){
-              rounds.splice(v, 1);
-            }
+            currentZom.newPos();
           }
-          //detect if zombie is hit and if so, decrement zombie health
-          for (var n = 0; n < zombies.length; n++){
-            for (var f = 0; f < rounds.length; f++){
-              if (rounds[f].xPos >= zombies[n].x && rounds[f].xPos <= (zombies[n].x + zombies[n].width) && rounds[f].yPos >= zombies[n].y && rounds[f].yPos <= (zombies[n].y + zombies[n].width)){
+        }
+
+        //Clear previous frame state
+        gameArea.clear();
+
+        //redraw canvas
+        for (var f = 0; f < floor.length; f++) {
+          floor[f].update();
+        }
+
+        for (var b = 0; b < obstacles.length; b++) {
+          obstacles[b].update();
+        }
+
+        playerSprite.update();
+
+        for (var z = 0; z < zombies.length; z++) {
+          zombies[z].update();
+        }
+
+        //shoot logic
+        for (var v = 0; v < rounds.length; v++) {
+          switch (rounds[v].dir) {
+            case 87:
+              rounds[v].yPos -= 2;
+              ctx = gameArea.context;
+              ctx.beginPath();
+              ctx.arc(rounds[v].xPos, rounds[v].yPos, 2, 0, 2 * Math.PI, false);
+              ctx.lineWidth = 3;
+              ctx.fillStyle = "red";
+              ctx.fill();
+              break;
+            case 83:
+              rounds[v].yPos += 2;
+              ctx = gameArea.context;
+              ctx.beginPath();
+              ctx.arc(rounds[v].xPos, rounds[v].yPos, 2, 0, 2 * Math.PI, false);
+              ctx.lineWidth = 3;
+              ctx.fillStyle = "red";
+              ctx.fill();
+              break;
+            case 65:
+              rounds[v].xPos -= 2;
+              ctx = gameArea.context;
+              ctx.beginPath();
+              ctx.arc(rounds[v].xPos, rounds[v].yPos, 2, 0, 2 * Math.PI, false);
+              ctx.lineWidth = 3;
+              ctx.fillStyle = "red";
+              ctx.fill();
+              break;
+            case 68:
+              rounds[v].xPos += 2;
+              ctx = gameArea.context;
+              ctx.beginPath();
+              ctx.arc(rounds[v].xPos, rounds[v].yPos, 2, 0, 2 * Math.PI, false);
+              ctx.lineWidth = 3;
+              ctx.fillStyle = "red";
+              ctx.fill();
+              break;
+          }
+          if (rounds[v].collide(obstacles)) {
+            rounds.splice(v, 1);
+          }
+        }
+        //detect if zombie is hit and if so, decrement zombie health
+        for (var n = 0; n < zombies.length; n++) {
+          for (var f = 0; f < rounds.length; f++) {
+            if (
+              rounds[f].xPos >= zombies[n].x &&
+              rounds[f].xPos <= zombies[n].x + zombies[n].width &&
+              rounds[f].yPos >= zombies[n].y &&
+              rounds[f].yPos <= zombies[n].y + zombies[n].width
+            ) {
               rounds.splice(f, 1);
               zombies[n].health -= 1;
               if (zombies[n].health === 0) {
                 zombies.splice(n, 1);
                 killCount++;
                 charXP += 10;
-                if (charXP === (100 * levelUP)) {
+                if (charXP === 100 * levelUP) {
                   let charLevel = document.getElementById("charLevel");
                   levelUP++;
                   charLevel.innerText = levelUP;
@@ -595,23 +632,23 @@ and open the template in the editor.
         if (zombFrame >= 24) {
           zombFrame = 0;
         }
-        
-        //get the element in which health is display 
+
+        //get the element in which health is display
         let healthStatus = document.getElementById("character_health_status");
         //extract the health value from within the healthStatus element
         let health = parseInt(healthStatus.innerText);
         //substract damage from played based ono sprite's healthy which is calculated/updatedd on collisions with zombies
         healthStatus.innerText = playerSprite.health;
-        if(zombies.length === 0){
-        var mapIndex = 0;
-        for (var y = 0; y <= mapHeight - 1; y++) {
-          for (var x = 0; x <= mapWidth - 1; x++, mapIndex++) {
-            var tile_x = x * blockW;
-            var tile_y = y * blockH;
-            var tileType = map[mapIndex];
-            
-            var zombSpriteImage = new Image();
-            zombSpriteImage.src = "Media/Sprites/ZombieSprite1.png";
+        if (zombies.length === 0) {
+          var mapIndex = 0;
+          for (var y = 0; y <= mapHeight - 1; y++) {
+            for (var x = 0; x <= mapWidth - 1; x++, mapIndex++) {
+              var tile_x = x * blockW;
+              var tile_y = y * blockH;
+              var tileType = map[mapIndex];
+
+              var zombSpriteImage = new Image();
+              zombSpriteImage.src = "Media/Sprites/ZombieSprite1.png";
               if (tileType === 0) {
                 var zombY = Math.floor(Math.random() * 800);
                 var zombX = Math.floor(Math.random() * 1216);
@@ -627,7 +664,8 @@ and open the template in the editor.
                     30,
                     30,
                     "zombie",
-                    3)
+                    3
+                  )
                 );
                 var zombY = Math.floor(Math.random() * 800);
                 var zombX = Math.floor(Math.random() * 1216);
@@ -643,16 +681,15 @@ and open the template in the editor.
                     30,
                     30,
                     "zombie",
-                    3)
+                    3
+                  )
                 );
                 mapIndex = 950;
               }
             }
           }
         }
-        }
-      
-      
+      }
 
       var gameArea = {
         canvas: document.createElement("canvas"),

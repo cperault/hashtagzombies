@@ -312,3 +312,14 @@ hr:after {
     margin-bottom: 10px;
   }
 }
+
+.game_outer_interface_div_left img {
+  height: 75px;
+  width: 70px;
+  border-radius: 15px;
+  position: absolute;
+}
+.game_outer_interface_div_left .table-div {
+  position: relative;
+  padding-right: 20px;
+}

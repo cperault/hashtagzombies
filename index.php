@@ -13,8 +13,6 @@
 //use PHPMailer\PHPMailer\Exception;
 //load the autoloader from Composer
 require_once('vendor/autoload.php');
-//load CSS into all pages
-include("Views/styling.php");
 //load the files from Models
 require_once('Models/Database.php');
 require_once('Models/Characters.php');
@@ -49,6 +47,17 @@ if ($action === NULL) {
     if ($action === NULL) {
         $action = 'login';
     }
+}
+
+//store JavaScript Axios request data into $post_body
+$post_body = json_decode(file_get_contents("php://input"), TRUE);
+//set up filter for additional POST/GET to handle data coming from JS HTTP instead form submissions from frontend
+$request_path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+//assign `$action` to appropriate endpoint from JS requests which will designate which case below to hit
+if ($request_path === "/discard_inventory_item") {
+    $action = "discard_inventory_item";
+} else if ($request_path === "/use_inventory_item") {
+    $action = "use_inventory_item";
 }
 
 //decide what to do based on the action(s) received from gameplay/forms
@@ -132,12 +141,19 @@ switch ($action) {
         include("Views/login.php");
         die;
         break;
-    case 'use_item':
-        var_dump($_POST);
-        $message = json_encode(array('received' => $_POST), JSON_PRETTY_PRINT);
+    case "discard_inventory_item":
+        //retrieve the item ID received from the Axios request
+        $inventory_item_id = $post_body["itemID"];
+        //get quantity of item ID
+        $item_quantity = InventoryDB::get_item_quantity($inventory_item_id);
+        //deduct 1 from quantity of item in user's inventory
+        InventoryDB::update_inventory($inventory_item_id, ($item_quantity - 1));
+        $remaining_quantity = $item_quantity - 1;
+        //serve the new quantity value now that the server has updated the quantity server-side
+        $message = json_encode(array("new_value" => $remaining_quantity), JSON_PRETTY_PRINT);
         exit($message);
         break;
     case 'change_map':
-
+        exit;
         break;
 }
