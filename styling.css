@@ -312,3 +312,17 @@ hr:after {
     margin-bottom: 10px;
   }
 }
+
+#healthBar, #healthBarContainer {
+    width: 200px;
+    height: 10px;
+    border: 1px solid black;
+    border-radius: 3px;
+    position: relative;
+    left: 0;
+}
+
+#healthBar {
+    position: relative;
+        top: 12px;
+}

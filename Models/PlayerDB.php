@@ -56,7 +56,7 @@ class PlayerDB
     public static function get_player_object($player_id)
     {
         $db = Database::getDB();
-        $query = 'SELECT playerUsername, playerFirstName, playerLastName, playerEmailAddress
+        $query = 'SELECT playerID, playerUsername, playerFirstName, playerLastName, playerEmailAddress
                   FROM Players WHERE playerID = :player_id';
         $statement = $db->prepare($query);
         $statement->bindValue(':player_id', $player_id);

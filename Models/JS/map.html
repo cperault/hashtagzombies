@@ -601,12 +601,24 @@ and open the template in the editor.
         }
         
         //get the element in which health is display 
-        let healthStatus = document.getElementById("character_health_status");
+        let healthStatus = document.getElementById("healthText");
         //extract the health value from within the healthStatus element
         let health = parseInt(healthStatus.innerText);
         //substract damage from played based ono sprite's healthy which is calculated/updatedd on collisions with zombies
-        healthStatus.innerText = playerSprite.health;
-        
+        healthStatus.innerText = playerSprite.health + "/100";
+        let healthBar = document.getElementById("healthBar");
+        healthBar.style.width = (playerSprite.health) * 2;
+        if (
+                playerSprite.health >= 50){
+            healthBar.style.backgroundColor = "green";
+                }
+        else if(
+                playerSprite.health >=10 && playerSprite.health < 50){
+            healthBar.style.backgroundColor = "yellow";
+                }
+        else {
+            healthBar.style.backgroundColor = "red";
+        }
         if(zombies.length === 0){
           t = setTimeout(moreZombs, 3000);
         }
