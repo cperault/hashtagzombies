@@ -8,13 +8,14 @@
 \******************************************************************************************************************/
 class Characters
 {
-    public $character_id, $character_name, $character_level;
+    public $character_id, $character_name, $character_level, $character_image;
 
-    function __construct($character_id, $character_name, $character_level)
+    function __construct($character_id, $character_name, $character_level, $character_image)
     {
         $this->character_id = $character_id;
         $this->character_name = $character_name;
         $this->character_level = $character_level;
+        $this->character_image = $character_image;
     }
     function getCharacterID()
     {
@@ -28,6 +29,10 @@ class Characters
     {
         return $this->character_level;
     }
+    function getCharacterImage()
+    {
+        return $this->character_image;
+    }
     function setCharacterID($character_id)
     {
         $this->character_id = $character_id;
@@ -39,5 +44,9 @@ class Characters
     function setCharacterLevel($character_level)
     {
         $this->character_level = $character_level;
+    }
+    function setCharacterImage($character_image)
+    {
+        $this->character_image = $character_image;
     }
 }

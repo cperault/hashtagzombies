@@ -22,3 +22,15 @@ function resumeGame() {
   gameStateButton.setAttribute("onclick", "pauseGame()");
   gameArea.interval = setInterval(updateGameArea, 20);
 }
+
+//function to save progress
+function saveGame(playerLevel, currentXP){
+    var gamestate = {level: playerLevel, exp: currentXP};
+    var gameStateEncode = JSON.stringify(gamestate);
+    return gameStateEncode;
+}
+
+function loadGame(playerID){
+    var gamestateobject = JSON.parse(gameStateEncoded);
+    return gamestateobject;
+}
