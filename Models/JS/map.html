@@ -19,7 +19,6 @@ and open the template in the editor.
   </head>
   <body onload="startGame()" class="zombies_body_gameplay_container">
     <script>
-      var inventory = [];
       var playerSprite;
       var wallTile;
       var floorTile;
@@ -45,11 +44,11 @@ and open the template in the editor.
       var hCount = 0;
       var charXP = 0;
       var levelUP = 1;
-      // comment below prevents formatting from messing up the 25x20 map matrix
       
       //make map
       // comment below prevents formatting from messing up the 38x25 map matrix
       // prettier-ignore
+      var mapName = "test";
       var map = [
               0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
               0,0,0,1,0,0,0,0,0,1,1,1,1,1,1,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -180,7 +179,23 @@ and open the template in the editor.
               );
             
             //make floor array
-            } else if (tileType === 0) {
+            }else if (tileType === 2){
+                obstacles.push(
+                  new component(
+                    medSpriteImage,
+                    0,
+                    0,
+                    32,
+                    32,
+                    tile_x + 8,
+                    tile_y + 8,
+                    16,
+                    16,
+                    "med", 0
+                  )
+                );
+            }
+            else if (tileType === 0) {
               floor.push(
                 new component(
                   floorTileImage,
@@ -420,16 +435,84 @@ and open the template in the editor.
 
         //Zombie Collision/Pathfinding
         var zombieCollisionCheck = false;
-       
         var zc = 0;
+        var interzombieCollisionCheck = false;
+        var zz = 0;
             //check if zombie is colliding with obstacle
            do {
             zombieCollisionCheck = currentZom.collide(obstacles[zc]);
             zc++;
             }
-            
             while (zombieCollisionCheck === false && zc < obstacles.length);
-          
+            if (zombieCollisionCheck !== false){
+              zc = 0;
+              currentZom.speedX = 0;
+              currentZom.speedY = 0;
+              if (distanceX > distanceY)
+              {
+                  //move up
+                if(currentZom.y > playerSprite.y){
+                 zMoveUp(currentZom);
+                 facing = "N";
+                 }
+                //move down
+                  else if(currentZom.y < playerSprite.y){
+                  zMoveDown(currentZom);
+                  facing = "S";
+                  }
+                  
+                  else {
+                      currentZom.speedY = 0;
+                  }
+                  
+                  do {
+                    zombieCollisionCheck = currentZom.collide(obstacles[zc]);
+                    zc++;
+                    }
+            
+                  while (zombieCollisionCheck === false && zc < obstacles.length);
+                  if (zombieCollisionCheck !== false && obstacles[zc].category === "tile"){
+                    currentZom.speedX = 0;
+                    currentZom.speedY = 0;
+                  }
+                }   
+                  
+                else if(distanceY > distanceX) {
+                    //move left
+                    if(currentZom.x > playerSprite.x){
+                    currentZom.speedX -= 1;
+                    facing = "W";
+                    }
+            //move right
+                else if(currentZom.x < playerSprite.x){
+                    currentZom.speedX += 1;
+                    facing = "E";
+                  }
+                  
+                  else{
+                     currentZom.speedX = 0;
+                  }
+           
+                   do {
+                    zombieCollisionCheck = currentZom.collide(obstacles[zc]);
+                    zc++;
+                    }
+            
+                  while (zombieCollisionCheck === false && zc < obstacles.length);
+                    if (zombieCollisionCheck !== false && obstacles[zc].category === "tile"){
+                    currentZom.speedX = 0;
+                    currentZom.speedY = 0;
+                    }
+           
+            }
+           }
+           
+           //check if zombie is colliding with another zombie
+           do {
+            zombieCollisionCheck = currentZom.collide(obstacles[zc]);
+            zc++;
+            }
+            while (zombieCollisionCheck === false && zc < obstacles.length);
             if (zombieCollisionCheck !== false){
               zc = 0;
               currentZom.speedX = 0;
