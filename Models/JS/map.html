@@ -41,12 +41,12 @@ and open the template in the editor.
       var zombFrame = 0;
       var currentItemIndex = -1;
       var t;
-    //
-    //make map
-      // comment below prevents formatting from messing up the 25x20 map matrix
+
       var hCount = 0;
       var charXP = 0;
       var levelUP = 1;
+      // comment below prevents formatting from messing up the 25x20 map matrix
+      
       //make map
       // comment below prevents formatting from messing up the 38x25 map matrix
       // prettier-ignore
@@ -213,16 +213,8 @@ and open the template in the editor.
                   )
                 );
                 //add items on floor tiles and push to obstacles array
-                var r = Math.random() * 100;
-                if(r >= 98){
-                    obstacles.push(
-                            new component(medSpriteImage, 0, 0, 32, 32, tile_x + 8, tile_y + 8, 16, 16, "med"));
-                } else if (r > 0 && r < 3){
-                    obstacles.push(
-                            new component(foodSpriteImage, 0, 0, 32, 32, tile_x + 8, tile_y + 8, 16, 16, "food"));
-                }
-            }    
-//              
+                
+            }       
               } else if (r > 0 && r < 3) {
                 obstacles.push(
                   new component(
@@ -240,7 +232,6 @@ and open the template in the editor.
                 );
               }
             }
-            //
           }
         }
      
@@ -298,10 +289,10 @@ and open the template in the editor.
           var otherbottom = otherobj.y + otherobj.height;
           var crash = false;
           
-         if ((myleft === otherright && mytop <= otherbottom && mybottom >= othertop) ||
-             (myright === otherleft && mytop <= otherbottom && mybottom >= othertop) ||
-             (mytop === otherbottom && myright >= otherleft && myleft <= otherright) ||
-             (mybottom === othertop && myright >= otherleft && myleft <= otherright) ||
+         if ((myleft === otherright && mytop < otherbottom && mybottom > othertop) ||
+             (myright === otherleft && mytop < otherbottom && mybottom > othertop) ||
+             (mytop === otherbottom && myright > otherleft && myleft < otherright) ||
+             (mybottom === othertop && myright > otherleft && myleft < otherright) ||
              (myleft <= 0) ||
              (myright >= mapWidth * 32) ||
              (mytop <= 0) ||
@@ -440,9 +431,10 @@ and open the template in the editor.
             while (zombieCollisionCheck === false && zc < obstacles.length);
           
             if (zombieCollisionCheck !== false){
+              zc = 0;
               currentZom.speedX = 0;
               currentZom.speedY = 0;
-              if (distanceX >= distanceY)
+              if (distanceX > distanceY)
               {
                   //move up
                 if(currentZom.y > playerSprite.y){
@@ -450,30 +442,49 @@ and open the template in the editor.
                  facing = "N";
                  }
                 //move down
-                  else{
+                  else if(currentZom.y < playerSprite.y){
                   zMoveDown(currentZom);
                   facing = "S";
                   }
-                  zombieCollisionCheck = currentZom.collide(obstacles[zc]);
+                  
+                  else {
+                      currentZom.speedY = 0;
+                  }
+                  
+                  do {
+                    zombieCollisionCheck = currentZom.collide(obstacles[zc]);
+                    zc++;
+                    }
+            
+                  while (zombieCollisionCheck === false && zc < obstacles.length);
                   if (zombieCollisionCheck !== false && obstacles[zc].category === "tile"){
                     currentZom.speedX = 0;
                     currentZom.speedY = 0;
                   }
                 }   
                   
-                else {
+                else if(distanceY > distanceX) {
                     //move left
                     if(currentZom.x > playerSprite.x){
-                    zMoveLeft(currentZom);
+                    currentZom.speedX -= 1;
                     facing = "W";
                     }
             //move right
-                if(currentZom.x < playerSprite.x){
-                    zMoveRight(currentZom);
+                else if(currentZom.x < playerSprite.x){
+                    currentZom.speedX += 1;
                     facing = "E";
                   }
+                  
+                  else{
+                     currentZom.speedX = 0;
+                  }
            
-                  zombieCollisionCheck = currentZom.collide(obstacles[zc]);
+                   do {
+                    zombieCollisionCheck = currentZom.collide(obstacles[zc]);
+                    zc++;
+                    }
+            
+                  while (zombieCollisionCheck === false && zc < obstacles.length);
                     if (zombieCollisionCheck !== false && obstacles[zc].category === "tile"){
                     currentZom.speedX = 0;
                     currentZom.speedY = 0;
@@ -600,7 +611,9 @@ and open the template in the editor.
           zombies[z].update();
         }
         
-        //get the element in which health is display 
+ // *********************************************** DYNAMIC VISUAL UPDATES/ELEMENTS **************************************************
+ 
+ //get the element in which health is display 
         let healthStatus = document.getElementById("healthText");
         //extract the health value from within the healthStatus element
         let health = parseInt(healthStatus.innerText);
@@ -619,6 +632,14 @@ and open the template in the editor.
         else {
             healthBar.style.backgroundColor = "red";
         }
+        
+        
+        //Update XP progress
+        let XPBar = document.getElementByID("xp_bar");
+        let XPTextNeeded = document.getElementById("xp_milestone");
+        let XPTextCurr = document.getElementById("xp_current");
+        let currentXP = parseInt(charXP);
+        //Kill Count
         if(zombies.length === 0){
           t = setTimeout(moreZombs, 3000);
         }
