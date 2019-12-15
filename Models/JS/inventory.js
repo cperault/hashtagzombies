@@ -57,7 +57,13 @@ function discardItem(item) {
     axios({
       method: method,
       url: url,
-      data: params
+      data: params,
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json"
+      },
+      withCredentials: true,
+      credentials: "same-origin"
     }).then(response => {
       //update the quantity value
       document.getElementById(`item_qty_value_${item}`).innerText =
