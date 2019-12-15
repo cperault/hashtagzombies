@@ -1,7 +1,9 @@
 
     <script>
       var playerSprite;
-      var mapName = concourse;
+      var playerSpawnX = 64;
+      var playerSpawnY = 64;
+      var mapObj = safeRoom;
       var wallTile;
       var floorTile;
       var floor = [];
@@ -9,8 +11,8 @@
       var enemies = [];
       var blockW = 32;
       var blockH = 32;
-      var mapWidth = mapName['width'];
-      var mapHeight = mapName['height'];
+      var mapWidth = mapObj['width'];
+      var mapHeight = mapObj['height'];
       var CWIDTH = mapWidth * blockW;
       var CHEIGHT = mapHeight * blockH;
       var rounds = [];
@@ -30,8 +32,8 @@
       //make map
       // comment below prevents formatting from messing up the 38x25 map matrix
       // prettier-ignore
-      var mapName = "concourse";
-      var map = concourse['mapArray'];
+      var mapName = "Saferoom";
+      var map = mapObj['mapArray'];
 
       //Create game canvas and load game area.
       function startGame() {
@@ -45,8 +47,8 @@
           65,
           32,
           32,
-          64,
-          64,
+          playerSpawnX,
+          playerSpawnY,
           30,
           30,
           "player",
@@ -67,7 +69,7 @@
         //assign map elements
         var mapIndex = 0;
         var zCounter = 0;
-        var zSpawnRate = Math.min(10, mapName['spawnRate']*levelUP);
+        var zSpawnRate = Math.min(10, mapObj['spawnRate']*levelUP);
         for (var y = 0; y <= mapHeight - 1; y++) {
           for (var x = 0; x <= mapWidth - 1; x++, mapIndex++) {
             var tile_x = x * blockW;
@@ -109,7 +111,7 @@
                 );
             }
             else if (tileType === 3){
-                obstacles.push(
+                floor.push(
                   new component(
                     doorSpriteImage,
                     0,
@@ -324,7 +326,7 @@
          //detect if collision is with an obstacle that can be picked up
           for(var i = 0; i < obstacles.length; i++){
             if(playerSprite.collide(obstacles[i]) !== false){
-                if (obstacles[i].getCategory() !== "tile" && obstacles[i].getCategory() !== "door"){
+                if (obstacles[i].getCategory() !== "tile"){
                 currentItemIndex = i;
                 }
             }
@@ -560,6 +562,7 @@
               //clearInterval(gameArea.interval);
               clearInterval(gameArea.interval);
               mapName = "Saferoom";
+              mapObj = safeRoom;
               mapWidth = safeRoom['width'];
               mapHeight = safeRoom['height'];
               map = safeRoom['mapArray'];
@@ -597,9 +600,10 @@
         }
 
         if (mapName === "concourse"){
-          if(playerSprite.x === 33 && playerSprite.y === 130){
+          if(playerSprite.x <= 20 && playerSprite.y >= 129 && playerSprite.y <= 225){
             clearInterval(gameArea.interval);
             mapName = "Saferoom";
+            mapObj = safeRoom;
             mapWidth = safeRoom['width'];
             mapHeight = safeRoom['height'];
             map = safeRoom['mapArray'];
@@ -607,11 +611,15 @@
             CHEIGHT = mapHeight * blockH;
             zombies = [];
             obstacles = [];
-            startGame(); 
+            playerSpawnX = 192;
+            playerSpawnY = 95;
+            startGame();
+           
           }
-          if(playerSprite.x >= 930 && playerSprite.x <= 994 && playerSprite.y === 321){
+          if(playerSprite.x >= 915 && playerSprite.x <= 994 && playerSprite.y === 321){
             clearInterval(gameArea.interval);
             mapName = "Hot Topic";
+            mapObj = hotTopic;
             mapWidth = hotTopic['width'];
             mapHeight = hotTopic['height'];
             map = hotTopic['mapArray'];
@@ -619,11 +627,14 @@
             CHEIGHT = mapHeight * blockH;
             zombies = [];
             obstacles = [];
+            playerSpawnX = 33;
+            playerSpawnY = 33;
             startGame(); 
           }
           if(playerSprite.x === 1217 && playerSprite.y >= 129 && playerSprite.y <= 225){
             clearInterval(gameArea.interval);
             mapName = "Food Court";
+            mapObj = foodCourt;
             mapWidth = foodCourt['width'];
             mapHeight = foodCourt['height'];
             map = foodCourt['mapArray'];
@@ -631,25 +642,30 @@
             CHEIGHT = mapHeight * blockH;
             zombies = [];
             obstacles = [];
+            playerSpawnX = 33;
+            playerSpawnY = 226;
             startGame(); 
           }
         }
         if (mapName === "Saferoom"){
-          if(playerSprite.x === 193 && playerSprite.y === 97){
+          if(playerSprite.x >= 220 && playerSprite.y >= 96 && playerSprite.y <=129){
             clearInterval(gameArea.interval);
             mapName = "concourse";
+            mapObj = concourse;
             mapWidth = concourse['width'];
             mapHeight = concourse['height'];
             map = concourse['mapArray'];
             CWIDTH = mapWidth * blockW;
-            CHEIGHT = mapHeight * blockH;
+            CHEIGHT = mapHeight * blockH; 
             zombies = [];
             obstacles = [];
-            startGame(); 
+            playerSpawnX = 33;
+            playerSpawnY = 130;
+            startGame();
           }
         }
         if (mapName === "Hot Topic"){
-          if(playerSprite.x >= 33 && playerSprite.x <= 65 && playerSprite.y === 33){
+          if(playerSprite.x >= 33 && playerSprite.x <= 65 && playerSprite.y <= 15){
             clearInterval(gameArea.interval);
             mapName = "concourse";
             mapWidth = concourse['width'];
@@ -659,6 +675,8 @@
             CHEIGHT = mapHeight * blockH;
             zombies = [];
             obstacles = [];
+             playerSpawnX = 33;
+            playerSpawnY = 130;
             startGame(); 
           }
         }
@@ -673,6 +691,8 @@
             CHEIGHT = mapHeight * blockH;
             zombies = [];
             obstacles = [];
+            playerSpawnX = 33;
+            playerSpawnY = 130;
             startGame(); 
           }
         }
