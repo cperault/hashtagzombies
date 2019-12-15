@@ -29,9 +29,8 @@
 
 .zombies_body_gameplay_container {
   margin: 0 auto;
-  width: 1218px;
-  min-width: 1200px;
-  height: 800px;
+  width: auto;
+  height: auto;
   border: solid red 3px;
   border-radius: 15px;
 }
@@ -96,8 +95,8 @@ br {
 
 canvas {
   border-radius: 12px;
-  min-width: 1200px;
-  height: 800px;
+  min-width: auto;
+  height: auto;
 }
 .error_text {
   font-weight: bold;
