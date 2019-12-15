@@ -56,8 +56,6 @@ $request_path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 //assign `$action` to appropriate endpoint from JS requests which will designate which case below to hit
 if ($request_path === "/discard_inventory_item") {
     $action = "discard_inventory_item";
-} else if ($request_path === "/use_inventory_item") {
-    $action = "use_inventory_item";
 }
 
 //decide what to do based on the action(s) received from gameplay/forms
