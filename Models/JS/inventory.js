@@ -19,14 +19,55 @@ function closeInventory() {
 }
 
 //function to use item in inventory
-function useItem(item) {
-  console.log("sending itemID: " + item);
-  let params = { item_to_remove: item };
-  let config = {
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json"
-    }
-  };
-  //axios request
+//param @id is used to apply item to gameplay whether it's increasing weapon damage,
+//      health, or energy and also gets passed to `discardItem()` method after
+//      applying item effect
+//param @category will be ued to determine how to use the item
+function useItem(id, category) {
+  //variable to store which type of item is being used
+  let item_type = "";
+  //categories: 1, 2, 3 => 1 = weapon, 2 = energy, 3 = health
+  switch (category) {
+    case 1:
+      item_type = "weapon";
+      break;
+    case 2:
+      item_type = "energy";
+      break;
+    case 3:
+      item_type = "health";
+      //check health, if health is less than
+      break;
+  }
+  console.log("using item ID " + id + " which is a(n) " + item_type + " item");
+  //update the quantity in the DB when a user uses their item by calling our `discardItem()` method below
+  discardItem(id);
+}
+
+//function to discard item in inventory
+function discardItem(item) {
+  let count = document.getElementById(`item_qty_value_${item}`).innerText;
+  //user cannot discard item if qty less than or equal to zero
+  if (count >= 1) {
+    console.log("Discarding item: " + item);
+    let url = "/discard_inventory_item";
+    let method = "post";
+    //set up request parameters
+    let params = { action: "discard", itemID: item };
+    axios({
+      method: method,
+      url: url,
+      data: params,
+      headers: {
+        "Content-Type": "application/json"
+      },
+      withCredentials: true,
+      credentials: "same-origin"
+    }).then(response => {
+      //update the quantity value
+      document.getElementById(`item_qty_value_${item}`).innerText =
+        response.data.new_value;
+    });
+  }
+  //else, do nothing
 }
