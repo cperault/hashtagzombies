@@ -607,6 +607,7 @@
             CHEIGHT = mapHeight * blockH;
             zombies = [];
             obstacles = [];
+            gameArea.remove();
             startGame(); 
           }
           if(playerSprite.x >= 930 && playerSprite.x <= 994 && playerSprite.y === 321){
@@ -619,6 +620,7 @@
             CHEIGHT = mapHeight * blockH;
             zombies = [];
             obstacles = [];
+            gameArea.remove();
             startGame(); 
           }
           if(playerSprite.x === 1217 && playerSprite.y >= 129 && playerSprite.y <= 225){
@@ -631,6 +633,7 @@
             CHEIGHT = mapHeight * blockH;
             zombies = [];
             obstacles = [];
+            gameArea.remove();
             startGame(); 
           }
         }
@@ -645,6 +648,7 @@
             CHEIGHT = mapHeight * blockH;
             zombies = [];
             obstacles = [];
+            gameArea.remove();
             startGame(); 
           }
         }
@@ -659,6 +663,7 @@
             CHEIGHT = mapHeight * blockH;
             zombies = [];
             obstacles = [];
+            gameArea.remove();
             startGame(); 
           }
         }
@@ -673,6 +678,7 @@
             CHEIGHT = mapHeight * blockH;
             zombies = [];
             obstacles = [];
+            gameArea.remove();
             startGame(); 
           }
         }
@@ -722,38 +728,21 @@
           this.frameNo = 0;
           //FRAMERATE
           this.interval = setInterval(updateGameArea, 20);
-          window.addEventListener("keydown", function(e) {
-            e.preventDefault();
-            gameArea.key = e.keyCode;
-          });
-          window.addEventListener("keyup", function(e) {
-            gameArea.key = false;
-          });
-          window.addEventListener("mousedown", function(e) {
-            timer = setInterval(function() {
-              rounds.push(
-                new Bullet(
-                  4,
-                  playerSprite.x + 16,
-                  playerSprite.y + 16,
-                  dir,
-                  3,
-                  3
-                )
-              );
-            }, 500);
-            gameArea.click = true;
-          });
-          window.addEventListener("mouseup", function(e) {
-            gameArea.click = false;
-            clearInterval(timer);
-          });
-          window.addEventListener("contextmenu", event =>
-            event.preventDefault()
-          );
+          window.addEventListener("keydown", key_down);
+          window.addEventListener("keyup", key_up);
+          window.addEventListener("mousedown", mouse_down);
+          window.addEventListener("mouseup", mouse_up);
+          window.addEventListener("contextmenu", context_menu);
         },
         clear: function() {
           this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        },
+        remove: function() {
+          window.removeEventListener("keydown", key_down);
+          window.removeEventListener("keyup", key_up);
+          window.removeEventListener("mousedown", mouse_down);
+          window.removeEventListener("mouseup", mouse_up);
+          window.removeEventListener("contextmenu", context_menu);
         }
       };
       //player movement controls
@@ -884,6 +873,40 @@
               zombo.sy = 0;
             }
       }
+
+      function key_down(e) {
+            e.preventDefault();
+            gameArea.key = e.keyCode;
+          };
+      function key_up(e) {
+            e.preventDefault();
+            gameArea.key = false;
+          };
+          function mouse_down(e) {
+            e.preventDefault();
+            timer = setInterval(function() {
+              rounds.push(
+                new Bullet(
+                  4,
+                  playerSprite.x + 16,
+                  playerSprite.y + 16,
+                  dir,
+                  3,
+                  3
+                )
+              );
+            }, 500);
+            gameArea.click = true;
+          };
+          function mouse_up(e) {
+            e.preventDefault();
+            gameArea.click = false;
+            clearInterval(timer);
+          };
+          function context_menu(e){
+            e.preventDefault();
+          };
+
     </script>
   
     

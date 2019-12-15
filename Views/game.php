@@ -78,7 +78,7 @@
                 <td><?php echo htmlspecialchars($player->username); ?></td>
                 <?php if (isset($character_object)) {
                     echo "<td>" . htmlspecialchars($character_object->character_name) . "</td>";
-                    echo "<td>" . htmlspecialchars($character_object->character_level) . "</td>";
+                    echo "<td id='charLevel'>" . htmlspecialchars($character_object->character_level) . "</td>";
                 } else {
                     echo "<form action='.' method='POST'><td class='create_character_button'><input type='submit' value='Create character'/><input type='hidden' name='action' value='create_character'/></form></td>";
                 } ?>
