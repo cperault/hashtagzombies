@@ -7,20 +7,19 @@
  *Purpose: This is the view where all gameplay is displayed.                                                       *
 \******************************************************************************************************************/
 ?>
-<!DOCTYPE html>
+<html>
 
 <head>
     <meta charset="UTF-8">
     <title>#ZOMBIES</title>
-    <link href="/styling.css" rel="stylesheet" type="text/css" />
     <script src="https://cdn.jsdelivr.net/processing.js/1.4.8/processing.min.js"></script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script src="Models/JS/map.js" type="text/javascript"></script>
     <script src="Models/JS/inventory.js"></script>
     <script src="Models/JS/gameState.js"></script>
+    <link href="styling.css" rel="stylesheet" type="text/css" />
 </head>
 <div id="inventory_modal_container_div" class="inventory_modal">
-
     <span onclick="closeInventory();" id="inventory_close_button">&times;</span>
     <?php if (isset($items) && count($items) > 0) { ?>
         <table class="inventory_table">
@@ -45,7 +44,6 @@
                 endforeach; ?>
         </table> <?php
                     } else {
-                        //echo "<span onclick='closeInventory();' id='inventory_close_button'>&times;</span>";
                         echo "<p class='no-items-message'>You don't have any items yet. :(</p>";
                     }
                     ?>
