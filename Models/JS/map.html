@@ -6,7 +6,7 @@ and open the template in the editor.
 -->
 <html>
   <head>
-    <title>#Zombies</title>
+    <title>TODO supply a title</title>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <style>
@@ -15,12 +15,11 @@ and open the template in the editor.
       }
     </style>
     <script src="Models/JS/bullet.js"></script>
-    <script src="Models/JS/gameState.js" type="text/javascript"></script>
-    <script src="Models/JS/gameMaps.js"></script>
+    <script src="Models/JS/gameMaps.js" type="text/javascript"></script>
+    <link href="styling.css" rel="stylesheet" type="text/css" />
   </head>
   <body onload="startGame()" class="zombies_body_gameplay_container">
     <script>
-      var inventory = [];
       var playerSprite;
       var wallTile;
       var floorTile;
@@ -29,8 +28,8 @@ and open the template in the editor.
       var enemies = [];
       var blockW = 32;
       var blockH = 32;
-      var mapWidth = 38;
-      var mapHeight = 25;
+      var mapWidth = concourse['width'];
+      var mapHeight = concourse['height'];
       var CWIDTH = mapWidth * blockW;
       var CHEIGHT = mapHeight * blockH;
       var rounds = [];
@@ -41,47 +40,20 @@ and open the template in the editor.
       var killCount = 0;
       var zombFrame = 0;
       var currentItemIndex = -1;
-      var t;
-      var mapType = "";
-    //
-    //make map
-      // comment below prevents formatting from messing up the 25x20 map matrix
+
+     
       var hCount = 0;
       var charXP = 0;
       var levelUP = 1;
+      
       //make map
       // comment below prevents formatting from messing up the 38x25 map matrix
       // prettier-ignore
-      var map1 = [
-              0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-              0,0,0,1,0,0,0,0,0,1,1,1,1,1,1,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-              0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-              0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-              0,0,0,1,0,0,0,1,0,0,0,0,0,1,1,1,1,1,1,1,1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-              0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-              0,1,0,0,0,0,0,1,0,0,1,1,1,1,1,1,1,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-              0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-              0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-              0,1,0,0,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-              0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-              0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-              0,0,0,0,1,0,0,0,1,1,1,0,0,0,1,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-              0,0,0,0,1,0,1,0,1,0,0,0,0,0,0,0,0,0,1,1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-              0,0,1,0,1,0,1,0,1,0,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-              0,0,1,0,1,0,1,0,1,0,0,0,0,1,1,1,1,0,0,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-              0,0,1,0,1,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-              0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-              0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-              0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-              0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-              1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-              0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-              0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-              0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
-              ];
-      var map = map1;
-    //Create game canvas and load game area. 
-    function startGame() {
+      var mapName = "concourse";
+      var map = concourse['mapArray'];
+
+      //Create game canvas and load game area.
+      function startGame() {
         gameArea.start();
         //player
         var playerSpriteImage = new Image();
@@ -92,14 +64,15 @@ and open the template in the editor.
           65,
           32,
           32,
-          32,
-          32,
+          64,
+          64,
           30,
           30,
           "player",
           100
         );
-
+        var zombSpriteImage = new Image();
+        zombSpriteImage.src = "Media/Sprites/ZombieSprite1.png";
         var floorTileImage = new Image();
         floorTileImage.src = "Media/Sprites/FloorTile1.bmp";
         var wallTileImage = new Image();
@@ -108,15 +81,18 @@ and open the template in the editor.
         foodSpriteImage.src = "Media/Sprites/borger.png";
         var medSpriteImage = new Image();
         medSpriteImage.src = "Media/Sprites/meds.png";
-        
+        var doorSpriteImage = new Image();
+        doorSpriteImage.src = "Media/Sprites/doorSprite.png";
         //assign map elements
         var mapIndex = 0;
+        var zCounter = 0;
+        var zSpawnRate = 5;
         for (var y = 0; y <= mapHeight - 1; y++) {
           for (var x = 0; x <= mapWidth - 1; x++, mapIndex++) {
             var tile_x = x * blockW;
             var tile_y = y * blockH;
             var tileType = map[mapIndex];
-            
+
             //make walls array
             if (tileType === 1) {
               obstacles.push(
@@ -135,24 +111,7 @@ and open the template in the editor.
               );
             
             //make floor array
-            } else if (tileType === 0) {
-              floor.push(
-                new component(
-                  floorTileImage,
-                  0,
-                  0,
-                  32,
-                  32,
-                  tile_x,
-                  tile_y,
-                  32,
-                  32,
-                  "tile", 0
-                  
-                )
-              );
-              var r = Math.random() * 100;
-              if (r >= 98) {
+            }else if (tileType === 2){
                 obstacles.push(
                   new component(
                     medSpriteImage,
@@ -167,43 +126,114 @@ and open the template in the editor.
                     "med", 0
                   )
                 );
-                //add items on floor tiles and push to obstacles array
-                var r = Math.random() * 100;
-                if(r >= 98){
-                    obstacles.push(
-                            new component(medSpriteImage, 0, 0, 32, 32, tile_x + 8, tile_y + 8, 16, 16, "med"));
-                } else if (r > 0 && r < 3){
-                    obstacles.push(
-                            new component(foodSpriteImage, 0, 0, 32, 32, tile_x + 8, tile_y + 8, 16, 16, "food"));
-                } 
-                  
-              
-            }    
-//              
-              } else if (r > 0 && r < 3) {
+            }
+            else if (tileType === 3){
                 obstacles.push(
                   new component(
-                    foodSpriteImage,
+                    doorSpriteImage,
                     0,
                     0,
                     32,
                     32,
-                    tile_x + 8,
-                    tile_y + 8,
-                    16,
-                    16,
-                    "food", 0
+                    tile_x,
+                    tile_y,
+                    32,
+                    32,
+                    "door", 0
                   )
                 );
-              }
-            }
-            //
+             }
+            else if (tileType === 0) {
+              floor.push(
+                new component(
+                  floorTileImage,
+                  0,
+                  0,
+                  32,
+                  32,
+                  tile_x,
+                  tile_y,
+                  32,
+                  32,
+                  "tile"
+                )
+              );
+              //add items on floor tiles and push to obstacles array
+              var r = Math.random() * 100;
+                var medicineHealthAmount = 0;
+                if (r >= 98) {
+                  //medicine will be values of either 20, 50; get random # between 0 and 1 to decide
+                  var m = Math.random();
+                  if(m === 0)
+                  {
+                    medicineHealthAmount = 20;
+                  }
+                  else if (m === 1) {
+                    medicineHealthAmount = 50;
+                  }
+                  obstacles.push(
+                    new component(
+                      medSpriteImage,
+                      0,
+                      0,
+                      32,
+                      32,
+                      tile_x + 8,
+                      tile_y + 8,
+                      16,
+                      16,
+                      "med",
+                      medicineHealthAmount
+                    )
+                  );
+                }
+                else if (r <=2 && zCounter < zSpawnRate){
+                    
+                    zombies.push(
+                            new component(
+                    zombSpriteImage,
+                    32,
+                    65,
+                    32,
+                    32,
+                    tile_x,
+                    tile_y,
+                    30,
+                    30,
+                    "zombie",
+                    3
+                    )
+                );
+                zCounter++;
+            
+                }
+                
+                } 
+//                else if (r > 0 && r < 3) {
+//              obstacles.push(
+//                new component(
+//                  foodSpriteImage,
+//                  0,
+//                  0,
+//                  32,
+//                  32,
+//                  tile_x + 8,
+//                  tile_y + 8,
+//                  16,
+//                  16,
+//                  "food"
+//                )
+//              );
+//            }
           }
+          
+          //
         }
-     
+      }
+
       //COMPONENTS
       //sprites
-      function component(
+     function component(
         img,
         sx,
         sy,
@@ -255,10 +285,10 @@ and open the template in the editor.
           var otherbottom = otherobj.y + otherobj.height;
           var crash = false;
           
-         if ((myleft === otherright && mytop <= otherbottom && mybottom >= othertop) ||
-             (myright === otherleft && mytop <= otherbottom && mybottom >= othertop) ||
-             (mytop === otherbottom && myright >= otherleft && myleft <= otherright) ||
-             (mybottom === othertop && myright >= otherleft && myleft <= otherright) ||
+         if ((myleft === otherright && mytop < otherbottom && mybottom > othertop) ||
+             (myright === otherleft && mytop < otherbottom && mybottom > othertop) ||
+             (mytop === otherbottom && myright > otherleft && myleft < otherright) ||
+             (mybottom === othertop && myright > otherleft && myleft < otherright) ||
              (myleft <= 0) ||
              (myright >= mapWidth * 32) ||
              (mytop <= 0) ||
@@ -284,7 +314,6 @@ and open the template in the editor.
             if(gameArea.frameNo < 24){
             gameArea.frameNo += 1;
           } else gameArea.frameNo = 0;
-
           //playerSprite Animation
           if (
             (gameArea.frameNo >= 0 && gameArea.frameNo <= 6) ||
@@ -301,7 +330,6 @@ and open the template in the editor.
          else {
              playerSprite.sy = 64;
          }
-
          //get new player sprite position based on last frame input
           playerSprite.newPos();
           
@@ -383,23 +411,20 @@ and open the template in the editor.
             facing = "S";
             }
          }
-
         //Zombie Collision/Pathfinding
         var zombieCollisionCheck = false;
-       
         var zc = 0;
-            //check if zombie is colliding with obstacle
+        
            do {
             zombieCollisionCheck = currentZom.collide(obstacles[zc]);
             zc++;
             }
-            
             while (zombieCollisionCheck === false && zc < obstacles.length);
-          
             if (zombieCollisionCheck !== false){
+              zc = 0;
               currentZom.speedX = 0;
               currentZom.speedY = 0;
-              if (distanceX >= distanceY)
+              if (distanceX > distanceY)
               {
                   //move up
                 if(currentZom.y > playerSprite.y){
@@ -407,40 +432,58 @@ and open the template in the editor.
                  facing = "N";
                  }
                 //move down
-                  else{
+                  else if(currentZom.y < playerSprite.y){
                   zMoveDown(currentZom);
                   facing = "S";
                   }
-                  zombieCollisionCheck = currentZom.collide(obstacles[zc]);
+                  
+                  else {
+                      currentZom.speedY = 0;
+                  }
+                  
+                  do {
+                    zombieCollisionCheck = currentZom.collide(obstacles[zc]);
+                    zc++;
+                    }
+            
+                  while (zombieCollisionCheck === false && zc < obstacles.length);
                   if (zombieCollisionCheck !== false && obstacles[zc].category === "tile"){
                     currentZom.speedX = 0;
                     currentZom.speedY = 0;
                   }
                 }   
                   
-                else {
+                else if(distanceY > distanceX) {
                     //move left
                     if(currentZom.x > playerSprite.x){
-                    zMoveLeft(currentZom);
+                    currentZom.speedX -= 1;
                     facing = "W";
                     }
             //move right
-                if(currentZom.x < playerSprite.x){
-                    zMoveRight(currentZom);
+                else if(currentZom.x < playerSprite.x){
+                    currentZom.speedX += 1;
                     facing = "E";
                   }
+                  
+                  else{
+                     currentZom.speedX = 0;
+                  }
            
-                  zombieCollisionCheck = currentZom.collide(obstacles[zc]);
+                   do {
+                    zombieCollisionCheck = currentZom.collide(obstacles[zc]);
+                    zc++;
+                    }
+            
+                  while (zombieCollisionCheck === false && zc < obstacles.length);
                     if (zombieCollisionCheck !== false && obstacles[zc].category === "tile"){
                     currentZom.speedX = 0;
                     currentZom.speedY = 0;
                     }
-           
             }
            }
-            
            currentZom.newPos();
-          }
+           } 
+           
       }
           zombFrame++;
           if(zombFrame >= 24){
@@ -461,9 +504,9 @@ and open the template in the editor.
           
           playerSprite.update();
           
-          for (var z = 0; z < zombies.length; z++){
-              zombies[z].update();
-          }
+//          for (var z = 0; z < zombies.length; z++){
+//              zombies[z].update();
+//          }
           
           //shoot logic
           for (var v = 0; v < rounds.length; v++){
@@ -533,7 +576,17 @@ and open the template in the editor.
               hCount = 0;
             }
             if (playerSprite.health === 0) {
+              //clearInterval(gameArea.interval);
               clearInterval(gameArea.interval);
+              mapName = "Saferoom";
+              mapWidth = safeRoom['width'];
+              mapHeight = safeRoom['height'];
+              map = safeRoom['mapArray'];
+              CWIDTH = mapWidth * blockW;
+              CHEIGHT = mapHeight * blockH;
+              zombies = [];
+              obstacles = [];
+              startGame(); 
             }
           }
           for (var f = 0; f < rounds.length; f++){
@@ -554,57 +607,129 @@ and open the template in the editor.
             }
           }
         }
-
         for (var z = 0; z < zombies.length; z++) {
           zombies[z].update();
         }
         
-        //get the element in which health is display 
-        let healthStatus = document.getElementById("character_health_status");
-        //extract the health value from within the healthStatus element
-        let health = parseInt(healthStatus.innerText);
-        //substract damage from played based ono sprite's healthy which is calculated/updatedd on collisions with zombies
-        healthStatus.innerText = playerSprite.health;
-        
-        if(zombies.length === 0){
+         if(zombies.length === 0){
           t = setTimeout(moreZombs, 3000);
         }
-        /*if(playerSprite.x <= 32 && playerSprite.y >= 768) {
-              mapType = "Hot Topic";
-            }*/
-        
-          if(playerSprite.x <= 32 && playerSprite.y >= 768) {
-            mapType = "Hot Topic";  
-            clearInterval(gameArea.interval);
-            map = hotTopic;
-            zombies = [];
-            obstacles = [];
-            mapWidth = 20;
-            mapHeight = 19;
-            gameArea.clear();
-            CWIDTH = mapWidth * blockW;
-            CHEIGHT = mapHeight * blockH;
-            startGame();
-          }
-          if(playerSprite.x <= 30 && playerSprite.y <= 30 && mapType === "Hot Topic"){
-            mapType = "";
-            clearInterval(gameArea.interval);
-            map = map1;
-            zombies = [];
-            obstacles = [];
-            mapWidth = 38;
-            mapHeight = 25;
-            gameArea.clear();
-            CWIDTH = mapWidth * blockW;
-            CHEIGHT = mapHeight * blockH;
-            startGame();
-          }
-      
-        console.log(mapType);
-              }
-      
-      
 
+        if (mapName === "concourse"){
+          if(playerSprite.x === 33 && playerSprite.y === 130){
+            clearInterval(gameArea.interval);
+            mapName = "Saferoom";
+            mapWidth = safeRoom['width'];
+            mapHeight = safeRoom['height'];
+            map = safeRoom['mapArray'];
+            CWIDTH = mapWidth * blockW;
+            CHEIGHT = mapHeight * blockH;
+            zombies = [];
+            obstacles = [];
+            startGame(); 
+          }
+          if(playerSprite.x >= 930 && playerSprite.x <= 994 && playerSprite.y === 321){
+            clearInterval(gameArea.interval);
+            mapName = "Hot Topic";
+            mapWidth = hotTopic['width'];
+            mapHeight = hotTopic['height'];
+            map = hotTopic['mapArray'];
+            CWIDTH = mapWidth * blockW;
+            CHEIGHT = mapHeight * blockH;
+            zombies = [];
+            obstacles = [];
+            startGame(); 
+          }
+          if(playerSprite.x === 1217 && playerSprite.y >= 129 && playerSprite.y <= 225){
+            clearInterval(gameArea.interval);
+            mapName = "Food Court";
+            mapWidth = foodCourt['width'];
+            mapHeight = foodCourt['height'];
+            map = foodCourt['mapArray'];
+            CWIDTH = mapWidth * blockW;
+            CHEIGHT = mapHeight * blockH;
+            zombies = [];
+            obstacles = [];
+            startGame(); 
+          }
+        }
+        if (mapName === "Saferoom"){
+          if(playerSprite.x === 193 && playerSprite.y === 97){
+            clearInterval(gameArea.interval);
+            mapName = "concourse";
+            mapWidth = concourse['width'];
+            mapHeight = concourse['height'];
+            map = concourse['mapArray'];
+            CWIDTH = mapWidth * blockW;
+            CHEIGHT = mapHeight * blockH;
+            zombies = [];
+            obstacles = [];
+            startGame(); 
+          }
+        }
+        if (mapName === "Hot Topic"){
+          if(playerSprite.x >= 33 && playerSprite.x <= 65 && playerSprite.y === 33){
+            clearInterval(gameArea.interval);
+            mapName = "concourse";
+            mapWidth = concourse['width'];
+            mapHeight = concourse['height'];
+            map = concourse['mapArray'];
+            CWIDTH = mapWidth * blockW;
+            CHEIGHT = mapHeight * blockH;
+            zombies = [];
+            obstacles = [];
+            startGame(); 
+          }
+        }
+        if (mapName === "Food Court"){
+          if(playerSprite.x === 33 && playerSprite.y >= 162 && playerSprite.y <= 289){
+            clearInterval(gameArea.interval);
+            mapName = "concourse";
+            mapWidth = concourse['width'];
+            mapHeight = concourse['height'];
+            map = concourse['mapArray'];
+            CWIDTH = mapWidth * blockW;
+            CHEIGHT = mapHeight * blockH;
+            zombies = [];
+            obstacles = [];
+            startGame(); 
+          }
+        }
+ // *********************************************** DYNAMIC VISUAL UPDATES/ELEMENTS **************************************************
+ 
+ //get the element in which health is display 
+        let healthStatus = document.getElementById("healthText");
+        //extract the health value from within the healthStatus element
+        //let health = parseInt(healthStatus.innerText);
+        //substract damage from played based ono sprite's healthy which is calculated/updatedd on collisions with zombies
+        healthStatus.innerText = playerSprite.health + "/100";
+        let healthBar = document.getElementById("healthBar");
+        healthBar.style.width = (playerSprite.health) * 2;
+        if (
+                playerSprite.health >= 50){
+            healthBar.style.backgroundColor = "green";
+                }
+        else if(
+                playerSprite.health >=10 && playerSprite.health < 50){
+            healthBar.style.backgroundColor = "yellow";
+                }
+        else {
+            healthBar.style.backgroundColor = "red";
+        }
+        
+        
+        //Update XP progress
+        //let XPBar = document.getElementByID("xp_bar");
+        //let XPTextNeeded = document.getElementById("xp_milestone");
+        //let XPTextCurr = document.getElementById("xp_current");
+        //let currentXP = parseInt(charXP);
+        
+        //Kill Count
+        
+       
+        }
+      
+      
       var gameArea = {
         canvas: document.createElement("canvas"),
         start: function() {
@@ -674,7 +799,6 @@ and open the template in the editor.
         playerSprite.speedY = 0;
         playerSprite.speedX = 0;
       }
-
       function moveKeys() {
         if (gameArea.key && (gameArea.key === 38 || gameArea.key === 87)) {
           moveUp();
@@ -692,8 +816,8 @@ and open the template in the editor.
           stopMove();
         }
       }
-
       function moreZombs(){
+        if(mapName !== "Saferoom"){
         var z = levelUP;
         if(zombies.length === 0){
         var mapIndex = 0;
@@ -708,6 +832,9 @@ and open the template in the editor.
             for (var l = 0; l < ((mapWidth * mapHeight)*.01); l++){
             var zombSpriteImage = new Image();
             zombSpriteImage.src = "Media/Sprites/ZombieSprite1.png";
+            
+            //var zombSpriteImage = new Image();
+            //zombSpriteImage.src = "Media/Sprites/ZombieSprite1.png";
               if (tileType === 0) {
                 var zombY = Math.floor(Math.random() * ((mapHeight * blockH) - 32));
                 var zombX = Math.floor(Math.random() * ((mapWidth * blockW) - 32));
@@ -735,6 +862,7 @@ and open the template in the editor.
       } else {
         clearTimeout(t);
       }
+    }
       }
       
       //zombie movement controls
@@ -774,8 +902,6 @@ and open the template in the editor.
               zombo.sy = 0;
             }
       }
-      
-
     </script>
   </body>
 </html>

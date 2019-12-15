@@ -13,7 +13,7 @@ class InventoryDB
     public static function get_all_inventory($player_id)
     {
         $db = Database::getDB();
-        $query = "SELECT inventory.inventory_id, inventory.item_id, inventory.player_id, inventory.item_qty, items.item_name, items.item_description
+        $query = "SELECT inventory.inventory_id, inventory.item_id, inventory.player_id, inventory.item_qty, items.item_name, items.item_category, items.item_description
                   FROM inventory
                   INNER JOIN Players ON inventory.player_id=Players.playerID
                   INNER JOIN items ON inventory.item_id=items.item_id
@@ -32,5 +32,28 @@ class InventoryDB
         return $stuff;
     }
 
-    //query to remove item from inventory
+    //query to get item quantity by item ID
+    public static function get_item_quantity($inventory_id)
+    {
+        $db = Database::getDB();
+        $query = "SELECT item_qty FROM inventory WHERE inventory_id = :inventory_id";
+        $statement = $db->prepare($query);
+        $statement->bindValue(':inventory_id', $inventory_id);
+        $statement->execute();
+        $quantity = $statement->fetch();
+        $statement->closeCursor();
+        return $quantity["item_qty"];
+    }
+
+    //query to update item quantity by item id
+    public static function update_inventory($item_id, $new_quantity)
+    {
+        $db = Database::getDB();
+        $query = "UPDATE inventory SET item_qty = :new_quantity WHERE inventory_id = :item_id";
+        $statement = $db->prepare($query);
+        $statement->bindValue(':new_quantity', $new_quantity);
+        $statement->bindValue(':item_id', $item_id);
+        $statement->execute();
+        $statement->closeCursor();
+    }
 }

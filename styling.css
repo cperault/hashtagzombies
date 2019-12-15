@@ -95,7 +95,7 @@ br {
 
 canvas {
   border-radius: 12px;
-  min-width: auto;
+  width: auto;
   height: auto;
 }
 .error_text {
@@ -310,4 +310,29 @@ hr:after {
   .character_creation_preview_div {
     margin-bottom: 10px;
   }
+}
+
+.game_outer_interface_div_left img {
+  height: 75px;
+  width: 70px;
+  border-radius: 15px;
+  position: absolute;
+}
+.game_outer_interface_div_left .table-div {
+  position: relative;
+  padding-right: 20px;
+}
+
+#healthBar, #healthBarContainer {
+    width: 200px;
+    height: 10px;
+    border: 1px solid black;
+    border-radius: 3px;
+    position: relative;
+    left: 0;
+}
+
+#healthBar {
+    position: relative;
+        top: 12px;
 }
