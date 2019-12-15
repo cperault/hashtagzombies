@@ -59,6 +59,7 @@ function discardItem(item) {
       url: url,
       data: params,
       headers: {
+        Host: "https://hashtagzombies.herokuapp.com",
         Accept: "application/json",
         "Content-Type": "application/json"
       },
