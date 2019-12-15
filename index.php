@@ -26,6 +26,13 @@ require_once('Models/GameLoad.php');
 require_once('Models/Register.php');
 require_once('Models/UserLogin.php');
 
+//define the headers to be hit by frontend requests
+header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Credentials: true');
+header('Access-Control-Allow-Methods: GET, POST');
+header('Access-Control-Max-Age: 1000');
+header('Access-Control-Allow-Headers: Origin, Content-Type, X-Auth-Token , Authorization');
+
 ////instantiate PHPMailer object
 //$mail = new PHPMailer(true); //true enables exception handling
 //
@@ -55,7 +62,7 @@ $post_body = json_decode(file_get_contents("php://input"), TRUE);
 $request_path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
 //assign `$action` to appropriate endpoint from JS requests which will designate which case below to hit
-if ($request_path === "index.php/discard_inventory_item") {
+if ($request_path === "/discard_inventory_item") {
     $action = "discard_inventory_item";
 }
 
