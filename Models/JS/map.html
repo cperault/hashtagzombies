@@ -324,7 +324,7 @@
          //detect if collision is with an obstacle that can be picked up
           for(var i = 0; i < obstacles.length; i++){
             if(playerSprite.collide(obstacles[i]) !== false){
-                if (obstacles[i].getCategory() !== "tile"){
+                if (obstacles[i].getCategory() !== "tile" && obstacles[i].getCategory() !== "door"){
                 currentItemIndex = i;
                 }
             }
