@@ -14,7 +14,7 @@ var concourseMap = [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
                     1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,3,3,3,1,1,1,1,1,1,1,1
                 ];
  var concourse = {
-     "height": 12, "width": 40, "name": "Concourse", "mapArray": concourseMap
+     "height": 12, "width": 40, "name": "Concourse", "mapArray": concourseMap, "spawnRate" : 1
  };
  
  var concourseHotzones = {
@@ -43,7 +43,7 @@ var hotTopicMap = [1,3,3,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
                    1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1
                    ];
 var hotTopic = {
-    "height": 20, "width": 20, "name": "Hot Topic", "mapArray": hotTopicMap
+    "height": 20, "width": 20, "name": "Hot Topic", "mapArray": hotTopicMap, "spawnRate" : 1
 };
 
 var hotTopicHotzones = {
@@ -68,7 +68,7 @@ var foodCourtMap = [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
                  1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1
              ];
 var hotTopic = {
-    "height": 25, "width": 15, "name": "Food Court", "mapArray": foodCourtMap
+    "height": 25, "width": 15, "name": "Food Court", "mapArray": foodCourtMap, "spawnRate" : 1
 };
              
 //8 long 4 tall
@@ -80,7 +80,7 @@ var safeRoomMap = [1,1,1,1,1,1,1,1,
                    1,1,1,1,1,1,1,1
                ];
 var safeRoom = {
-    "height": 5, "width": 8, "name": "Saferoom", "mapArray": safeRoomMap
+    "height": 5, "width": 8, "name": "Saferoom", "mapArray": safeRoomMap, "spawnRate": 0
 };
 
 var tutorialMessages = 

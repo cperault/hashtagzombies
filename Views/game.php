@@ -17,8 +17,13 @@
     <script src="Models/JS/map.js" type="text/javascript"></script>
     <script src="Models/JS/inventory.js"></script>
     <script src="Models/JS/gameState.js"></script>
+    <script src="Models/JS/bullet.js"></script>
+    <script src="Models/JS/gameMaps.js" type="text/javascript"></script>
     <link href="styling.css" rel="stylesheet" type="text/css" />
 </head>
+<body onload="startGame()">
+    <div id="gameplayArea"></div>
+    <?php include('./Models/JS/map.html'); ?>
 <div id="inventory_modal_container_div" class="inventory_modal">
     <span onclick="closeInventory();" id="inventory_close_button">&times;</span>
     <?php if (isset($items) && count($items) > 0) { ?>
@@ -49,7 +54,9 @@
                     ?>
 
 </div>
-<?php include("Models/JS/map.html"); ?>
+    
+<div id="in_game_messages">
+</div>
 <div class="game_outer_interface_div_left">
     <?php if (isset($character_object->character_image)) {
         echo "<img src='$character_object->character_image'>";
@@ -95,5 +102,5 @@
     <input type="submit" value="Pause Game" onclick="pauseGame()" id="btnGameState" />
 </footer>
 
-
+</body>
 </html>
