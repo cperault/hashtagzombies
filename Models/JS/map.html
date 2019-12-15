@@ -19,7 +19,6 @@ and open the template in the editor.
   </head>
   <body onload="startGame()" class="zombies_body_gameplay_container">
     <script>
-      var inventory = [];
       var playerSprite;
       var wallTile;
       var floorTile;
@@ -28,8 +27,8 @@ and open the template in the editor.
       var enemies = [];
       var blockW = 32;
       var blockH = 32;
-      var mapWidth = 38;
-      var mapHeight = 25;
+      var mapWidth;
+      var mapHeight;
       var CWIDTH = mapWidth * blockW;
       var CHEIGHT = mapHeight * blockH;
       var rounds = [];
@@ -45,35 +44,12 @@ and open the template in the editor.
       var hCount = 0;
       var charXP = 0;
       var levelUP = 1;
+      
       //make map
       // comment below prevents formatting from messing up the 38x25 map matrix
       // prettier-ignore
+      var mapName;
       var map = [
-              0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-              0,0,0,1,0,0,0,0,0,1,1,1,1,1,1,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-              0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-              0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-              0,0,0,1,0,0,0,1,0,0,0,0,0,1,1,1,1,1,1,1,1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-              0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-              0,1,0,0,0,0,0,1,0,0,1,1,1,1,1,1,1,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-              0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-              0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-              0,1,0,0,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-              0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-              0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-              0,0,0,0,1,0,0,0,1,1,1,0,0,0,1,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-              0,0,0,0,1,0,1,0,1,0,0,0,0,0,0,0,0,0,1,1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-              0,0,1,0,1,0,1,0,1,0,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-              0,0,1,0,1,0,1,0,1,0,0,0,0,1,1,1,1,0,0,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-              0,0,1,0,1,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-              0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-              0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-              0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-              0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-              1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-              0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-              0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-              0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
               ];
 
       //Create game canvas and load game area.
@@ -151,7 +127,8 @@ and open the template in the editor.
         foodSpriteImage.src = "Media/Sprites/borger.png";
         var medSpriteImage = new Image();
         medSpriteImage.src = "Media/Sprites/meds.png";
-
+        var doorSpriteImage = new Image();
+        doorSpriteImage.src = "Media/Sprites/doorSprite.png";
         //assign map elements
         var mapIndex = 0;
         for (var y = 0; y <= mapHeight - 1; y++) {
@@ -176,9 +153,41 @@ and open the template in the editor.
                   "tile"
                 )
               );
-
-              //make floor array
-            } else if (tileType === 0) {
+            
+            //make floor array
+            }else if (tileType === 2){
+                obstacles.push(
+                  new component(
+                    medSpriteImage,
+                    0,
+                    0,
+                    32,
+                    32,
+                    tile_x + 8,
+                    tile_y + 8,
+                    16,
+                    16,
+                    "med", 0
+                  )
+                );
+            }
+            else if (tileType === 3){
+                obstacles.push(
+                  new component(
+                    doorSpriteImage,
+                    0,
+                    0,
+                    32,
+                    32,
+                    tile_x,
+                    tile_y,
+                    32,
+                    32,
+                    "door", 0
+                  )
+                );
+             }
+            else if (tileType === 0) {
               floor.push(
                 new component(
                   floorTileImage,
@@ -411,74 +420,88 @@ and open the template in the editor.
             currentZom.speedX = 0;
             currentZom.speedY = 0;
 
-            //pathfinding priority
-            if (
-              Math.abs(currentZom.x - playerSprite.x) >
-              Math.abs(currentZom.y - playerSprite.y)
-            ) {
-              //move left
-              if (currentZom.x > playerSprite.x) {
-                currentZom.speedX -= 1;
-                currentZom.sx = 96;
-                if (
-                  (zombFrame >= 0 && zombFrame <= 6) ||
-                  (zombFrame >= 13 && zombFrame <= 18)
-                ) {
-                  currentZom.sy = 64;
-                } else {
-                  currentZom.sy = 0;
-                }
-              }
-              //move right
-              if (currentZom.x < playerSprite.x) {
-                currentZom.speedX += 1;
-                currentZom.sx = 64;
-                if (
-                  (zombFrame >= 0 && zombFrame <= 6) ||
-                  (zombFrame >= 13 && zombFrame <= 18)
-                ) {
-                  currentZom.sy = 64;
-                } else {
-                  currentZom.sy = 0;
-                }
-              }
-            } else {
-              //move up
-              if (currentZom.y > playerSprite.y) {
-                currentZom.speedY -= 1;
-                currentZom.sx = 0;
-                if (
-                  (zombFrame >= 0 && zombFrame <= 6) ||
-                  (zombFrame >= 13 && zombFrame <= 18)
-                ) {
-                  currentZom.sy = 32;
-                } else {
-                  currentZom.sy = 0;
-                }
-              }
-              //move down
-              if (currentZom.y < playerSprite.y) {
-                currentZom.speedY += 1;
-                currentZom.sx = 32;
-                if (
-                  (zombFrame >= 0 && zombFrame <= 6) ||
-                  (zombFrame >= 13 && zombFrame <= 18)
-                ) {
-                  currentZom.sy = 32;
-                } else {
-                  currentZom.sy = 0;
-                }
-              }
+        //Zombie Collision/Pathfinding
+        var zombieCollisionCheck = false;
+        var zc = 0;
+        var interzombieCollisionCheck = false;
+        var zz = 0;
+            //check if zombie is colliding with obstacle
+           do {
+            zombieCollisionCheck = currentZom.collide(obstacles[zc]);
+            zc++;
             }
-            //Zombie Collision/Pathfinding
-            var zombieCollisionCheck = false;
-            var zc = 0;
-            do {
-              zombieCollisionCheck = currentZom.collide(obstacles[zc]);
-              zc++;
-            } while (zombieCollisionCheck === false && zc < obstacles.length);
-
-            if (zombieCollisionCheck !== false) {
+            while (zombieCollisionCheck === false && zc < obstacles.length);
+            if (zombieCollisionCheck !== false){
+              zc = 0;
+              currentZom.speedX = 0;
+              currentZom.speedY = 0;
+              if (distanceX > distanceY)
+              {
+                  //move up
+                if(currentZom.y > playerSprite.y){
+                 zMoveUp(currentZom);
+                 facing = "N";
+                 }
+                //move down
+                  else if(currentZom.y < playerSprite.y){
+                  zMoveDown(currentZom);
+                  facing = "S";
+                  }
+                  
+                  else {
+                      currentZom.speedY = 0;
+                  }
+                  
+                  do {
+                    zombieCollisionCheck = currentZom.collide(obstacles[zc]);
+                    zc++;
+                    }
+            
+                  while (zombieCollisionCheck === false && zc < obstacles.length);
+                  if (zombieCollisionCheck !== false && obstacles[zc].category === "tile"){
+                    currentZom.speedX = 0;
+                    currentZom.speedY = 0;
+                  }
+                }   
+                  
+                else if(distanceY > distanceX) {
+                    //move left
+                    if(currentZom.x > playerSprite.x){
+                    currentZom.speedX -= 1;
+                    facing = "W";
+                    }
+            //move right
+                else if(currentZom.x < playerSprite.x){
+                    currentZom.speedX += 1;
+                    facing = "E";
+                  }
+                  
+                  else{
+                     currentZom.speedX = 0;
+                  }
+           
+                   do {
+                    zombieCollisionCheck = currentZom.collide(obstacles[zc]);
+                    zc++;
+                    }
+            
+                  while (zombieCollisionCheck === false && zc < obstacles.length);
+                    if (zombieCollisionCheck !== false && obstacles[zc].category === "tile"){
+                    currentZom.speedX = 0;
+                    currentZom.speedY = 0;
+                    }
+           
+            }
+           }
+           
+           //check if zombie is colliding with another zombie
+           do {
+            zombieCollisionCheck = currentZom.collide(obstacles[zc]);
+            zc++;
+            }
+            while (zombieCollisionCheck === false && zc < obstacles.length);
+            if (zombieCollisionCheck !== false){
+              zc = 0;
               currentZom.speedX = 0;
               currentZom.speedY = 0;
 
