@@ -55,7 +55,7 @@ $post_body = json_decode(file_get_contents("php://input"), TRUE);
 $request_path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
 //assign `$action` to appropriate endpoint from JS requests which will designate which case below to hit
-if ($request_path === "/discard_inventory_item") {
+if ($request_path === "index.php/discard_inventory_item") {
     $action = "discard_inventory_item";
 }
 
