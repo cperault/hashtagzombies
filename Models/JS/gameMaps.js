@@ -14,7 +14,7 @@ var concourseMap = [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
                     1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,3,3,3,1,1,1,1,1,1,1,1
                 ];
  var concourse = {
-     "height": 12, "width": 40, "name": "Concourse", "mapArray": concourseMap
+     "height": 12, "width": 40, "name": "Concourse", "mapArray": concourseMap, "spawnRate" : 1
  };
  
  var concourseHotzones = {
@@ -80,7 +80,7 @@ var safeRoomMap = [1,1,1,1,1,1,1,1,
                    1,1,1,1,1,1,1,1
                ];
 var safeRoom = {
-    "height": 5, "width": 8, "name": "Saferoom", "mapArray": safeRoomMap
+    "height": 5, "width": 8, "name": "Saferoom", "mapArray": safeRoomMap, "spawnRate": 0
 };
 
 var tutorialMessages = 

@@ -1,26 +1,7 @@
-<!DOCTYPE html>
-<!--
-To change this license header, choose License Headers in Project Properties.
-To change this template file, choose Tools | Templates
-and open the template in the editor.
--->
-<html>
-  <head>
-    <title>TODO supply a title</title>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <style>
-      canvas {
-        border: 1px solid black;
-      }
-    </style>
-    <script src="Models/JS/bullet.js"></script>
-    <script src="Models/JS/gameMaps.js" type="text/javascript"></script>
-    <link href="styling.css" rel="stylesheet" type="text/css" />
-  </head>
-  <body onload="startGame()" class="zombies_body_gameplay_container">
+
     <script>
       var playerSprite;
+      var mapName = concourse;
       var wallTile;
       var floorTile;
       var floor = [];
@@ -28,8 +9,8 @@ and open the template in the editor.
       var enemies = [];
       var blockW = 32;
       var blockH = 32;
-      var mapWidth = concourse['width'];
-      var mapHeight = concourse['height'];
+      var mapWidth = mapName['width'];
+      var mapHeight = mapName['height'];
       var CWIDTH = mapWidth * blockW;
       var CHEIGHT = mapHeight * blockH;
       var rounds = [];
@@ -49,8 +30,8 @@ and open the template in the editor.
       //make map
       // comment below prevents formatting from messing up the 38x25 map matrix
       // prettier-ignore
-      var mapName = "concourse";
-      var map = concourse['mapArray'];
+      
+      var map = mapName['mapArray'];
 
       //Create game canvas and load game area.
       function startGame() {
@@ -86,7 +67,7 @@ and open the template in the editor.
         //assign map elements
         var mapIndex = 0;
         var zCounter = 0;
-        var zSpawnRate = 5;
+        var zSpawnRate = Math.min(10, mapName['spawnRate']*levelUP);
         for (var y = 0; y <= mapHeight - 1; y++) {
           for (var x = 0; x <= mapWidth - 1; x++, mapIndex++) {
             var tile_x = x * blockW;
@@ -343,7 +324,7 @@ and open the template in the editor.
          //detect if collision is with an obstacle that can be picked up
           for(var i = 0; i < obstacles.length; i++){
             if(playerSprite.collide(obstacles[i]) !== false){
-                if (obstacles[i].getCategory() !== "tile"){
+                if (obstacles[i].getCategory() !== "tile" && obstacles[i].getCategory() !== "door"){
                 currentItemIndex = i;
                 }
             }
@@ -724,6 +705,7 @@ and open the template in the editor.
         //let XPTextCurr = document.getElementById("xp_current");
         //let currentXP = parseInt(charXP);
         
+        
         //Kill Count
         
        
@@ -736,7 +718,7 @@ and open the template in the editor.
           this.canvas.width = CWIDTH;
           this.canvas.height = CHEIGHT;
           this.context = this.canvas.getContext("2d");
-          document.body.insertBefore(this.canvas, document.body.childNodes[0]);
+          document.body.insertBefore(this.canvas, document.getElementById("gameplayArea").childNodes[1]);
           this.frameNo = 0;
           //FRAMERATE
           this.interval = setInterval(updateGameArea, 20);
@@ -833,8 +815,8 @@ and open the template in the editor.
             var zombSpriteImage = new Image();
             zombSpriteImage.src = "Media/Sprites/ZombieSprite1.png";
             
-            //var zombSpriteImage = new Image();
-            //zombSpriteImage.src = "Media/Sprites/ZombieSprite1.png";
+            var zombSpriteImage = new Image();
+            zombSpriteImage.src = "Media/Sprites/ZombieSprite1.png";
               if (tileType === 0) {
                 var zombY = Math.floor(Math.random() * ((mapHeight * blockH) - 32));
                 var zombX = Math.floor(Math.random() * ((mapWidth * blockW) - 32));
@@ -903,5 +885,5 @@ and open the template in the editor.
             }
       }
     </script>
-  </body>
-</html>
+  
+    
