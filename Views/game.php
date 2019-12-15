@@ -52,7 +52,7 @@
 <?php include("Models/JS/map.html"); ?>
 <div class="game_outer_interface_div_left">
     <?php if (isset($character_object->character_image)) {
-        echo "<img src=" . $character_object->character_image . "/>";
+        echo "<img src='$character_object->character_image'>";
     } ?>
     <div class="table-div">
         <table class="game_profile_table">
