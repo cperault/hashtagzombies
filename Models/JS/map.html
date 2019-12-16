@@ -570,8 +570,11 @@
               map = safeRoom['mapArray'];
               CWIDTH = mapWidth * blockW;
               CHEIGHT = mapHeight * blockH;
+              playerSpawnX = 64;
+              playerSpawnY = 64;
               zombies = [];
               obstacles = [];
+              playerSprite.health = charHP;
               startGame(); 
             }
           }
