@@ -22,8 +22,7 @@
     <link href="styling.css" rel="stylesheet" type="text/css" />
 </head>
 <body onload="startGame()">
-    <div id="gameplayArea"></div>
-    <?php include('./Models/JS/map.html'); ?>
+    
 <div id="inventory_modal_container_div" class="inventory_modal">
     <span onclick="closeInventory();" id="inventory_close_button">&times;</span>
     <?php if (isset($items) && count($items) > 0) { ?>
@@ -54,9 +53,14 @@
                     ?>
 
 </div>
-    
+    <script>
+        var gameStateEncoded = <?php echo $gameStateString; ?>;
+    </script>
+ <div id="gameplayArea"></div>
+    <?php include('./Models/JS/map.html'); ?>   
 <div id="in_game_messages">
 </div>
+ <div id="cookieDump"></div>
 <div class="game_outer_interface_div_left">
     <?php if (isset($character_object->character_image)) {
         echo "<img src='$character_object->character_image'>";

@@ -1,5 +1,8 @@
 
     <script>
+      //set current gamestate cookie
+      var gamestate = {level: levelUP, exp: charXP, hp: charHP};
+      document.cookie = "gamestate="+gamestate;
       var playerSprite;
       var playerSpawnX = 64;
       var playerSpawnY = 64;
@@ -23,11 +26,10 @@
       var killCount = 0;
       var zombFrame = 0;
       var currentItemIndex = -1;
-
-     
       var hCount = 0;
       var charXP = 0;
       var levelUP = 1;
+      var charHP = 100;
       
       //make map
       // comment below prevents formatting from messing up the 38x25 map matrix
@@ -52,7 +54,7 @@
           30,
           30,
           "player",
-          100
+          charHP
         );
         var zombSpriteImage = new Image();
         zombSpriteImage.src = "Media/Sprites/ZombieSprite1.png";
@@ -573,6 +575,7 @@
               startGame(); 
             }
           }
+          charHP = playerSprite.health;
           for (var f = 0; f < rounds.length; f++){
               if (rounds[f].xPos >= zombies[n].x && rounds[f].xPos <= (zombies[n].x + zombies[n].width) && rounds[f].yPos >= zombies[n].y && rounds[f].yPos <= (zombies[n].y + zombies[n].width)){
               rounds.splice(f, 1);
@@ -732,7 +735,10 @@
         
         
         //Kill Count
-        
+ //Update the current gamestate and cookie
+ gamestate=saveGame(levelUP, charXP, playerSprite.health);
+ document.cookie = "gamestate"+gamestate;
+ document.getElementById("cookieDump").innerText = document.cookie;
        
         }
       
