@@ -3,14 +3,14 @@ MAP TILES/SPRITES
 
 0   Floor Tile
 1   Wall Tile
-2   Food - low val
-3   Food - mid val
-4   Food - high val
-5   Medicine - low val
-6   Medicine - mid val
-7   Medicine - high val
-8   Weapon - low val
-9   Weapon - mid val
-10  Weapon - high val
-11  Enemy - weak
-12  Enemy - strong
+2   Food 
+3   Door
+4   Bench - left
+5   Bench - right
+6   Bench - up
+7   Bench - down
+8   Bin
+9   Table1
+10  Table2
+11  Table3
+12  Table4

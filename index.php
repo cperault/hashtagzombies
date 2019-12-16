@@ -162,4 +162,13 @@ switch ($action) {
     case 'change_map':
         exit;
         break;
+    
+    case 'save_game':
+        $savestate = filter_input(INPUT_POST, 'gamestate');
+        PlayerDB::save_game($_SESSION["player_id"], $savestate);
+        GameLoad::load_game_data();
+        $_COOKIE["gamestate"] = $savestate;
+        include_once("Views/game.php");
+        exit;
+        break;
 }

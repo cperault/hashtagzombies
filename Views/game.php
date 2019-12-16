@@ -6,6 +6,10 @@
  *Date:    October 23, 2019                                                                                        *
  *Purpose: This is the view where all gameplay is displayed.                                                       *
 \******************************************************************************************************************/
+$loadedGame = PlayerDB::load_game($_SESSION["player_id"]);
+
+if(!isset($_COOKIE["gamestate"])){
+setcookie('gamestate', $loadedGame);}
 ?>
 <html>
 
@@ -53,14 +57,21 @@
                     ?>
 
 </div>
-    <script>
-        var gameStateEncoded = <?php echo $gameStateString; ?>;
-    </script>
- <div id="gameplayArea"></div>
+    <div id="gameplayArea"> 
+    </div>
     <?php include('./Models/JS/map.html'); ?>   
 <div id="in_game_messages">
 </div>
- <div id="cookieDump"></div>
+ <div id="cookieDump">
+ </div>
+ <div>
+    
+     <form action ="./index.php" method="POST">
+         <input type="hidden" name="action" value="save_game">
+         <input type="hidden" name="gamestate" id="gamestateSubmit" value="">
+        <input type="submit" name="SAVE GAME" value="SAVE GAME">
+     </form>
+ </div>
 <div class="game_outer_interface_div_left">
     <?php if (isset($character_object->character_image)) {
         echo "<img src='$character_object->character_image'>";

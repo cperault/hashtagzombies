@@ -1,8 +1,8 @@
-
+    
     <script>
-      //set current gamestate cookie
-      var gamestate = {level: levelUP, exp: charXP, hp: charHP};
-      document.cookie = "gamestate="+gamestate;
+    //set current gamestate cookie
+      var gamestate = readState();
+      var gamestateValues = gamestate.match(/\d+/g);
       var playerSprite;
       var playerSpawnX = 64;
       var playerSpawnY = 64;
@@ -27,8 +27,8 @@
       var zombFrame = 0;
       var currentItemIndex = -1;
       var hCount = 0;
-      var charXP = 0;
-      var levelUP = 1;
+      var charXP = gamestateValues[1];
+      var levelUP = gamestateValues[0];
       var charHP = 100;
       
       //make map
@@ -36,11 +36,11 @@
       // prettier-ignore
       var mapName = "Saferoom";
       var map = mapObj['mapArray'];
-
       //Create game canvas and load game area.
       function startGame() {
         gameArea.start();
         //player
+        document.getElementById("charLevel").innerText = levelUP;
         var playerSpriteImage = new Image();
         playerSpriteImage.src = "Media/Sprites/KevinHumanman.png";
         playerSprite = new component(
@@ -77,7 +77,6 @@
             var tile_x = x * blockW;
             var tile_y = y * blockH;
             var tileType = map[mapIndex];
-
             //make walls array
             if (tileType === 1) {
               obstacles.push(
@@ -215,7 +214,6 @@
           //
         }
       }
-
       //COMPONENTS
       //sprites
      function component(
@@ -366,7 +364,6 @@
             var currentZom = zombies[q];
             var distanceX = Math.abs(currentZom.x - playerSprite.x);
             var distanceY = Math.abs(currentZom.y - playerSprite.y);
-            var facing = "S";
             currentZom.speedX = 0;
             currentZom.speedY = 0;
             
@@ -375,12 +372,10 @@
                 //move left
             if(currentZom.x > playerSprite.x){
                 zMoveLeft(currentZom);
-                facing = "W";
             }
             //move right
             if(currentZom.x < playerSprite.x){
                 zMoveRight(currentZom);
-                facing = "E";
               }
           }  
           
@@ -388,12 +383,10 @@
           //move up
           if(currentZom.y > playerSprite.y){
            zMoveUp(currentZom);
-           facing = "N";
            }
           //move down
             if(currentZom.y < playerSprite.y){
             zMoveDown(currentZom);
-            facing = "S";
             }
          }
         //Zombie Collision/Pathfinding
@@ -402,6 +395,9 @@
         
            do {
             zombieCollisionCheck = currentZom.collide(obstacles[zc]);
+            if(obstacles[zc].getCategory() !== "tile"){
+                zombieCollisionCheck = false;
+                }
             zc++;
             }
             while (zombieCollisionCheck === false && zc < obstacles.length);
@@ -414,12 +410,10 @@
                   //move up
                 if(currentZom.y > playerSprite.y){
                  zMoveUp(currentZom);
-                 facing = "N";
                  }
                 //move down
                   else if(currentZom.y < playerSprite.y){
                   zMoveDown(currentZom);
-                  facing = "S";
                   }
                   
                   else {
@@ -428,11 +422,15 @@
                   
                   do {
                     zombieCollisionCheck = currentZom.collide(obstacles[zc]);
+                    if(obstacles[zc].getCategory() !== "tile"){
+                        zombieCollisionCheck = false;
+                        }
                     zc++;
                     }
             
                   while (zombieCollisionCheck === false && zc < obstacles.length);
-                  if (zombieCollisionCheck !== false && obstacles[zc].category === "tile"){
+                  if (zombieCollisionCheck !== false){
+                       zc = 0;
                     currentZom.speedX = 0;
                     currentZom.speedY = 0;
                   }
@@ -442,12 +440,10 @@
                     //move left
                     if(currentZom.x > playerSprite.x){
                     currentZom.speedX -= 1;
-                    facing = "W";
                     }
             //move right
                 else if(currentZom.x < playerSprite.x){
                     currentZom.speedX += 1;
-                    facing = "E";
                   }
                   
                   else{
@@ -456,11 +452,14 @@
            
                    do {
                     zombieCollisionCheck = currentZom.collide(obstacles[zc]);
+                    if(obstacles[zc].getCategory() !== "tile"){
+                        zombieCollisionCheck = false;
+                        }
                     zc++;
                     }
-            
                   while (zombieCollisionCheck === false && zc < obstacles.length);
-                    if (zombieCollisionCheck !== false && obstacles[zc].category === "tile"){
+                    if (zombieCollisionCheck !== false){
+                         zc = 0;
                     currentZom.speedX = 0;
                     currentZom.speedY = 0;
                     }
@@ -540,7 +539,6 @@
           //detect if zombie is hit and if so, decrement zombie health
           for (var n = 0; n < zombies.length; n++){
             
-
           if (
             playerSprite.x >= zombies[n].x &&
             playerSprite.x <= zombies[n].x + zombies[n].width &&
@@ -570,8 +568,11 @@
               map = safeRoom['mapArray'];
               CWIDTH = mapWidth * blockW;
               CHEIGHT = mapHeight * blockH;
+              playerSpawnX = 64;
+              playerSpawnY = 64;
               zombies = [];
               obstacles = [];
+              playerSprite.health = charHP;
               startGame(); 
             }
           }
@@ -602,6 +603,7 @@
           t = setTimeout(moreZombs, 3000);
         }
 
+//*************************************** MAP TRANSITIONS ***********************************************//
         if (mapName === "concourse"){
           if(playerSprite.x <= 20 && playerSprite.y >= 96 && playerSprite.y <= 225){
             clearInterval(gameArea.interval);
@@ -616,6 +618,7 @@
             obstacles = [];
             playerSpawnX = 192;
             playerSpawnY = 95;
+            charHP = 100;
             gameArea.remove();
             startGame(); 
           }
@@ -706,7 +709,7 @@
         }
  // *********************************************** DYNAMIC VISUAL UPDATES/ELEMENTS **************************************************
  
- //get the element in which health is display 
+    //get the element in which health is display 
         let healthStatus = document.getElementById("healthText");
         //extract the health value from within the healthStatus element
         //let health = parseInt(healthStatus.innerText);
@@ -728,21 +731,20 @@
         
         
         //Update XP progress
-        //let XPBar = document.getElementByID("xp_bar");
-        //let XPTextNeeded = document.getElementById("xp_milestone");
-        //let XPTextCurr = document.getElementById("xp_current");
-        //let currentXP = parseInt(charXP);
+//        let XPBar = document.getElementByID("xp_bar");
+//        let XPTextNeeded = document.getElementById("xp_milestone");
+//        let XPTextCurr = document.getElementById("xp_current");
+//        let currentXP = parseInt(charXP);
         
-        
-        //Kill Count
- //Update the current gamestate and cookie
- gamestate=saveGame(levelUP, charXP, playerSprite.health);
- document.cookie = "gamestate"+gamestate;
- document.getElementById("cookieDump").innerText = document.cookie;
-       
+        //Update the current gamestate and cookie
+        gamestate=saveGame(levelUP, charXP, playerSprite.health);
+        //document.cookie = "gamestate = " + gamestate;
+        document.getElementById("cookieDump").innerText = gamestate;
+        document.getElementById("gamestateSubmit").value = gamestate;
         }
-      
-      
+//END GAME UPDATE FUNCTION   
+
+//INSTANTIATE GAME AREA CANVAS
       var gameArea = {
         canvas: document.createElement("canvas"),
         start: function() {
@@ -770,7 +772,8 @@
           window.removeEventListener("contextmenu", context_menu);
         }
       };
-      //player movement controls
+
+ //PLAYER MOVEMENT CONTROLS
       function moveUp() {
         playerSprite.speedY -= 1;
         playerSprite.sx = 0;
@@ -812,6 +815,8 @@
           stopMove();
         }
       }
+      
+//ZOMBIE SPAWNER
       function moreZombs(){
         if(mapName !== "Saferoom"){
         var z = levelUP;
@@ -826,9 +831,6 @@
             var tile_y = y * blockH;
             var tileType = map[mapIndex];
             for (var l = 0; l < ((mapWidth * mapHeight)*.01); l++){
-            var zombSpriteImage = new Image();
-            zombSpriteImage.src = "Media/Sprites/ZombieSprite1.png";
-            
             var zombSpriteImage = new Image();
             zombSpriteImage.src = "Media/Sprites/ZombieSprite1.png";
               if (tileType === 0) {
@@ -931,6 +933,13 @@
           function context_menu(e){
             e.preventDefault();
           };
+          
+function readState() {
+    var cookiesParse = decodeURIComponent(document.cookie);
+    var cookiesParsed = cookiesParse.split(";");
+    var cookiesOut = cookiesParsed[0].split("=");
+    return cookiesOut[1].toString();
+    }
 
     </script>
   

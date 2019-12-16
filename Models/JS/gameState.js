@@ -35,3 +35,5 @@ function loadGame(gameStateEncoded){
     var gamestateobject = JSON.parse(gameStateEncoded);
     return gamestateobject;
 }
+
+
