@@ -24,13 +24,14 @@ function resumeGame() {
 }
 
 //function to save progress
-function saveGame(playerLevel, currentXP){
-    var gamestate = {level: playerLevel, exp: currentXP};
+function saveGame(playerLevel, currentXP, health){
+    var gamestate = {level: playerLevel, exp: currentXP, hp: health};
     var gameStateEncode = JSON.stringify(gamestate);
     return gameStateEncode;
 }
 
-function loadGame(playerID){
+//parse JSON string gamestate to gamestate object
+function loadGame(gameStateEncoded){
     var gamestateobject = JSON.parse(gameStateEncoded);
     return gamestateobject;
 }
