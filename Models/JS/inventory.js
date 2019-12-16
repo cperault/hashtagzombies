@@ -18,6 +18,44 @@ function closeInventory() {
   resumeGame();
 }
 
+//function to be called when an inventory item is picked up during gameplay
+function pickupInventoryItem(item, value) {
+  //initial item ID value
+  inventoryToIncrement = 0;
+  switch (item) {
+    case "med":
+      //get value of the med
+      let medicineValue = value;
+      if (medicineValue === 20) {
+        //item is aspirin
+        inventoryToIncrement = 12; //item_id in inventory table for aspirin is 12
+      } else if (medicineValue === 50) {
+        //item is a first aid kit
+        inventoryToIncrement = 13; //item_id in inventory table for first aid kit is 13
+      }
+      //add med to inventory
+      let url = "/add_picked_up_item";
+      let method = "post";
+      //set up request parameters
+      let params = { itemID: inventoryToIncrement };
+      axios({
+        method: method,
+        url: url,
+        data: params,
+        headers: {
+          "Content-Type": "application/json"
+        },
+        withCredentials: true,
+        credentials: "same-origin"
+      }).then(response => {
+        // //update the inventory item quantity value
+        let key = response.data.incremented_item;
+        document.getElementById(`item_qty_value_${key}`).innerText =
+          response.data.new_value;
+      });
+  }
+}
+
 //function to use item in inventory
 //param @id is used to apply item to gameplay whether it's increasing weapon damage,
 //      health, or energy and also gets passed to `discardItem()` method after
@@ -49,11 +87,9 @@ function useItem(id, category, description) {
       }
       //update health text based on result of using the item
       let newHealthLevel = updatedHealth + "/" + maxHealth;
-      console.log(newHealthLevel);
       health.innerText = newHealthLevel;
       break;
   }
-  console.log("using item ID " + id + " which is a(n) " + item_type + " item");
   //update the quantity in the DB when a user uses their item by calling our `discardItem()` method below
   discardItem(id);
 }
@@ -66,7 +102,7 @@ function discardItem(item) {
     let url = "/discard_inventory_item";
     let method = "post";
     //set up request parameters
-    let params = { action: "discard", itemID: item };
+    let params = { itemID: item };
     axios({
       method: method,
       url: url,

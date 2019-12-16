@@ -65,6 +65,8 @@ $request_path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 //assign `$action` to appropriate endpoint from JS requests which will designate which case below to hit
 if ($request_path === "/discard_inventory_item") {
     $action = "discard_inventory_item";
+} else if ($request_path === "/add_picked_up_item") {
+    $action = "add_inventory_item";
 }
 
 //decide what to do based on the action(s) received from gameplay/forms
@@ -147,6 +149,23 @@ switch ($action) {
         //redirect to the login view
         include("Views/login.php");
         die;
+        break;
+    case "add_inventory_item":
+        //get the current user's ID
+        $player_id = $_SESSION["player_id"];
+        //retrive the item ID of item picked up
+        $inventory_item_id = $post_body["itemID"];
+        //get quantity of that item in the user's inventory
+        $current_quantity = InventoryDB::get_item_quantity_of_user_item($inventory_item_id, $player_id);
+        //update the value in the DB
+        InventoryDB::update_inventory_item($player_id, $inventory_item_id, ($current_quantity + 1));
+        //add 1 to the quantity of the current item being picked up
+        $new_quantity = $current_quantity + 1;
+        //get inventory ID of item incremented
+        $incremented_inventory_id = InventoryDB::get_inventory_id($player_id, $inventory_item_id);
+        //send back the new quantity
+        $message = json_encode(array("new_value" => $new_quantity, "incremented_item" => $incremented_inventory_id), JSON_PRETTY_PRINT);
+        die($message);
         break;
     case "discard_inventory_item":
         //retrieve the item ID received from the Axios request
