@@ -22,21 +22,35 @@ function closeInventory() {
 //param @id is used to apply item to gameplay whether it's increasing weapon damage,
 //      health, or energy and also gets passed to `discardItem()` method after
 //      applying item effect
-//param @category will be ued to determine how to use the item
-function useItem(id, category) {
+//param @category will be used to determine how to use the item
+function useItem(id, category, description) {
   //variable to store which type of item is being used
   let item_type = "";
-  //categories: 1, 2, 3 => 1 = weapon, 2 = energy, 3 = health
+  //categories: 1, 2  => 1 = weapon, 2 = health
   switch (category) {
     case 1:
       item_type = "weapon";
       break;
     case 2:
-      item_type = "energy";
-      break;
-    case 3:
       item_type = "health";
-      //check health, if health is less than
+      //get health increment value of item
+      let itemValue = parseInt(description);
+      let health = document.getElementById("healthText");
+      let healthStatus = health.innerText;
+      let healthParts = healthStatus.split("/");
+      //the current health will be healthParts[0] and total health is healthParts[1]
+      let currentHealth = parseInt(healthParts[0]);
+      let maxHealth = 100;
+      //add health to current health
+      let updatedHealth = currentHealth + itemValue;
+      //make sure health doesn't exceed max
+      if (updatedHealth > 100) {
+        updatedHealth = 100;
+      }
+      //update health text based on result of using the item
+      let newHealthLevel = updatedHealth + "/" + maxHealth;
+      console.log(newHealthLevel);
+      health.innerText = newHealthLevel;
       break;
   }
   console.log("using item ID " + id + " which is a(n) " + item_type + " item");
@@ -49,7 +63,6 @@ function discardItem(item) {
   let count = document.getElementById(`item_qty_value_${item}`).innerText;
   //user cannot discard item if qty less than or equal to zero
   if (count >= 1) {
-    console.log("Discarding item: " + item);
     let url = "/discard_inventory_item";
     let method = "post";
     //set up request parameters
