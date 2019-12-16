@@ -630,6 +630,23 @@
           playerSprite.health = charHP;
           startGame();
         }
+        if (mapName === "Saferoom"){
+          if(playerSprite.x === 225 && playerSprite.y >= 65 && playerSprite.y <= 97){
+            clearInterval(gameArea.interval);
+            mapName = "concourse";
+            mapWidth = concourse['width'];
+            mapHeight = concourse['height'];
+            map = concourse['mapArray'];
+            CWIDTH = mapWidth * blockW;
+            CHEIGHT = mapHeight * blockH;
+            zombies = [];
+            obstacles = [];
+            playerSpawnX = 44;
+            playerSpawnY = 113;
+            gameArea.remove();
+            startGame(); 
+          }
+        }
         if (mapName === "Food Court"){
           if(playerSprite.x === 33 && playerSprite.y >= 162 && playerSprite.y <= 289){
             clearInterval(gameArea.interval);
@@ -643,6 +660,23 @@
             obstacles = [];
             playerSpawnX = 1180;
             playerSpawnY = 160;
+            gameArea.remove();
+            startGame(); 
+          }
+        }
+        if (mapName === "Hot Topic"){
+          if(playerSprite.x >= 33 && playerSprite.x <= 65 && playerSprite.y === 1){
+            clearInterval(gameArea.interval);
+            mapName = "concourse";
+            mapWidth = concourse['width'];
+            mapHeight = concourse['height'];
+            map = concourse['mapArray'];
+            CWIDTH = mapWidth * blockW;
+            CHEIGHT = mapHeight * blockH;
+            zombies = [];
+            obstacles = [];
+            playerSpawnX = 962;
+            playerSpawnY = 300;
             gameArea.remove();
             startGame(); 
           }
