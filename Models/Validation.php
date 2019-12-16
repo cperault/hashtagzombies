@@ -123,6 +123,11 @@ class Validation
                         $result[] = $key . " must be between 10 and 100 characters";
                     }
                     break;
+                case 'Password reset username':
+                    //check that the username on the password reset form is not empty
+                    if (!Validation::input_is_present($value)) {
+                        $result[] = "Username is required";
+                    }
             }
         }
         return $result;

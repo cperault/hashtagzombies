@@ -10,6 +10,7 @@ session_start();}
 \******************************************************************************************************************/
 class GameLoad
 {
+    //function to load gameplay page for non-admins
     public static function load_game_data()
     {
         //get the player object from username saved in the session at login
@@ -25,11 +26,16 @@ class GameLoad
         //get all inventory for the logged in user
         $items = InventoryDB::get_all_inventory($_SESSION["player_id"]);
         $gamestate = PlayerDB::load_game($_SESSION["player_id"]);
-        if (!isset($gamestate) || $gamestate == NULL || $gamestate == ''){
+        if (!isset($gamestate) || $gamestate == NULL || $gamestate == '') {
             $gamestate = '{"level":1, "exp":0,"inventory":[]}';
         }
         include('Views/game.php');
     }
-    
-    
+
+    //function to load admin page
+    public static function load_admin_page()
+    {
+        $admin_object = PlayerDB::get_player_object(PlayerDB::get_player_id($_SESSION["username"]))[0];
+        include("Views/admin_view.php");
+    }
 }

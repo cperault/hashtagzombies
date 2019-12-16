@@ -21,7 +21,7 @@
         <h1 class="zombies_header_login"><img src="Media/logo.jpeg" alt="Zombies bloody logo in all caps" height="150" width="500" /></h1>
     </header>
     <div class="zombies_div_login">
-        <form method="POST" autocomplete="off" action=".">
+        <form method="POST" autocomplete="off" action="index.php">
             <label for="username">Username </label>
             <input type="text" name="username" class="textbox" <?php if (isset($username)) {
                                                                     echo "value='$username'";
@@ -30,16 +30,20 @@
             <input type="password" name="password" class="textbox" <?php if (isset($password)) {
                                                                         echo "value='$password'";
                                                                     } ?>><br>
+            <br />
+            <input type="submit" value="Login">
             <input type='hidden' name="action" value="submit_login">
-            <br>
-            <button type="submit">Login</button>
+        </form>
+        <form method="POST" action="index.php">
+            <input type="submit" id="password_reset_button" value="Reset password">
+            <input type='hidden' name="action" value="reset_password">
         </form>
         <br />
         <div class="zombies_div_login_alternatives">
             <hr>
             <p class="zombies_div_login_facebook">
                 <form action="index.php" method="POST">
-                    <input type="submit" value="Register">
+                    <input id="register_button" type="submit" value="Register">
                     <input type="hidden" name="action" value="register">
                 </form>
             </p>

@@ -183,19 +183,23 @@ class PlayerDB
         $statement->execute();
         $statement->closeCursor();
     }
-    
-    public static function save_game($player_id, $savestate){
-         $db = Database::getDB();
+
+    //query to save game state
+    public static function save_game($player_id, $savestate)
+    {
+        $db = Database::getDB();
         $query = 'UPDATE Players
-                  SET savestate = :savestate WHERE playerID = :player_id'; 
+                  SET savestate = :savestate WHERE playerID = :player_id';
         $statement = $db->prepare($query);
         $statement->bindValue(':player_id', $player_id);
         $statement->bindValue(':savestate', $savestate);
         $statement->execute();
         $statement->closeCursor();
     }
-    
-    public static function load_game($player_id){
+
+    //query to load game state
+    public static function load_game($player_id)
+    {
         $db = Database::getDB();
         $query = 'SELECT savestate FROM Players where playerID = :player_id';
         $statement = $db->prepare($query);
@@ -204,5 +208,34 @@ class PlayerDB
         $save_game = $statement->fetch();
         $statement->closeCursor();
         return $save_game['savestate'];
+    }
+
+    //query to update user's password
+    public static function update_password($email_address, $new_password)
+    {
+        $db = Database::getDB();
+        $query = "UPDATE Players SET playerPassword = :new_password WHERE playerEmailAddress = :email_address";
+        $statement = $db->prepare($query);
+        $statement->bindValue(':new_password', $new_password);
+        $statement->bindValue(':email_address', $email_address);
+        $statement->execute();
+        $statement->closeCursor();
+    }
+
+    //query to check if user is an admin
+    public static function is_admin($email_address)
+    {
+        $db = Database::getDB();
+        $query = "SELECT playerEmailAddress FROM Players WHERE playerEmailAddress = :email_address AND userRole = 1";
+        $statement = $db->prepare($query);
+        $statement->bindValue(':email_address', $email_address);
+        $statement->execute();
+        $admin = false;
+        //check if record found, return true or false
+        if ($statement->rowCount() >= 1) {
+            $admin = true;
+        }
+        $statement->closeCursor();
+        return $admin;
     }
 }

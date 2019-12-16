@@ -7,10 +7,10 @@
  *Purpose: This is the controller.                                                                                 *
 \******************************************************************************************************************/
 
-////import the PHPMailer classes installed from Composer
-//use PHPMailer\PHPMailer\PHPMailer;
-//use PHPMailer\PHPMailer\SMTP;
-//use PHPMailer\PHPMailer\Exception;
+//import the PHPMailer classes installed from Composer
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\SMTP;
+use PHPMailer\PHPMailer\Exception;
 //load the autoloader from Composer
 require_once('vendor/autoload.php');
 //load the files from Models
@@ -25,6 +25,7 @@ require_once('Models/InventoryDB.php');
 require_once('Models/GameLoad.php');
 require_once('Models/Register.php');
 require_once('Models/UserLogin.php');
+require_once('Models/AdminDB.php');
 
 //define the headers to be hit by frontend requests
 header('Access-Control-Allow-Origin: *');
@@ -34,17 +35,17 @@ header('Access-Control-Max-Age: 1000');
 header('Access-Control-Allow-Headers: Origin, Content-Type, X-Auth-Token , Authorization');
 
 ////instantiate PHPMailer object
-//$mail = new PHPMailer(true); //true enables exception handling
-//
-////SMTP server settings setup as shown in the library's documentation
-////$mail->SMTPDebug = SMTP::DEBUG_SERVER;                      // Enable verbose debug output
-//$mail->isSMTP();                                            // Send using SMTP
-//$mail->Host       = 'smtp.gmail.com';                       // Set the SMTP server to send through
-//$mail->SMTPAuth   = true;                                   // Enable SMTP authentication
-//$mail->Username   = 'hashtagzombies.development@gmail.com'; // SMTP username
-//$mail->Password   = 'uodzpufieenhtdzt';                 // SMTP password
-//$mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;         // Enable TLS encryption; `PHPMailer::ENCRYPTION_SMTPS` also accepted
-//$mail->Port       = 587;
+$mail = new PHPMailer(true); //true enables exception handling
+
+//SMTP server settings setup as shown in the library's documentation
+//$mail->SMTPDebug = SMTP::DEBUG_SERVER;                    // Enable verbose debug output
+$mail->isSMTP();                                            // Send using SMTP
+$mail->Host       = 'smtp.gmail.com';                       // Set the SMTP server to send through
+$mail->SMTPAuth   = true;                                   // Enable SMTP authentication
+$mail->Username   = 'hashtagzombies.development@gmail.com'; // SMTP username
+$mail->Password   = 'uodzpufieenhtdzt';                     // SMTP password
+$mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;         // Enable TLS encryption; `PHPMailer::ENCRYPTION_SMTPS` also accepted
+$mail->Port       = 587;
 
 
 //get the value of the POST or GET data from form actions
@@ -64,6 +65,8 @@ $request_path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 //assign `$action` to appropriate endpoint from JS requests which will designate which case below to hit
 if ($request_path === "/discard_inventory_item") {
     $action = "discard_inventory_item";
+} else if ($request_path === "/add_picked_up_item") {
+    $action = "add_inventory_item";
 }
 
 //decide what to do based on the action(s) received from gameplay/forms
@@ -147,6 +150,23 @@ switch ($action) {
         include("Views/login.php");
         die;
         break;
+    case "add_inventory_item":
+        //get the current user's ID
+        $player_id = $_SESSION["player_id"];
+        //retrive the item ID of item picked up
+        $inventory_item_id = $post_body["itemID"];
+        //get quantity of that item in the user's inventory
+        $current_quantity = InventoryDB::get_item_quantity_of_user_item($inventory_item_id, $player_id);
+        //update the value in the DB
+        InventoryDB::update_inventory_item($player_id, $inventory_item_id, ($current_quantity + 1));
+        //add 1 to the quantity of the current item being picked up
+        $new_quantity = $current_quantity + 1;
+        //get inventory ID of item incremented
+        $incremented_inventory_id = InventoryDB::get_inventory_id($player_id, $inventory_item_id);
+        //send back the new quantity
+        $message = json_encode(array("new_value" => $new_quantity, "incremented_item" => $incremented_inventory_id), JSON_PRETTY_PRINT);
+        die($message);
+        break;
     case "discard_inventory_item":
         //retrieve the item ID received from the Axios request
         $inventory_item_id = $post_body["itemID"];
@@ -157,10 +177,99 @@ switch ($action) {
         $remaining_quantity = $item_quantity - 1;
         //serve the new quantity value now that the server has updated the quantity server-side
         $message = json_encode(array("new_value" => $remaining_quantity), JSON_PRETTY_PRINT);
-        exit($message);
+        die($message);
         break;
     case 'change_map':
-        exit;
+        die;
+        break;
+    case 'reset_password':
+        //load the password reset view
+        include("Views/password_reset.php");
+        die;
+        break;
+    case 'submit_password_reset':
+        //get username
+        $username = htmlspecialchars(trim(filter_input(INPUT_POST, 'username')));
+        UserLogin::reset_password($username, $mail);
+        die;
+        break;
+    case 'confirm_password_resubmit':
+        //get new password and email address
+        $email_address = $_SESSION["email_for_password_reset"];
+        $new_password = filter_input(INPUT_POST, 'new_password');
+
+        //hash the new password
+        $options = [
+            'cost' => 14,
+        ];
+        $hash = password_hash($new_password, PASSWORD_BCRYPT, $options);
+        //save new password
+        PlayerDB::update_password($email_address, $hash);
+        $login_result = "Your password has been reset! Please log in.";
+        //redirect to login view
+        include("Views/login.php");
+        die($message);
+        break;
+    case 'reset_player_password':
+        $player_password_reset_form = true;
+        include("Views/admin_view.php");
+        die;
+        break;
+    case 'submit_player_password_reset':
+        //get username
+        $username = htmlspecialchars(filter_input(INPUT_POST, 'player_username'));
+        //get new password
+        $new_password = filter_input(INPUT_POST, 'player_new_password');
+        //hash the new password
+        $options = [
+            'cost' => 14,
+        ];
+        $hash = password_hash($new_password, PASSWORD_BCRYPT, $options);
+        //save the new password
+        AdminDB::reset_player_password($username, $hash);
+        $message = "Password has been reset for " . $username . ".";
+        //hide the password reset form
+        $player_password_reset_form = false;
+        include("Views/admin_view.php");
+        die($message);
+        break;
+    case 'reset_player_state':
+        $player_state_reset_form = true;
+        include("Views/admin_view.php");
+        die;
+        break;
+    case 'submit_player_state_reset':
+        //get username
+        $username = htmlspecialchars(filter_input(INPUT_POST, 'player_username'));
+        //get ID of user by username
+        $player_id = PlayerDB::get_player_ID($username);
+        //reset the player's state
+        AdminDB::reset_player_state($player_id);
+        //set message for admin view
+        $message = "Player state has been reset for " . $username . ".";
+        //hide the state reset form
+        $player_state_reset_form = false;
+        include("Views/admin_view.php");
+        die($message);
+        break;
+    case 'delete_player':
+        $player_delete_form = true;
+        include("Views/admin_view.php");
+        die;
+        break;
+    case 'submit_player_delete':
+        //get username
+        $username = htmlspecialchars(filter_input(INPUT_POST, 'player_username'));
+        //get ID of user by username
+        $player_id = PlayerDB::get_player_ID($username);
+        //delete the player
+        AdminDB::delete_player($player_id);
+        //set message for admin view
+        $message = $username . " has been deleted.";
+        //hide the player delete form
+        $player_delete_form = false;
+        include("Views/admin_view.php");
+        die($message);
         break;
     
     case 'save_game':
