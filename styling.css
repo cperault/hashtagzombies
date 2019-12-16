@@ -1,5 +1,6 @@
 .zombies_div_login input[type="text"],
-.zombies_div_registration input[type="text"] {
+.zombies_div_registration input[type="text"],
+.admin_div input[type="text"] {
   width: 100%;
   display: inline-block;
   border: solid 1px lightcoral;
@@ -16,7 +17,8 @@
   font-size: 20px;
 }
 .zombies_div_login,
-.zombies_div_registration {
+.zombies_div_registration,
+.admin_div {
   width: 450px;
   margin: 0 auto;
   overflow: hidden;
@@ -35,10 +37,26 @@
   border: solid red 3px;
   border-radius: 15px;
 }
-.zombies_div_login button,
-.zombies_div_registration button {
-  width: 80px;
+.zombies_div_login input[type="submit"],
+.zombies_div_registration input[type="submit"] {
+  width: auto;
   float: right;
+}
+
+.zombies_div_login h5 {
+  text-align: center;
+  color: black;
+}
+
+#register_button {
+  float: none !important;
+}
+
+#admin_main_button {
+  float: none !important;
+  margin: 0 auto !important;
+  text-align: center !important;
+  display: inline-block !important;
 }
 
 .zombies_div_login_separator {
@@ -80,7 +98,8 @@ br {
   border-radius: 15px;
 }
 
-.thank_you_message {
+.thank_you_message,
+.admin_result_message {
   font-size: small;
   text-align: center;
 }
@@ -322,4 +341,30 @@ hr:after {
 .game_outer_interface_div_left .table-div {
   position: relative;
   padding-right: 20px;
+}
+
+.zombies_div_login #password_reset_button {
+  width: auto !important;
+}
+
+.admin_header {
+  margin: 0 auto;
+  text-align: center;
+}
+
+.username_reset_div {
+  margin: 0 auto;
+}
+
+.password_reset_admin_div,
+.state_reset_admin_div,
+.delete_player_admin_div {
+  border: solid red 2px;
+  border-radius: 15px;
+  padding: 20px;
+}
+.password_reset_admin_div input[type="submit"],
+.state_reset_admin_div input[type="submit"],
+.delete_player_admin_div input[type="submit"] {
+  float: right;
 }
