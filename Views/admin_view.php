@@ -71,7 +71,7 @@
             <input type="hidden" name="action" value="delete_player">
         </form>
         <?php if (isset($player_delete_form) && $player_delete_form) {
-            //show from to reset state for a player
+            //show from to delete a player
             echo "<div class='delete_player_admin_div'>";
             echo "<form action='.' method='POST'>";
             echo "<label for='player_username'>Player's username</label>";
