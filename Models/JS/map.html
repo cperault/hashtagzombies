@@ -355,13 +355,12 @@
         //Zombie Collision/Pathfinding
         var zombieCollisionCheck = false;
         var zc = 0;
-        
            do {
             zombieCollisionCheck = currentZom.collide(obstacles[zc]);
             if(obstacles[zc].getCategory() !== "tile"){
                 zombieCollisionCheck = false;
                 }
-            zc++;
+                zc++;
             } while (zombieCollisionCheck === false && zc < obstacles.length);
             if (
               zombieCollisionCheck !== false 
@@ -372,23 +371,21 @@
               {
                   //move up
                 if(currentZom.y > playerSprite.y){
-                 zMoveUp(currentZom);
+                 currentZom.speedY -= 1;
                  }
                 //move down
                   else if(currentZom.y < playerSprite.y){
-                  zMoveDown(currentZom);
+                  currentZom.speedY += 1;;
                   }
-                  
                   else {
                       currentZom.speedY = 0;
                   }
-                  
                   do {
                     zombieCollisionCheck = currentZom.collide(obstacles[zc]);
                     if(obstacles[zc].getCategory() !== "tile"){
                         zombieCollisionCheck = false;
                         }
-                    zc++;
+                        zc++;
                     }
                   while (zombieCollisionCheck === false && zc < obstacles.length);
                   if (zombieCollisionCheck !== false){
@@ -403,45 +400,32 @@
                     if(currentZom.x > playerSprite.x){
                     currentZom.speedX -= 1;
                     }
-            //move right
-                else if(currentZom.x < playerSprite.x){
+                    //move right
+                    else if(currentZom.x < playerSprite.x){
                     currentZom.speedX += 1;
                   }
-                  
                   else{
                      currentZom.speedX = 0;
                   }
-           
                    do {
                     zombieCollisionCheck = currentZom.collide(obstacles[zc]);
                     if(obstacles[zc].getCategory() !== "tile"){
                         zombieCollisionCheck = false;
                         }
-                    zc++;
+                        zc++;
                     }
-                  while (zombieCollisionCheck === false && zc < obstacles.length);
+                   while (zombieCollisionCheck === false && zc < obstacles.length);
                     if (zombieCollisionCheck !== false){
                          zc = 0;
                     currentZom.speedX = 0;
                     currentZom.speedY = 0;
                     }
-            }
-
-            do {
-              zombieCollisionCheck = currentZom.collide(obstacles[zc]);
-              zc++;
-            } while (zombieCollisionCheck === false && zc < obstacles.length);
-            if (
-              zombieCollisionCheck !== false &&
-              obstacles[zc].category === "tile"
-            ) {
-              currentZom.speedX = 0;
-              currentZom.speedY = 0;
-            }
+                }  
           }
-        }
+        
         currentZom.newPos();
       }
+     }
           zombFrame++;
           if(zombFrame >= 24){
             zombFrame = 0;
@@ -460,10 +444,7 @@
           } 
           
           playerSprite.update();
-          
-//          for (var z = 0; z < zombies.length; z++){
-//              zombies[z].update();
-//          }
+         
           
           //shoot logic
           for (var v = 0; v < rounds.length; v++){

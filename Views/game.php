@@ -46,8 +46,6 @@ setcookie('gamestate', $loadedGame);}
     <?php include('./Models/JS/map.html'); ?>   
 <div id="in_game_messages">
 </div>
- <div id="cookieDump">
- </div>
  <div>
      <form action ="./index.php" method="POST">
          <input type="hidden" name="action" value="save_game">
