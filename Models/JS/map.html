@@ -676,13 +676,10 @@
 //        let XPTextCurr = document.getElementById("xp_current");
 //        let currentXP = parseInt(charXP);
         
-        //Update the current gamestate and cookie
+        //Update the current gamestate
         gamestate=saveGame(levelUP, charXP, playerSprite.health);
-        //document.cookie = "gamestate = " + gamestate;
-        document.getElementById("cookieDump").innerText = gamestate;
         document.getElementById("gamestateSubmit").value = gamestate;
         }
-    
 //END GAME UPDATE FUNCTION   
 
 //INSTANTIATE GAME AREA CANVAS

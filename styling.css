@@ -231,6 +231,7 @@ canvas {
   padding: 10px;
   display: flex;
   align-content: center;
+  padding-left: 150px;
 }
 
 #character_image {
@@ -333,8 +334,7 @@ hr:after {
 }
 
 .game_outer_interface_div_left img {
-  height: 75px;
-  width: 70px;
+  height: 95px;
   border-radius: 15px;
   position: absolute;
 }
@@ -342,6 +342,7 @@ hr:after {
   position: relative;
   padding-right: 20px;
 }
+
 
 .zombies_div_login #password_reset_button {
   width: auto !important;
@@ -367,4 +368,18 @@ hr:after {
 .state_reset_admin_div input[type="submit"],
 .delete_player_admin_div input[type="submit"] {
   float: right;
+}
+
+#healthBar, #healthBarContainer {
+    width: 200px;
+    height: 10px;
+    border: 1px solid black;
+    border-radius: 3px;
+    position: relative;
+    left: 0;
+}
+
+#healthBar {
+    position: relative;
+        top: 12px;
 }

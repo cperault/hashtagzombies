@@ -27,7 +27,9 @@ setcookie('gamestate', $loadedGame);}
 </head>
 
 <body onload="startGame()">
-
+<div id="gameplayArea"> 
+    </div>
+    <?php include('./Models/JS/map.html'); ?>   
     <div id="inventory_modal_container_div" class="inventory_modal">
         <span onclick="closeInventory();" id="inventory_close_button">&times;</span>
         <?php if (isset($items) && count($items) > 0) { ?>
@@ -41,20 +43,9 @@ setcookie('gamestate', $loadedGame);}
             </table>
         <?php }; ?>
         </div>
-    <div id="gameplayArea"> 
-    </div>
-    <?php include('./Models/JS/map.html'); ?>   
+    
 <div id="in_game_messages">
 </div>
- <div>
-     <form action ="./index.php" method="POST">
-         <input type="hidden" name="action" value="save_game">
-         <input type="hidden" name="gamestate" id="gamestateSubmit" value="">
-        <input type="submit" name="SAVE GAME" value="SAVE GAME">
-     </form>
- </div>
-    
-
     <div class="game_outer_interface_div_left">
         <?php if (isset($character_object->character_image)) {
             echo "<img src='$character_object->character_image'>";
@@ -92,13 +83,18 @@ setcookie('gamestate', $loadedGame);}
             </table>
         </div>
     </div>
-
+    
     <footer class="logout_footer">
         <form action="." method="POST">
             <input type="submit" value="Logout">
             <input type="hidden" name="action" value="logout">
         </form>
         <input type="submit" value="Pause Game" onclick="pauseGame()" id="btnGameState" />
+        <form action ="./index.php" method="POST">
+         <input type="hidden" name="action" value="save_game">
+         <input type="hidden" name="gamestate" id="gamestateSubmit" value="">
+         <input type="submit" name="SAVE GAME" value="SAVE GAME" id="saveGameButton">
+     </form>
     </footer>
 
 </body>
