@@ -34,14 +34,32 @@ setcookie('gamestate', $loadedGame);}
         <span onclick="closeInventory();" id="inventory_close_button">&times;</span>
         <?php if (isset($items) && count($items) > 0) { ?>
             <table class="inventory_table">
-                <tr>
-                    <th class="th_item">Item</th>
-                    <th class="th_desc">Description</th>
-                    <th class="th_qty">Quantity</th>
-                    <th class="th_action">Action</th>
-                </tr>
-            </table>
-        <?php }; ?>
+            <tr>
+                <th class="th_item">Item</th>
+                <th class="th_desc">Description</th>
+                <th class="th_qty">Quantity</th>
+                <th class="th_action">Action</th>
+            </tr>
+
+            <?php foreach ($items as $item) : { ?>
+                    <tr id='<?php echo htmlspecialchars($item["inventory_id"]) ?>'>
+                        <td id='item_name_category_<?php echo htmlspecialchars($item["inventory_id"]) ?>'><?php echo htmlspecialchars($item["item_name"]); ?></td>
+                        <td><?php echo htmlspecialchars($item["item_description"]); ?></td>
+                        <td id='item_qty_value_<?php echo htmlspecialchars($item["inventory_id"]) ?>'><?php echo htmlspecialchars($item["item_qty"]); ?></td>
+                        <td>
+                            <input type="submit" value="Use" onclick="useItem(<?php echo htmlspecialchars($item['inventory_id']) . ',' ?><?php echo htmlspecialchars($item['item_category']) ?>)" id="btnUseInventory" />
+                            <input type="submit" value="Discard" onclick="discardItem(<?php echo htmlspecialchars($item['inventory_id']) ?>)" id="btnDropInventory" />
+                        </td>
+                    </tr>
+            <?php }
+                endforeach; ?>
+        </table> <?php
+                    } else {
+                        echo "<p class='no-items-message'>You don't have any items yet. :(</p>";
+                    }
+                    ?>
+        <?php //}; ?> 
+
         </div>
     
 <div id="in_game_messages">
