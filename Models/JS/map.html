@@ -95,21 +95,6 @@
               );
             
             //make floor array
-            }else if (tileType === 2){
-                obstacles.push(
-                  new component(
-                    medSpriteImage,
-                    0,
-                    0,
-                    32,
-                    32,
-                    tile_x + 8,
-                    tile_y + 8,
-                    16,
-                    16,
-                    "med", 0
-                  )
-                );
             }
             else if (tileType === 3){
                 floor.push(
@@ -189,142 +174,11 @@
                     )
                 );
                 zCounter++;
-            
-                }
-                
-                } 
-//                else if (r > 0 && r < 3) {
-//              obstacles.push(
-//                new component(
-//                  foodSpriteImage,
-//                  0,
-//                  0,
-//                  32,
-//                  32,
-//                  tile_x + 8,
-//                  tile_y + 8,
-//                  16,
-//                  16,
-//                  "food"
-//                )
-//              );
-//            }
-          }
-          obstacles.push(
-            new component(
-              medSpriteImage,
-              0,
-              0,
-              32,
-              32,
-              tile_x + 8,
-              tile_y + 8,
-              16,
-              16,
-              "med",
-              medicineHealthAmount
-            )
-          );
-        } else if (tileType === 3) {
-          floor.push(
-            new component(
-              doorSpriteImage,
-              0,
-              0,
-              32,
-              32,
-              tile_x,
-              tile_y,
-              32,
-              32,
-              "door",
-              0
-            )
-          );
-        } else if (tileType === 0) {
-          floor.push(
-            new component(
-              floorTileImage,
-              0,
-              0,
-              32,
-              32,
-              tile_x,
-              tile_y,
-              32,
-              32,
-              "tile"
-            )
-          );
-          //add items on floor tiles and push to obstacles array
-          //logic to decide health value of health item
-          var r = Math.random() * 100;
-          var medicineHealthAmount = 0;
-          var min = 0;
-          var max = 1;
-          var m = Math.floor(Math.random() * (max - min + 1)) + min; //should return 0 or 1
-          //medicine will be values of either 20, 50; get random # between 0 and 1 to decide
-          if (m === 0) {
-            medicineHealthAmount = 20;
-          } else if (m === 1) {
-            medicineHealthAmount = 50;
-          }
-          if (r >= 98) {
-            obstacles.push(
-              new component(
-                medSpriteImage,
-                0,
-                0,
-                32,
-                32,
-                tile_x + 8,
-                tile_y + 8,
-                16,
-                16,
-                "med",
-                medicineHealthAmount
-              )
-            );
-          } else if (r <= 2 && zCounter < zSpawnRate) {
-            zombies.push(
-              new component(
-                zombSpriteImage,
-                32,
-                65,
-                32,
-                32,
-                tile_x,
-                tile_y,
-                30,
-                30,
-                "zombie",
-                3
-              )
-            );
-            zCounter++;
-          }
+                }                 
+            }
+            }
         }
-        //                else if (r > 0 && r < 3) {
-        //              obstacles.push(
-        //                new component(
-        //                  foodSpriteImage,
-        //                  0,
-        //                  0,
-        //                  32,
-        //                  32,
-        //                  tile_x + 8,
-        //                  tile_y + 8,
-        //                  16,
-        //                  16,
-        //                  "food"
-        //                )
-        //              );
-        //            }
-      }
-
-      //
     }
-  }
 
   //COMPONENTS
   //sprites
@@ -464,55 +318,7 @@
       }
     }
 
-    //update zombies - movement = half player speed
-    if (zombFrame % 2 === 0) {
-      //Zombie movement - Player Tracking
-
-      for (var q = 0; q < zombies.length; q++) {
-        var currentZom = zombies[q];
-        var distanceX = Math.abs(currentZom.x - playerSprite.x);
-        var distanceY = Math.abs(currentZom.y - playerSprite.y);
-        var facing = "S";
-        currentZom.speedX = 0;
-        currentZom.speedY = 0;
-
-        //pathfinding priority
-        if (distanceX > distanceY) {
-          //move left
-          if (currentZom.x > playerSprite.x) {
-            zMoveLeft(currentZom);
-            facing = "W";
-          }
-          //move right
-          if (currentZom.x < playerSprite.x) {
-            zMoveRight(currentZom);
-            facing = "E";
-          }
-            
-          //Check collision and prevent movement through obstacles
-          collisionCheck = false;
-          var c = 0;
-          do {
-              collisionCheck = playerSprite.collide(obstacles[c]);
-              c++;
-          }
-          while (collisionCheck === false && c < obstacles.length);
-          
-          if (collisionCheck !== false){
-              playerSprite.speedX = 0;
-              playerSprite.speedY = 0;
-          }
-         
-         //If object is grabbable, add to inventory and remove from map
-          if (gameArea.key && gameArea.key === 71){
-           if (currentItemIndex > -1){
-                 grabbed = obstacles.splice(currentItemIndex, 1);
-                 currentItemIndex = -1;
-                 inventory.push(grabbed.getCategory());
-              }
-          }
-          
-          
+   
         //update zombies - movement = half player speed
           if (zombFrame % 2 === 0){ 
           //Zombie movement - Player Tracking
@@ -556,22 +362,9 @@
                 zombieCollisionCheck = false;
                 }
             zc++;
-            }
-            //move down
-            else if (currentZom.y < playerSprite.y) {
-              zMoveDown(currentZom);
-              facing = "S";
-            } else {
-              currentZom.speedY = 0;
-            }
-
-            do {
-              zombieCollisionCheck = currentZom.collide(obstacles[zc]);
-              zc++;
             } while (zombieCollisionCheck === false && zc < obstacles.length);
             if (
-              zombieCollisionCheck !== false &&
-              obstacles[zc].category === "tile"
+              zombieCollisionCheck !== false 
             ) {
               currentZom.speedX = 0;
               currentZom.speedY = 0;
@@ -597,7 +390,6 @@
                         }
                     zc++;
                     }
-            
                   while (zombieCollisionCheck === false && zc < obstacles.length);
                   if (zombieCollisionCheck !== false){
                        zc = 0;
@@ -909,6 +701,7 @@
         document.getElementById("cookieDump").innerText = gamestate;
         document.getElementById("gamestateSubmit").value = gamestate;
         }
+    
 //END GAME UPDATE FUNCTION   
 
 //INSTANTIATE GAME AREA CANVAS

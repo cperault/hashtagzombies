@@ -38,8 +38,9 @@ setcookie('gamestate', $loadedGame);}
                     <th class="th_qty">Quantity</th>
                     <th class="th_action">Action</th>
                 </tr>
-
-</div>
+            </table>
+        <?php }; ?>
+        </div>
     <div id="gameplayArea"> 
     </div>
     <?php include('./Models/JS/map.html'); ?>   
@@ -48,49 +49,14 @@ setcookie('gamestate', $loadedGame);}
  <div id="cookieDump">
  </div>
  <div>
-    
      <form action ="./index.php" method="POST">
          <input type="hidden" name="action" value="save_game">
          <input type="hidden" name="gamestate" id="gamestateSubmit" value="">
         <input type="submit" name="SAVE GAME" value="SAVE GAME">
      </form>
  </div>
-<div class="game_outer_interface_div_left">
-    <?php if (isset($character_object->character_image)) {
-        echo "<img src='$character_object->character_image'>";
-    } ?>
-    <div class="table-div">
-        <table class="game_profile_table">
-            <tr>
-                <th>Username</th>
-                <?php if (isset($character_object)) {
-                    echo "<th>Character</th>";
-                    echo "<th>Character Level</th>";
-                } else {
-                    echo "<th>Character</th>";
-                } ?>
-                <th>Health</th>
-                <th>Inventory</th>
-            </tr>
-            <tr>
-                <td><?php echo htmlspecialchars($player->username); ?></td>
-                <?php if (isset($character_object)) {
-                    echo "<td>" . htmlspecialchars($character_object->character_name) . "</td>";
-                    echo "<td id='charLevel'>" . htmlspecialchars($character_object->character_level) . "</td>";
-                } else {
-                    echo "<form action='.' method='POST'><td class='create_character_button'><input type='submit' value='Create character'/><input type='hidden' name='action' value='create_character'/></form></td>";
-                } ?>
-                 <td id="character_health_status">
-                <div id="healthBar"> </div>
-            <div id="healthBarContainer"> </div>
-            <div id="healthText"></div></td>
-                <!--default 100; this will need to be dynamically updated throughout gameplay by targeting the `element by id` selector and changing innerText-->
-                <!--Would be cool to setup different colors for health ranges; green for 100-90, orange 89-70, yellow 69-50, etc. I will set that up. :) -->
-                <td><input type="submit" value="View inventory" onclick="viewInventory()" id="btnViewInventory" /></td>
-            </tr>
-        </table>
-    </div>
-    <div id="cookieDump"></div>
+    
+
     <div class="game_outer_interface_div_left">
         <?php if (isset($character_object->character_image)) {
             echo "<img src='$character_object->character_image'>";
@@ -138,5 +104,4 @@ setcookie('gamestate', $loadedGame);}
     </footer>
 
 </body>
-
 </html>
